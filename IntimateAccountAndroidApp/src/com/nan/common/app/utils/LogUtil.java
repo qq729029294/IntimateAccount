@@ -1,10 +1,9 @@
 
-package com.nan.utils;
+package com.nan.common.app.utils;
 
 import android.util.Log;
 
-public class LogUtils {
-	
+public class LogUtil {
     /**
      * Priority constant for the println method; use Log.v.
      */
@@ -45,6 +44,48 @@ public class LogUtils {
     	sDefaultTag = defaultTag;
     }
 
+    // Default TAG.
+    public static void i(String msg) {
+        LogUtil.i(sDefaultTag, msg);
+    }
+
+    public static void i(String msg, Throwable e) {
+    	LogUtil.i(sDefaultTag, msg, e);
+    }
+
+    public static void e(String msg) {
+    	LogUtil.e(sDefaultTag, msg);
+    }
+
+    public static void e(String msg, Throwable e) {
+    	LogUtil.e(sDefaultTag, msg, e);
+    }
+
+    public static void d(String msg) {
+    	LogUtil.d(sDefaultTag, msg);
+    }
+
+    public static void d(String msg, Throwable e) {
+    	LogUtil.d(sDefaultTag, msg, e);
+    }
+
+    public static void v(String msg) {
+    	LogUtil.v(sDefaultTag, msg);
+    }
+
+    public static void v(String msg, Throwable e) {
+    	LogUtil.v(sDefaultTag, msg, e);
+    }
+
+    public static void w(String msg) {
+    	LogUtil.w(sDefaultTag, msg);
+    }
+
+    public static void w(String msg, Throwable e) {
+    	LogUtil.w(sDefaultTag, msg, e);
+    }
+
+    // Special TAG.
     public static void i(String TAG, String msg) {
         if (sLogLevel <= INFO) {
             Log.i(TAG, msg);
