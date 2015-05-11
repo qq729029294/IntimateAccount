@@ -1,4 +1,4 @@
-package com.nan.ia;
+package com.nan.ia.server.controller;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nan.ia.server.db.DBService;
+
 /**
  * Handles requests for the application home page.
  */
@@ -23,7 +25,7 @@ public class HomeController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "/aa", method = RequestMethod.GET)
+	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public @ResponseBody String home(Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
@@ -34,6 +36,6 @@ public class HomeController {
 		
 		model.addAttribute("serverTime", formattedDate );
 		
-		return "home";
+		return "home + " + DBService.getInstance().getUserCount();
 	}
 }
