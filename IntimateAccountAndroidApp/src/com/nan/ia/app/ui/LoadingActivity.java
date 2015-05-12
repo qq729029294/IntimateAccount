@@ -1,11 +1,10 @@
 package com.nan.ia.app.ui;
 
-import com.nan.ia.app.AppSettings;
+import com.nan.ia.app.AppData;
 import com.nan.ia.app.R;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.app.Activity;
 import android.content.Intent;
 
 public class LoadingActivity extends BaseActivity {
@@ -56,9 +55,9 @@ public class LoadingActivity extends BaseActivity {
 	}
 
 	private void loadComplete() {
-		if (!AppSettings.hasInit()) {
+		if (!AppData.hasInit()) {
 			// 初始化引导界面
-			AppSettings.setInit(true);
+			AppData.setInit(true);
 			
 			Intent intent = new Intent(LoadingActivity.this, StartActivity.class);
 			startActivity(intent);
