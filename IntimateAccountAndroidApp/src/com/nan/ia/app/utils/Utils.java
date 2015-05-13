@@ -1,4 +1,4 @@
-package com.nan.common.app.utils;
+package com.nan.ia.app.utils;
 
 import java.io.ByteArrayOutputStream;
 
@@ -8,7 +8,7 @@ import android.graphics.Bitmap;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-public class Util {
+public class Utils {
 	static public byte[] bitmapToByteArray(Bitmap bm) {
 		int size = bm.getWidth() * bm.getHeight() * 4;  
         ByteArrayOutputStream baos = new ByteArrayOutputStream(size);  

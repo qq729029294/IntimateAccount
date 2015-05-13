@@ -1,9 +1,9 @@
 
-package com.nan.common.app.utils;
+package com.nan.ia.app.utils;
 
 import android.util.Log;
 
-public class LogUtil {
+public class LogUtils {
     /**
      * Priority constant for the println method; use Log.v.
      */
@@ -46,43 +46,43 @@ public class LogUtil {
 
     // Default TAG.
     public static void i(String msg) {
-        LogUtil.i(sDefaultTag, msg);
+        LogUtils.i(sDefaultTag, msg);
     }
 
     public static void i(String msg, Throwable e) {
-    	LogUtil.i(sDefaultTag, msg, e);
+    	LogUtils.i(sDefaultTag, msg, e);
     }
 
     public static void e(String msg) {
-    	LogUtil.e(sDefaultTag, msg);
+    	LogUtils.e(sDefaultTag, msg);
     }
 
     public static void e(String msg, Throwable e) {
-    	LogUtil.e(sDefaultTag, msg, e);
+    	LogUtils.e(sDefaultTag, msg, e);
     }
 
     public static void d(String msg) {
-    	LogUtil.d(sDefaultTag, msg);
+    	LogUtils.d(sDefaultTag, msg);
     }
 
     public static void d(String msg, Throwable e) {
-    	LogUtil.d(sDefaultTag, msg, e);
+    	LogUtils.d(sDefaultTag, msg, e);
     }
 
     public static void v(String msg) {
-    	LogUtil.v(sDefaultTag, msg);
+    	LogUtils.v(sDefaultTag, msg);
     }
 
     public static void v(String msg, Throwable e) {
-    	LogUtil.v(sDefaultTag, msg, e);
+    	LogUtils.v(sDefaultTag, msg, e);
     }
 
     public static void w(String msg) {
-    	LogUtil.w(sDefaultTag, msg);
+    	LogUtils.w(sDefaultTag, msg);
     }
 
     public static void w(String msg, Throwable e) {
-    	LogUtil.w(sDefaultTag, msg, e);
+    	LogUtils.w(sDefaultTag, msg, e);
     }
 
     // Special TAG.

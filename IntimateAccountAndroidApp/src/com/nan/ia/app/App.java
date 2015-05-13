@@ -1,6 +1,6 @@
 package com.nan.ia.app;
 
-import com.nan.common.app.utils.LogUtil;
+import com.nan.ia.app.utils.LogUtils;
 
 import android.app.ActivityManager;
 import android.app.Application;
@@ -22,7 +22,7 @@ public class App extends Application {
 	public void onCreate() {
 		sApp = this;
 		
-		LogUtil.configure(AppConfigs.TAG, LogUtil.VERBOSE);
+		LogUtils.configure(AppConfigs.TAG, LogUtils.VERBOSE);
 		super.onCreate();
 	}
 

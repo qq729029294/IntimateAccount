@@ -1,11 +1,11 @@
-package com.nan.common.app.utils;
+package com.nan.ia.app.utils;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.io.Reader;
 import java.io.Writer;
 
-public class CloseUtil {
+public class CloseUtils {
     private static final String TAG = "CloseUtils";
     
     public static void close(InputStream is) {
@@ -14,7 +14,7 @@ public class CloseUtil {
                 is.close();
             }
             catch (Exception e) {
-                LogUtil.i(TAG, "close exception: " + e.toString());
+                LogUtils.i(TAG, "close exception: " + e.toString());
             }
         }
     }
@@ -25,7 +25,7 @@ public class CloseUtil {
                 os.close();
             }
             catch (Exception e) {
-                LogUtil.i(TAG, "close exception: " + e.toString());
+                LogUtils.i(TAG, "close exception: " + e.toString());
             }
         }
     }
@@ -36,7 +36,7 @@ public class CloseUtil {
                 randomAccessFile.close();
             }
             catch (Exception e) {
-                LogUtil.i(TAG, "close exception: " + e.toString());
+                LogUtils.i(TAG, "close exception: " + e.toString());
             }
         }
     }
@@ -47,7 +47,7 @@ public class CloseUtil {
                 writer.close();
             }
             catch (Exception e) {
-                LogUtil.i(TAG, "close exception: " + e.toString());
+                LogUtils.i(TAG, "close exception: " + e.toString());
             }
         }
     }
@@ -58,7 +58,7 @@ public class CloseUtil {
                 reader.close();
             }
             catch (Exception e) {
-                LogUtil.i(TAG, "close exception: " + e.toString());
+                LogUtils.i(TAG, "close exception: " + e.toString());
             }
         }
     }

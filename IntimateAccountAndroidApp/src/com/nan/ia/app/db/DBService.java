@@ -2,10 +2,8 @@ package com.nan.ia.app.db;
 
 import java.util.List;
 
-import com.nan.ia.app.entities.AccountBook;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 
 public class DBService {
 	private DBHelper dbHelper = null;
@@ -30,10 +28,10 @@ public class DBService {
 	}
 	
 	public int createAccountBooks(String name, String description) {
-		return null;
+		return 0;
 	}
 	
 	private int execOperateSQL(String sql) {
-		
+		return 0;
 	}
 }

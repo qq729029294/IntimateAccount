@@ -2,8 +2,8 @@ package com.nan.ia.app.ui;
 
 import java.lang.reflect.Field;
 
-import com.nan.common.app.utils.LogUtil;
 import com.nan.ia.app.R;
+import com.nan.ia.app.utils.LogUtils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,7 +25,7 @@ public class BaseActivity extends Activity {
 	/******************************** 【Activity LifeCycle For Debug】 *******************************************/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		LogUtil.d(TAG, this.getClass().getSimpleName()
+		LogUtils.d(TAG, this.getClass().getSimpleName()
 				+ " onCreate() invoked!!");
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -33,39 +33,39 @@ public class BaseActivity extends Activity {
 
 	@Override
 	protected void onStart() {
-		LogUtil.d(TAG, this.getClass().getSimpleName() + " onStart() invoked!!");
+		LogUtils.d(TAG, this.getClass().getSimpleName() + " onStart() invoked!!");
 		super.onStart();
 	}
 
 	@Override
 	protected void onRestart() {
-		LogUtil.d(TAG, this.getClass().getSimpleName()
+		LogUtils.d(TAG, this.getClass().getSimpleName()
 				+ " onRestart() invoked!!");
 		super.onRestart();
 	}
 
 	@Override
 	protected void onResume() {
-		LogUtil.d(TAG, this.getClass().getSimpleName()
+		LogUtils.d(TAG, this.getClass().getSimpleName()
 				+ " onResume() invoked!!");
 		super.onResume();
 	}
 
 	@Override
 	protected void onPause() {
-		LogUtil.d(TAG, this.getClass().getSimpleName() + " onPause() invoked!!");
+		LogUtils.d(TAG, this.getClass().getSimpleName() + " onPause() invoked!!");
 		super.onPause();
 	}
 
 	@Override
 	protected void onStop() {
-		LogUtil.d(TAG, this.getClass().getSimpleName() + " onStop() invoked!!");
+		LogUtils.d(TAG, this.getClass().getSimpleName() + " onStop() invoked!!");
 		super.onStop();
 	}
 
 	@Override
 	public void onDestroy() {
-		LogUtil.d(TAG, this.getClass().getSimpleName()
+		LogUtils.d(TAG, this.getClass().getSimpleName()
 				+ " onDestroy() invoked!!");
 		super.onDestroy();
 
