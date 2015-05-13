@@ -1,19 +1,36 @@
 package com.nan.ia.app.http.cmd;
 
-import org.apache.http.HttpResponse;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import junit.framework.AssertionFailedError;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.protocol.HTTP;
+import org.json.JSONObject;
+
+import com.nan.ia.app.R;
+import com.nan.ia.app.http.CustomHttpResponse;
+import com.nan.ia.app.http.HttpRequestHelper;
+import com.nan.ia.app.http.cmd.HttpCmdInfo.HttpMethod;
+import com.nan.ia.app.utils.LogUtils;
+
+import android.content.Context;
+import android.os.AsyncTask;
+import android.os.Looper;
 
 /**
  * Created by weijiangnan on 15-5-13.
  */
 public abstract class BaseHttpCmd {
-	protected HttpResult mResult;
-
-	protected abstract HttpCmdInfo injectionHttpCmdInfo();
+	protected abstract HttpCmdInfo getHttpCmdInfo();
 
 	/**
 	 * 用于检查输入值是否有效
@@ -25,81 +42,89 @@ public abstract class BaseHttpCmd {
 	}
 
 	static public interface HttpCmdCallback {
-		public void onFinished(int statusCode, );
+		public void onFinished(HttpResult result);
 	}
 
 	/**
 	 * 异步请求
-	 *
+	 * @param context
+	 * @param useCache
 	 * @param callback
 	 */
-	public void sendAsync(final HttpCmdCallback callback) {
-		AuroraHttpThreadPool pool = AuroraHttpThreadPool.getInstance();
-		pool.execute(new Runnable() {
+	public void sendAsync(final Context context, final boolean useCache, final HttpCmdCallback callback) {
+		if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
+			// 必须在主线程调用
+			throw new AssertionFailedError("BaseHttpCmd.sendAsync must be called at main thread.");
+		}
+		
+		AsyncTask<Integer, Integer, HttpResult> task = new AsyncTask<Integer, Integer, HttpResult>() {
+
 			@Override
-			public void run() {
-				send();
+			protected HttpResult doInBackground(Integer... params) {
+				return send(context, useCache);
+			}
+
+			@Override
+			protected void onPostExecute(HttpResult result) {
 				if (null != callback) {
-					callback.onFinished(mResult);
+					callback.onFinished(result);
 				}
+				
+				super.onPostExecute(result);
 			}
-		});
+		};
+		
+		task.execute(0);
 	}
-
+	
 	/**
-	 * 发送请求
-	 *
+	 * 同步请求
+	 * @param context
+	 * @param useCache
+	 * @return
 	 */
-	public void send() {
-        AuroraLog.d(this.getClass().getName() + " send.");
-
-		if (!checkInputValid()) {
-			throw new RuntimeException("Input invalid.");
-		}
-		;
-
-		if (null == mHttpCmdInfo) {
-			mHttpCmdInfo = injectionHttpCmdInfo();
-			if (null == mHttpCmdInfo) {
-				throw new RuntimeException("HttpCmdInfo is no injection.");
+	public HttpResult send(Context context, boolean useCache) {
+		HttpCmdInfo httpCmdInfo = getHttpCmdInfo(); // 获取请求的信息
+		List<NameValuePair> parameters = getParameters();
+		NameValuePair[] parameterArray = parameters.toArray(new NameValuePair[parameters.size()]);
+		
+		CustomHttpResponse response = null;
+		
+		try {
+			if (httpCmdInfo.getHttpMethod() == HttpMethod.POST) {
+				response = HttpRequestHelper.postByHttpClient(context,
+						useCache, httpCmdInfo.getUrl(), parameterArray);
+			} else {
+				response = HttpRequestHelper.getByHttpClient(context,
+						useCache, httpCmdInfo.getUrl(), parameterArray);
 			}
+		} catch (Exception e) {
+			response = new CustomHttpResponse();
+			LogUtils.w("http request error.", e);
 		}
-
-		mHttpRequest = new AuroraHttpRequest();
-		HttpResponse res;
-		if (mHttpCmdInfo.getHttpMethod() == HttpCmdInfo.HttpMethod.GET) {
-			// Get
-			res = mHttpRequest.get(mHttpCmdInfo.getUrl(),
-					mInput.getParameters(),
-					mHttpCmdInfo.getScoketTimeout(),
-					mHttpCmdInfo.getConnectTimeout());
-		} else {
-			// Post
-			res = mHttpRequest.post(mHttpCmdInfo.getUrl(),
-					mInput.getParameters(),
-					mHttpCmdInfo.getScoketTimeout(),
-					mHttpCmdInfo.getConnectTimeout());
-		}
-
-		// 处理返回值
-		handleResponse(res);
+		
+		return handleResponse(response);
 	}
+	
+	protected List<NameValuePair> getParameters() {
+		return new ArrayList<NameValuePair>();
+	}
+
 
     /**
      * 处理返回值
      * @param res
      */
-	protected void handleResponse(HttpResponse res) {
+	protected HttpResult handleResponse(Context context, CustomHttpResponse response) {
 		try {
-            if (res == null) {
+			HttpResult result = new HttpResult();
+            if (response == null) {
                 // 请求异常，直接返回
-                mResult.setHttpStatus(0);
-                mResult.setRet(AuroraSrvErrorCode.ERROR);
+                result.setRet(HttpResult.RET_HTTP_ERROR);
+                result.setErrMsg(context.getString(R.string.http_request_exception));
             }
 
-			mResult.setHttpStatus(res.getStatusLine().getStatusCode());
-
-			if (mResult.getHttpStatus() == 200) {
+			if (response.getStatusCode() == HttpStatus.SC_OK) {
 				// 读取返回的Json
 				InputStream is;
 				is = res.getEntity().getContent();

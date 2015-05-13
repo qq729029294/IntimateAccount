@@ -1,6 +1,7 @@
 package com.nan.ia.app.http;
 
 import android.content.Context;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -31,6 +32,7 @@ import com.nan.ia.app.utils.LogUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +69,7 @@ public class CustomHttpClient {
                     params.add(nameValuePairs[i]);
                 }
             }
+            
             UrlEncodedFormEntity urlEncoded = new UrlEncodedFormEntity(params,
             		CHARSET_UTF8);
             LogUtils.i(TAG, url);

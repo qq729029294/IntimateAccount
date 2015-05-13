@@ -37,7 +37,7 @@ public class RequestCacheDBHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL("CREATE TABLE IF NOT EXISTS `request_cache` ("
 				  + "`id` INT(11) NOT NULL AUTO_INCREMENT,"
-				  + "`url` TEXT NULL,"
+				  + "`urlkey` TEXT NULL,"
 				  + "`response` TEXT NULL,"
 				  + "`update_time` INT(11) NULL,"
 				  + "PRIMARY KEY (`id`))");
@@ -53,15 +53,15 @@ public class RequestCacheDBHelper extends SQLiteOpenHelper {
 		}
 	}
 	
-	public void insertRequestCache(String url, String response) {
+	public void insertRequestCache(String urlkey, String response) {
 		ContentValues contentValues = new ContentValues();
-		contentValues.put("url", url);
+		contentValues.put("urlkey", urlkey);
 		contentValues.put("response", response);
 		contentValues.put("update_time", System.currentTimeMillis());
 		
-		Cursor cursor = database.query("request_cache", new String[] { "id" }, "url=?", new String[] { url }, null, null, null);
+		Cursor cursor = database.query("request_cache", new String[] { "id" }, "urlkey=?", new String[] { urlkey }, null, null, null);
 		if (cursor.moveToFirst()) {
-			database.update("request_cache", contentValues, "url=?", new String[] { url });
+			database.update("request_cache", contentValues, "urlkey=?", new String[] { urlkey });
 		} else {
 			database.insert("request_cache", null, contentValues);
 		}
@@ -69,9 +69,9 @@ public class RequestCacheDBHelper extends SQLiteOpenHelper {
 		cursor.close();
 	}
 	
-	public String getRequestCache(String url, long activeBeginTime) {
+	public String getRequestCache(String urlkey, long activeBeginTime) {
 		String response = "";
-		Cursor cursor = database.query("request_cache", new String[] { "response" }, "url=? and update_time>?", new String[] { url, String.valueOf(activeBeginTime) }, null, null, null);
+		Cursor cursor = database.query("request_cache", new String[] { "response" }, "url=? and update_time>?", new String[] { urlkey, String.valueOf(activeBeginTime) }, null, null, null);
 		if (cursor.moveToFirst()) {
 			response = cursor.getString(cursor.getColumnIndex("response"));
 		}

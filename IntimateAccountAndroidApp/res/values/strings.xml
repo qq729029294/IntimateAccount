@@ -1,7 +1,7 @@
 <resources>
-
     <string name="app_name">IntimateAccountAndroidApp</string>
-
     <string name="start">立即开始</string>
+    <string name="http_request_exception">网络请求出现异常</string>
+    <string name="fmt_http_request_error">网络请求错误，错误代码</string>
 
 </resources>

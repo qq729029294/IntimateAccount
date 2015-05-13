@@ -10,7 +10,7 @@ public class HttpCmdInfo {
     }
 
     protected String url;
-    protected HttpMethod httpMethod = HttpMethod.POST;
+    protected HttpMethod httpMethod = HttpMethod.GET;
     protected int scoketTimeout = 20000;
     protected int connectTimeout = 10000;
 

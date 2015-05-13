@@ -8,7 +8,6 @@ public class CustomHttpResponse {
 	
 	private int statusCode;
 	private String response;
-	private String errMsg;
 	
 	public int getStatusCode() {
 		return statusCode;
@@ -21,11 +20,5 @@ public class CustomHttpResponse {
 	}
 	public void setResponse(String response) {
 		this.response = response;
-	}
-	public String getErrMsg() {
-		return errMsg;
-	}
-	public void setErrMsg(String errMsg) {
-		this.errMsg = errMsg;
 	}
 }
