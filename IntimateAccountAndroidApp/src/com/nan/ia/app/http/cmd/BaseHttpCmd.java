@@ -1,27 +1,24 @@
 package com.nan.ia.app.http.cmd;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import junit.framework.AssertionFailedError;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.json.JSONObject;
 
 import com.nan.ia.app.R;
 import com.nan.ia.app.http.CustomHttpResponse;
 import com.nan.ia.app.http.HttpRequestHelper;
-import com.nan.ia.app.http.cmd.HttpCmdInfo.HttpMethod;
+import com.nan.ia.app.http.cmd.BaseHttpCmd.HttpCmdInfo.HttpMethod;
 import com.nan.ia.app.utils.LogUtils;
+import com.nan.ia.app.widget.CustomToast;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Looper;
@@ -30,19 +27,86 @@ import android.os.Looper;
  * Created by weijiangnan on 15-5-13.
  */
 public abstract class BaseHttpCmd {
+	/**
+	 * Created by weijiangnan on 14-8-13.
+	 */
+	public static class HttpCmdInfo {
+	    public enum HttpMethod {
+	        GET,
+	        POST
+	    }
+
+	    protected String url;
+	    protected HttpMethod httpMethod = HttpMethod.GET;
+	    protected int scoketTimeout = 20000;
+	    protected int connectTimeout = 10000;
+
+	    public int getConnectTimeout() {
+	        return connectTimeout;
+	    }
+
+	    public void setConnectTimeout(int connectTimeout) {
+	        this.connectTimeout = connectTimeout;
+	    }
+
+	    public String getUrl() {
+	        return url;
+	    }
+
+	    public void setUrl(String url) {
+	        this.url = url;
+	    }
+
+	    public HttpMethod getHttpMethod() {
+	        return httpMethod;
+	    }
+
+	    public void setHttpMethod(HttpMethod httpMethod) {
+	        this.httpMethod = httpMethod;
+	    }
+
+	    public int getScoketTimeout() {
+	        return scoketTimeout;
+	    }
+
+	    public void setScoketTimeout(int scoketTimeout) {
+	        this.scoketTimeout = scoketTimeout;
+	    }
+	}
+	
+	private static class ParamNameValuePair implements NameValuePair {
+		String name;
+		String value;
+		
+		public ParamNameValuePair(String name, Object value) {
+			this.name = name;
+			this.value = value.toString();
+		}
+
+		@Override
+		public String getName() {
+			return name;
+		}
+
+		@Override
+		public String getValue() {
+			return value;
+		}
+	}
+	
 	protected abstract HttpCmdInfo getHttpCmdInfo();
 
 	/**
 	 * 用于检查输入值是否有效
 	 * 
-	 * @return
+	 * @returnss
 	 */
 	public boolean checkInputValid() {
 		return true;
 	}
 
 	static public interface HttpCmdCallback {
-		public void onFinished(HttpResult result);
+		public void onFinished(CustomHttpResponse response);
 	}
 
 	/**
@@ -57,15 +121,15 @@ public abstract class BaseHttpCmd {
 			throw new AssertionFailedError("BaseHttpCmd.sendAsync must be called at main thread.");
 		}
 		
-		AsyncTask<Integer, Integer, HttpResult> task = new AsyncTask<Integer, Integer, HttpResult>() {
+		AsyncTask<Integer, Integer, CustomHttpResponse> task = new AsyncTask<Integer, Integer, CustomHttpResponse>() {
 
 			@Override
-			protected HttpResult doInBackground(Integer... params) {
+			protected CustomHttpResponse doInBackground(Integer... params) {
 				return send(context, useCache);
 			}
 
 			@Override
-			protected void onPostExecute(HttpResult result) {
+			protected void onPostExecute(CustomHttpResponse result) {
 				if (null != callback) {
 					callback.onFinished(result);
 				}
@@ -83,7 +147,7 @@ public abstract class BaseHttpCmd {
 	 * @param useCache
 	 * @return
 	 */
-	public HttpResult send(Context context, boolean useCache) {
+	public CustomHttpResponse send(Context context, boolean useCache) {
 		HttpCmdInfo httpCmdInfo = getHttpCmdInfo(); // 获取请求的信息
 		List<NameValuePair> parameters = getParameters();
 		NameValuePair[] parameterArray = parameters.toArray(new NameValuePair[parameters.size()]);
@@ -103,60 +167,72 @@ public abstract class BaseHttpCmd {
 			LogUtils.w("http request error.", e);
 		}
 		
-		return handleResponse(response);
+		return handleResponse(context, response);
 	}
-	
-	protected List<NameValuePair> getParameters() {
-		return new ArrayList<NameValuePair>();
-	}
-
 
     /**
      * 处理返回值
      * @param res
      */
-	protected HttpResult handleResponse(Context context, CustomHttpResponse response) {
+	protected CustomHttpResponse handleResponse(Context context, CustomHttpResponse response) {
 		try {
-			HttpResult result = new HttpResult();
             if (response == null) {
-                // 请求异常，直接返回
-                result.setRet(HttpResult.RET_HTTP_ERROR);
-                result.setErrMsg(context.getString(R.string.http_request_exception));
+            	// 请求异常
+            	response = new CustomHttpResponse();
             }
+            
+			if (null != response && response.getStatusCode() == HttpStatus.SC_OK) {
+				// 请求成功
+				return response;
+			}
 
-			if (response.getStatusCode() == HttpStatus.SC_OK) {
-				// 读取返回的Json
-				InputStream is;
-				is = res.getEntity().getContent();
-
-				StringBuffer buffer = new StringBuffer();
-				BufferedReader bufferedReader = new BufferedReader(
-						new InputStreamReader(is));
-				String str;
-				while ((str = bufferedReader.readLine()) != null) {
-					buffer.append(str);
-				}
-
-				mResult.setRet(AuroraSrvErrorCode.ERROR);
-
-                String json = buffer.toString();
-                AuroraLog.d(json);
-				JSONObject jsonObject = new JSONObject(json);
-                // 设置返回码
-                mResult.setRet(jsonObject.optInt("ret", AuroraSrvErrorCode.ERROR));
-                // 转换数据
-                JSONObject dataJsonObject = jsonObject.optJSONObject("data");
-                if (null != dataJsonObject)
-				parseResult(dataJsonObject);
+			if (response.getStatusCode() == CustomHttpResponse.HTTP_REQUEST_EXCEPTION) {
+				// 请求异常，直接返回
+            	CustomToast.showToast(R.string.http_request_exception);
 			} else {
-				AuroraLog.e("Http request error, httpStatus=" + mResult.getHttpStatus());
+				// 网络错误
+				CustomToast.showToast(context.getString(R.string.fmt_http_request_error) + response.getStatusCode());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		return response;
 	}
+	
+	@SuppressLint("DefaultLocale")
+	protected List<NameValuePair> getParameters() {
+		Class<?> x = this.getClass();
+		Field[] fields = x.getDeclaredFields();
 
-	protected void parseResult(JSONObject resultObject) {
-		mResult.parseGeneralResult(resultObject);
+		List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+		for (int i = 0; i < fields.length; i++) {
+			Field field = fields[i];
+			String name = field.getName();
+			int modifier = field.getModifiers();
+
+			// 非静态变量，都认为是参数
+			if ((modifier & Modifier.STATIC) == 0) {
+				try {
+					String getMethodName = "get"
+							+ name.replaceFirst(name.substring(0, 1), name
+									.substring(0, 1).toUpperCase());
+					Method method = this.getClass().getMethod(getMethodName);
+
+					// 不添加为空的值
+					if (field.getClass() instanceof Object
+							&& method.invoke(this) == null) {
+						continue;
+					}
+
+					nameValuePairs.add(new ParamNameValuePair(name, method
+							.invoke(this)));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return nameValuePairs;
 	}
 }

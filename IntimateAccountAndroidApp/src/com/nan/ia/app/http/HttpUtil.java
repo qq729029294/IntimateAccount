@@ -11,7 +11,7 @@ public class HttpUtil {
     // 网络连接部分
     public static CustomHttpResponse postByHttpClient(Context context, String strUrl,
             NameValuePair... nameValuePairs) throws Exception {
-        return CustomHttpClient.PostFromWebByHttpClient(context, strUrl, nameValuePairs);
+        return CustomHttpClient.postFromWebByHttpClient(context, strUrl, nameValuePairs);
     }
 
     public static CustomHttpResponse getByHttpClient(Context context, String strUrl,

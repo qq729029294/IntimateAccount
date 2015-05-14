@@ -3,7 +3,7 @@ package com.nan.ia.app.view;
 import com.nan.ia.app.R;
 import com.nan.ia.app.ui.LoadingActivity;
 import com.nan.ia.app.ui.MainActivity;
-import com.nan.ia.app.view.common.CustomButton;
+import com.nan.ia.app.widget.CustomButton;
 
 import android.support.v4.app.Fragment;
 import android.content.Intent;

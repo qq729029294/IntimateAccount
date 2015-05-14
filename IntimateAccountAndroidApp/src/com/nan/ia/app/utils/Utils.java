@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 public class Utils {
+	private static char sHexDigits[] = { '0', '1', '2', '3', '4', '5', '6',
+		'7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+	
 	static public byte[] bitmapToByteArray(Bitmap bm) {
 		int size = bm.getWidth() * bm.getHeight() * 4;  
         ByteArrayOutputStream baos = new ByteArrayOutputStream(size);  
@@ -45,5 +48,22 @@ public class Utils {
 					.getSystemService(Context.INPUT_METHOD_SERVICE);
 			inputmanger.hideSoftInputFromWindow(view.getWindowToken(), 0);
 		}
+	}
+	
+	public static String hexString(byte[] source) {
+		if (source == null || source.length <= 0) {
+			return "";
+		}
+
+		final int size = source.length;
+		final char str[] = new char[size * 2];
+		int index = 0;
+		byte b;
+		for (int i = 0; i < size; i++) {
+			b = source[i];
+			str[index++] = sHexDigits[b >>> 4 & 0xf];
+			str[index++] = sHexDigits[b & 0xf];
+		}
+		return new String(str);
 	}
 }

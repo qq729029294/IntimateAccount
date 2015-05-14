@@ -1,4 +1,4 @@
-package com.nan.ia.app.view.common;
+package com.nan.ia.app.widget;
 
 import com.nan.ia.app.R;
 

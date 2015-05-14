@@ -49,7 +49,7 @@ public final class MD5 {
 		byte[] btyes = source.getBytes();
 		byte[] encodedBytes = sDigest.digest(btyes);
 
-		return Utility.hexString(encodedBytes);
+		return Utils.hexString(encodedBytes);
 	}
 
 

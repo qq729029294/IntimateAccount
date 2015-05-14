@@ -32,7 +32,6 @@ import com.nan.ia.app.utils.LogUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +58,7 @@ public class CustomHttpClient {
      * @return
      * @throws IOException
      */
-    public static CustomHttpResponse PostFromWebByHttpClient(Context context, String url,
+    public static CustomHttpResponse postFromWebByHttpClient(Context context, String url,
             NameValuePair... nameValuePairs) throws IOException {
     	HttpResponse response = null;
         try {
@@ -70,9 +69,10 @@ public class CustomHttpClient {
                 }
             }
             
+            LogUtils.d(TAG, "Htttp post, url=" + url + "\nparams=" + params);
+            
             UrlEncodedFormEntity urlEncoded = new UrlEncodedFormEntity(params,
             		CHARSET_UTF8);
-            LogUtils.i(TAG, url);
             HttpPost httpPost = new HttpPost(url);
             httpPost.setEntity(urlEncoded);
             DefaultHttpClient client = getHttpClient(context);
@@ -117,7 +117,8 @@ public class CustomHttpClient {
                         nameValuePairs[i].getValue()));
             }
         }
-        LogUtils.i(TAG, sb.toString());
+        
+        LogUtils.d(TAG, "Htttp get, url=" + sb.toString());
         // HttpGet连接对象
         HttpGet httpRequest = new HttpGet(sb.toString());
         // 取得HttpClient对象
@@ -144,7 +145,7 @@ public class CustomHttpClient {
      */
     private static synchronized DefaultHttpClient getHttpClient(Context context) {
         HttpParams params = new BasicHttpParams();
-        // 设置�?��基本参数
+        // 设置基本参数
         HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
         HttpProtocolParams.setContentCharset(params, CHARSET_UTF8);
         HttpProtocolParams.setUseExpectContinue(params, true);
@@ -155,7 +156,7 @@ public class CustomHttpClient {
                         "Mozilla/5.0(Linux;U;Android 2.2.1;en-us;Nexus One Build.FRG83) "
                                 + "AppleWebKit/553.1(KHTML,like Gecko) Version/4.0 Mobile Safari/533.1");
         // 超时设置
-        /* 从连接池中取连接的超时时�? */
+        /* 从连接池中取连接的超时 */
         ConnManagerParams.setTimeout(params, 10000);
         /* 连接超时 */
         int ConnectionTimeOut = 30000;
@@ -188,6 +189,8 @@ public class CustomHttpClient {
 			customHttpResponse.setResponse((resEntity == null) ? null : EntityUtils.toString(resEntity,
                     CHARSET_UTF8));
 		}
+    	
+    	LogUtils.d(TAG, "Http result, statusCode=" + customHttpResponse.getStatusCode() + "\nresponse=" + customHttpResponse.getResponse());
     	
     	return customHttpResponse;
     }

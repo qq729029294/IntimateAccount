@@ -4,7 +4,7 @@ package com.nan.ia.app.http;
  * @author Create by weijiangnan on 2015-5-13
  */
 public class CustomHttpResponse {
-	public static final int HTTP_ERROR = -1;
+	public static final int HTTP_REQUEST_EXCEPTION = -1;
 	
 	private int statusCode;
 	private String response;
