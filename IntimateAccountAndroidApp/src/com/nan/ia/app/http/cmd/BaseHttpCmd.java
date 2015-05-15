@@ -16,6 +16,7 @@ import com.nan.ia.app.http.CustomHttpResponse;
 import com.nan.ia.app.http.HttpRequestHelper;
 import com.nan.ia.app.http.cmd.BaseHttpCmd.HttpCmdInfo.HttpMethod;
 import com.nan.ia.app.utils.LogUtils;
+import com.nan.ia.app.utils.MainThreadExecutor;
 import com.nan.ia.app.widget.CustomToast;
 
 import android.annotation.SuppressLint;
@@ -116,9 +117,9 @@ public abstract class BaseHttpCmd {
 	 * @param callback
 	 */
 	public void sendAsync(final Context context, final boolean useCache, final HttpCmdCallback callback) {
-		if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
+		if (!Thread.currentThread().equals(Looper.getMainLooper().getThread())) {
 			// 必须在主线程调用
-			throw new AssertionFailedError("BaseHttpCmd.sendAsync must be called at main thread.");
+			throw new AssertionFailedError("BaseHttpCmd.sendAsync must be called on main thread.");
 		}
 		
 		AsyncTask<Integer, Integer, CustomHttpResponse> task = new AsyncTask<Integer, Integer, CustomHttpResponse>() {
@@ -174,7 +175,7 @@ public abstract class BaseHttpCmd {
      * 处理返回值
      * @param res
      */
-	protected CustomHttpResponse handleResponse(Context context, CustomHttpResponse response) {
+	protected CustomHttpResponse handleResponse(final Context context, CustomHttpResponse response) {
 		try {
             if (response == null) {
             	// 请求异常
@@ -185,16 +186,30 @@ public abstract class BaseHttpCmd {
 				// 请求成功
 				return response;
 			}
-
+			
 			if (response.getStatusCode() == CustomHttpResponse.HTTP_REQUEST_EXCEPTION) {
 				// 请求异常，直接返回
-            	CustomToast.showToast(R.string.http_request_exception);
+				MainThreadExecutor.run(new Runnable() {
+
+					@Override
+					public void run() {
+						CustomToast.showToast(R.string.http_request_exception);
+					}
+				});
 			} else {
 				// 网络错误
-				CustomToast.showToast(context.getString(R.string.fmt_http_request_error) + response.getStatusCode());
+				final String errMsg = context.getString(R.string.fmt_http_request_error) + response.getStatusCode();
+				MainThreadExecutor.run(new Runnable() {
+
+					@Override
+					public void run() {
+						CustomToast.showToast(errMsg);
+					}
+				});
 			}
+			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogUtils.e("handleResponse exception", e);
 		}
 		
 		return response;

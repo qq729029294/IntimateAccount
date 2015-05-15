@@ -23,6 +23,7 @@ public class App extends Application {
 		sApp = this;
 		
 		LogUtils.configure(AppConfigs.TAG, LogUtils.VERBOSE);
+		
 		super.onCreate();
 	}
 

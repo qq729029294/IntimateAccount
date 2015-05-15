@@ -1,7 +1,7 @@
 package com.nan.ia.app.ui;
 
-import com.nan.ia.app.AppData;
 import com.nan.ia.app.R;
+import com.nan.ia.app.data.AppData;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -55,7 +55,7 @@ public class LoadingActivity extends BaseActivity {
 	}
 
 	private void loadComplete() {
-		if (!AppData.hasInit()) {
+		if (!AppData.isInit()) {
 			// 初始化引导界面
 			AppData.setInit(true);
 			
