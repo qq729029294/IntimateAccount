@@ -1,16 +1,13 @@
 package com.nan.ia.app.biz;
 
+import java.util.Date;
 import java.util.List;
 
-import android.widget.Toast;
-
-import com.nan.ia.app.App;
 import com.nan.ia.app.data.AppData;
-import com.nan.ia.app.db.DBService;
-import com.nan.ia.app.entities.AccountBook;
-import com.nan.ia.app.entities.AccountCategory;
-import com.nan.ia.app.entities.AccountItem;
-import com.nan.ia.app.widget.CustomToast;
+import com.nan.ia.common.entities.AccountBook;
+import com.nan.ia.common.entities.AccountBookDelete;
+import com.nan.ia.common.entities.AccountCategory;
+import com.nan.ia.common.entities.AccountItem;
 
 public class BizFacade {
 
@@ -69,16 +66,17 @@ public class BizFacade {
 	public void createAccountBooks(String name, String description) {
 		AccountBook accountBook = new AccountBook();
 		accountBook.setAccountBookId(obtainNewAccountBookId());
-		accountBook.setCreateUerId(AppData.getUserLoginInfo().getUserId());
+		accountBook.setCreateUserId(AppData.getUserLoginInfo().getUserId());
 		accountBook.setName(name);
 		accountBook.setDescription(description);
 		
-		long currentTimeMillis = System.currentTimeMillis();
-		accountBook.setCreateTime(currentTimeMillis);
-		accountBook.setUpdateTime(currentTimeMillis);
+		accountBook.setCreateTime(new Date());
+		accountBook.setUpdateTime(new Date());
 		
 		// 添加账本数据
 		AppData.getAccountBooks().add(accountBook);
+		
+		this.trySyncDataToServer();
 	}
 	
 	public void editAccountBooksDetail(int accountBookId, String name, String description) {
@@ -88,13 +86,37 @@ public class BizFacade {
 			if (accountBookId == accountBooks.get(i).getAccountBookId()) {
 				accountBook.setName(name);
 				accountBook.setDescription(description);
-				accountBook.setUpdateTime(System.currentTimeMillis());
+				accountBook.setUpdateTime(new Date());
+				
+				break;
 			}
 		}
+		
+		this.trySyncDataToServer();
 	}
 	
 	public void deleteAccountBooks(int accountBookId) {
+		List<AccountBook> accountBooks = AppData.getAccountBooks();
+		for (int i = 0; i < accountBooks.size(); i++) {
+			AccountBook accountBook = accountBooks.get(i);
+			if (accountBookId == accountBooks.get(i).getAccountBookId()) {
+				accountBooks.remove(accountBook);
+
+				if (AppData.getLastSyncDataLocalTime() > accountBook.getCreateTime().getTime()) {
+					// 是在最后一次同步之前创建的，则需要保留到delete中，以同步数据
+					AccountBookDelete delete = new AccountBookDelete();
+					delete.setAccountBookId(accountBook.getAccountBookId());
+					delete.setDeleteUserId(AppData.getUserLoginInfo().getUserId());
+					delete.setDeleteTime(new Date());
+					
+					AppData.getAccountBookDeletes().add(delete);
+				}
+				
+				break;
+			}
+		}
 		
+		this.trySyncDataToServer();
 	}
 	
 	// 类别相关接口
@@ -131,13 +153,20 @@ public class BizFacade {
 		
 	}
 	
-	// 同步服务器数据
-	public void syncServerData() {
-		// 获取本地新增的数据信息
-	}
-	
 	// 重新加载数据
 	public void reloadDataFromDB() {
 		
+	}
+	
+	/**
+	 * 尝试同步数据
+	 */
+	public void trySyncDataToServer() {
+		
+	}
+	
+	// 同步服务器数据
+	public void syncDataToServer() {
+		// 获取本地新增的数据信息
 	}
 }

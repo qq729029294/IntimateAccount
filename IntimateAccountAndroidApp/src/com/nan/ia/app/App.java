@@ -1,6 +1,8 @@
 package com.nan.ia.app;
 
+import com.nan.ia.app.constant.AppConfigs;
 import com.nan.ia.app.utils.LogUtils;
+import com.nan.ia.app.utils.MainThreadExecutor;
 
 import android.app.ActivityManager;
 import android.app.Application;
@@ -23,6 +25,7 @@ public class App extends Application {
 		sApp = this;
 		
 		LogUtils.configure(AppConfigs.TAG, LogUtils.VERBOSE);
+		MainThreadExecutor.init();
 		
 		super.onCreate();
 	}

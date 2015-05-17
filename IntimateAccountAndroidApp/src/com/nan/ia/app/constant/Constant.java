@@ -1,4 +1,4 @@
-package com.nan.ia.app;
+package com.nan.ia.app.constant;
 
 public class Constant {
 	public static final int ACCOUNT_TYPE_INCOME = 0;

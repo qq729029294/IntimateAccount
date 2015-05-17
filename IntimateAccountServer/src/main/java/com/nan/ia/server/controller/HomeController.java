@@ -36,6 +36,7 @@ public class HomeController {
 		
 		model.addAttribute("serverTime", formattedDate );
 		
-		return "home + " + DBService.getInstance().getUserCount();
+//		return "home + " + DBService.getInstance().getUserCount();
+		return "lao po chi fan";
 	}
 }

@@ -1,0 +1,48 @@
+package com.nan.ia.common.entities;
+
+import java.util.Date;
+
+public class AccountCategory {
+	private Integer accountCategoryId;
+	private int accountBookId;
+	private String category;
+	private String superCategory;
+	private Date createTime;
+	private Date updateTime;
+	public Integer getAccountCategoryId() {
+		return accountCategoryId;
+	}
+	public void setAccountCategoryId(Integer accountCategoryId) {
+		this.accountCategoryId = accountCategoryId;
+	}
+	public int getAccountBookId() {
+		return accountBookId;
+	}
+	public void setAccountBookId(int accountBookId) {
+		this.accountBookId = accountBookId;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	public String getSuperCategory() {
+		return superCategory;
+	}
+	public void setSuperCategory(String superCategory) {
+		this.superCategory = superCategory;
+	}
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+}
