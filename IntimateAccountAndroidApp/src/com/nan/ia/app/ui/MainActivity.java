@@ -13,6 +13,7 @@ import com.nan.ia.common.http.cmd.entities.ServerResponse;
 import com.nan.ia.common.http.cmd.entities.SyncDataRequestData;
 import com.nan.ia.common.http.cmd.entities.SyncDataResponseData;
 
+import android.media.audiofx.AcousticEchoCanceler;
 import android.os.Bundle;
 
 public class MainActivity extends BaseActivity {
@@ -24,10 +25,18 @@ public class MainActivity extends BaseActivity {
 		setContentView(R.layout.activity_main);
 		
 		SyncDataRequestData requestData = new SyncDataRequestData();
+		requestData.setToken("1");
+		
 		requestData.setLastSyncDataLocalTime(AppData.getLastSyncDataLocalTime());
 		requestData.setLastSyncDataServerTime(AppData.getLastSyncDataServerTime());
 		List<AccountBook> accountBooks = new ArrayList<AccountBook>();
-		accountBooks.add(new AccountBook());
+		AccountBook accountBook = new AccountBook();
+		accountBook.setAccountBookId(-1);
+		accountBook.setCreateUserId(1);
+		accountBook.setName("生活账本");
+		accountBook.setDescription("这个人很懒");
+		
+		accountBooks.add(accountBook);
 		requestData.setNewAccountBooks(accountBooks);
 		
 		new SyncDataServerCmd().sendAsync(this, requestData, SyncDataResponseData.class, false, new ServerCmdCallback<SyncDataResponseData>() {

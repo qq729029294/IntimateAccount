@@ -1,6 +1,6 @@
 package com.nan.ia.server.db.entities;
 
-// Generated 2015-5-17 18:02:39 by Hibernate Tools 3.4.0.CR1
+// Generated 2015-5-18 15:27:41 by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -29,9 +29,12 @@ public class AccountCategoryTbl implements java.io.Serializable {
 	public AccountCategoryTbl() {
 	}
 
-	public AccountCategoryTbl(int accountBookId, String category) {
+	public AccountCategoryTbl(int accountBookId, String category,
+			Date createTime, Date updateTime) {
 		this.accountBookId = accountBookId;
 		this.category = category;
+		this.createTime = createTime;
+		this.updateTime = updateTime;
 	}
 
 	public AccountCategoryTbl(int accountBookId, String category,
@@ -82,7 +85,7 @@ public class AccountCategoryTbl implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "create_time", length = 19)
+	@Column(name = "create_time", nullable = false, length = 19)
 	public Date getCreateTime() {
 		return this.createTime;
 	}
@@ -92,7 +95,7 @@ public class AccountCategoryTbl implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "update_time", length = 19)
+	@Column(name = "update_time", nullable = false, length = 19)
 	public Date getUpdateTime() {
 		return this.updateTime;
 	}

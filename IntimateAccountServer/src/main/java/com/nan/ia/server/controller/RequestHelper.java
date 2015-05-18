@@ -7,8 +7,6 @@
 
 package com.nan.ia.server.controller;
 
-import java.lang.reflect.Type;
-
 import javax.servlet.http.HttpServletRequest;
 
 import com.google.gson.Gson;
@@ -17,6 +15,19 @@ import com.nan.ia.common.http.cmd.entities.EmptyRequestData;
 import com.nan.ia.common.http.cmd.entities.ServerResponse;
 
 public class RequestHelper {
+	
+	/**
+	 * 检查Token是否有效
+	 * @param validate
+	 * @return
+	 */
+	public static boolean checkTokenValid(String token) {
+		return true;
+	}
+	
+	public static int getUserIdFromToken(String token) {
+		return Integer.valueOf(token);
+	}
 	
 	public static <T> boolean parseRequestData(HttpServletRequest request, T requestData, Class<T> requestDataClass) {
 		if (requestDataClass.equals(EmptyRequestData.class)) {
@@ -36,16 +47,58 @@ public class RequestHelper {
 		if (null != dataJson && !dataJson.isEmpty()) {
 			Gson gson = new Gson();
 			requestData = gson.fromJson(dataJson, requestDataClass);
-			return true;
+			return requestData != null;
 		}
 		
 		return false;
 	}
 	
-	public static <responseDataClass> String responseParamError(Type responseDataClass) {
-		ServerResponse<responseDataClass> response = new ServerResponse<responseDataClass>();
+	/**
+	 * 成功
+	 * @return
+	 */
+	public static <T> String responseSuccess(T responseData) {
+		ServerResponse<T> response = new ServerResponse<T>();
 		response.setRet(ServerErrorCode.RET_PARAM_ERROR);
-		response.setErrMsg("请求参数错误");
+		String errMsg = "请求成功";
+		response.setErrMsg(errMsg);
+		response.setData(responseData);
+		
+		Gson gson = new Gson();
+		return gson.toJson(response);
+	}
+	
+	/**
+	 * 参数错误
+	 * @param responseDataClass
+	 * @return
+	 */
+	public static String responseParamError(String otherMsg) {
+		ServerResponse<Object> response = new ServerResponse<Object>();
+		response.setRet(ServerErrorCode.RET_PARAM_ERROR);
+		String errMsg = "请求参数错误";
+		if (null != otherMsg || "" != otherMsg) {
+			errMsg = errMsg + ":" + otherMsg;
+		}
+		response.setErrMsg(errMsg);
+		
+		Gson gson = new Gson();
+		return gson.toJson(response);
+	}
+	
+	/**
+	 * 修改数据库错误
+	 * @param responseDataClass
+	 * @return
+	 */
+	public static String responseAccessDBError(String otherMsg) {
+		ServerResponse<Object> response = new ServerResponse<Object>();
+		response.setRet(ServerErrorCode.RET_PARAM_ERROR);
+		String errMsg = "存取数据库错误";
+		if (null != otherMsg || "" != otherMsg) {
+			errMsg = errMsg + ":" + otherMsg;
+		}
+		response.setErrMsg(errMsg);
 		
 		Gson gson = new Gson();
 		return gson.toJson(response);

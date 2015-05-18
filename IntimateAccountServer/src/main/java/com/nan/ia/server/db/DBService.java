@@ -136,7 +136,9 @@ public class DBService {
 	 * 检查是否需要更新账本信息
 	 * @return
 	 */
-	public boolean checkNeedUpdateAccountBooks(int userId, long lastUpdateTime) {
+	public boolean checkNeedUpdateAccountBooks(int userId, long lastUpdateTime, boolean dest) {
+		dest = false;
+		
 		try {
 			Session session = HibernateUtil.getSession();
 			// 检查原表是否有更新
@@ -144,6 +146,7 @@ public class DBService {
 			query.setParameter(0, new Date(userId));
 			query.setParameter(1, new Date(lastUpdateTime));
 			if (query.list().size() > 0) {
+				dest = true;
 				return true;
 			};
 			
@@ -152,6 +155,7 @@ public class DBService {
 			query.setParameter(0, new Date(userId));
 			query.setParameter(1, new Date(lastUpdateTime));
 			if (query.list().size() > 0) {
+				dest = true;
 				return true;
 			};
 			
@@ -168,18 +172,20 @@ public class DBService {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<AccountBookTbl> getAccountBooksByUserId(int userId) {
-		List<AccountBookTbl> accountBookTbls = new ArrayList<AccountBookTbl>();
+	public boolean getAccountBooksByUserId(int userId, List<AccountBookTbl> dest) {
+		dest = new ArrayList<AccountBookTbl>();
 		try {
 			Session session = HibernateUtil.getSession();
 			Query query = session.createQuery("SELECT r FROM AccountBookTbl r, AccountBookMemberTbl s WHERE s.memberUserId = ? AND r.accountBookId = s.accountBookId");
 			query.setParameter(0, userId);
-			accountBookTbls.addAll(query.list());
+			dest.addAll(query.list());
+			
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return accountBookTbls;
+		return false;
 	}
 	
 	public boolean deleteCategoryByAccountBookId(int accountBookId) {

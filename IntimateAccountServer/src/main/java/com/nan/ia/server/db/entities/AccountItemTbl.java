@@ -1,6 +1,6 @@
 package com.nan.ia.server.db.entities;
 
-// Generated 2015-5-17 18:02:39 by Hibernate Tools 3.4.0.CR1
+// Generated 2015-5-18 15:27:41 by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -24,6 +24,7 @@ public class AccountItemTbl implements java.io.Serializable {
 	private int accountCategoryId;
 	private Integer waterValue;
 	private String description;
+	private Date recordTime;
 	private int createUserId;
 	private Date createTime;
 	private Date updateTime;
@@ -32,19 +33,23 @@ public class AccountItemTbl implements java.io.Serializable {
 	}
 
 	public AccountItemTbl(int accountBookId, int accountCategoryId,
-			int createUserId) {
+			Date recordTime, int createUserId, Date createTime, Date updateTime) {
 		this.accountBookId = accountBookId;
 		this.accountCategoryId = accountCategoryId;
+		this.recordTime = recordTime;
 		this.createUserId = createUserId;
+		this.createTime = createTime;
+		this.updateTime = updateTime;
 	}
 
 	public AccountItemTbl(int accountBookId, int accountCategoryId,
-			Integer waterValue, String description, int createUserId,
-			Date createTime, Date updateTime) {
+			Integer waterValue, String description, Date recordTime,
+			int createUserId, Date createTime, Date updateTime) {
 		this.accountBookId = accountBookId;
 		this.accountCategoryId = accountCategoryId;
 		this.waterValue = waterValue;
 		this.description = description;
+		this.recordTime = recordTime;
 		this.createUserId = createUserId;
 		this.createTime = createTime;
 		this.updateTime = updateTime;
@@ -97,6 +102,16 @@ public class AccountItemTbl implements java.io.Serializable {
 		this.description = description;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "record_time", nullable = false, length = 19)
+	public Date getRecordTime() {
+		return this.recordTime;
+	}
+
+	public void setRecordTime(Date recordTime) {
+		this.recordTime = recordTime;
+	}
+
 	@Column(name = "create_user_id", nullable = false)
 	public int getCreateUserId() {
 		return this.createUserId;
@@ -107,7 +122,7 @@ public class AccountItemTbl implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "create_time", length = 19)
+	@Column(name = "create_time", nullable = false, length = 19)
 	public Date getCreateTime() {
 		return this.createTime;
 	}
@@ -117,7 +132,7 @@ public class AccountItemTbl implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "update_time", length = 19)
+	@Column(name = "update_time", nullable = false, length = 19)
 	public Date getUpdateTime() {
 		return this.updateTime;
 	}

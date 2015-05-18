@@ -12,7 +12,7 @@ import java.util.List;
 import com.nan.ia.common.entities.AccountBook;
 import com.nan.ia.common.entities.AccountBookDelete;
 
-public class SyncDataRequestData {
+public class SyncDataRequestData extends BaseRequestData {
 	long lastSyncDataServerTime;
 	long lastSyncDataLocalTime;
 	
