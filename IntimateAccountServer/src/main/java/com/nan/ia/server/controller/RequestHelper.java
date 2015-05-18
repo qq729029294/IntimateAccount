@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.nan.ia.common.constant.ServerErrorCode;
 import com.nan.ia.common.http.cmd.entities.EmptyRequestData;
 import com.nan.ia.common.http.cmd.entities.ServerResponse;
+import com.nan.ia.common.utils.BoolResult;
 
 public class RequestHelper {
 	
@@ -53,13 +54,38 @@ public class RequestHelper {
 		return false;
 	}
 	
+	public static <T> BoolResult<T> parseRequestData(HttpServletRequest request, Class<T> requestDataClass) {
+		if (requestDataClass.equals(EmptyRequestData.class)) {
+			try {
+				return BoolResult.True(requestDataClass.newInstance());
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			
+			return BoolResult.False();
+		}
+		
+		String dataJson = request.getParameter("data");
+		if (null != dataJson && !dataJson.isEmpty()) {
+			Gson gson = new Gson();
+			T requestData = gson.fromJson(dataJson, requestDataClass);
+			if (requestData != null) {
+				return BoolResult.True(requestData);
+			}
+		}
+		
+		return BoolResult.False();
+	}
+	
 	/**
 	 * 成功
 	 * @return
 	 */
 	public static <T> String responseSuccess(T responseData) {
 		ServerResponse<T> response = new ServerResponse<T>();
-		response.setRet(ServerErrorCode.RET_PARAM_ERROR);
+		response.setRet(ServerErrorCode.RET_SUCCESS);
 		String errMsg = "请求成功";
 		response.setErrMsg(errMsg);
 		response.setData(responseData);
@@ -77,7 +103,7 @@ public class RequestHelper {
 		ServerResponse<Object> response = new ServerResponse<Object>();
 		response.setRet(ServerErrorCode.RET_PARAM_ERROR);
 		String errMsg = "请求参数错误";
-		if (null != otherMsg || "" != otherMsg) {
+		if (null != otherMsg && !otherMsg.isEmpty()) {
 			errMsg = errMsg + ":" + otherMsg;
 		}
 		response.setErrMsg(errMsg);
@@ -93,9 +119,9 @@ public class RequestHelper {
 	 */
 	public static String responseAccessDBError(String otherMsg) {
 		ServerResponse<Object> response = new ServerResponse<Object>();
-		response.setRet(ServerErrorCode.RET_PARAM_ERROR);
+		response.setRet(ServerErrorCode.RET_ASSCESS_DB_ERROR);
 		String errMsg = "存取数据库错误";
-		if (null != otherMsg || "" != otherMsg) {
+		if (null != otherMsg && !otherMsg.isEmpty()) {
 			errMsg = errMsg + ":" + otherMsg;
 		}
 		response.setErrMsg(errMsg);

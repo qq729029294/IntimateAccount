@@ -12,7 +12,10 @@ import org.hibernate.Transaction;
 import com.nan.ia.common.entities.AccountBook;
 import com.nan.ia.common.entities.AccountBookDelete;
 import com.nan.ia.common.http.cmd.entities.SyncDataRequestData;
+import com.nan.ia.common.utils.BoolResult;
 import com.nan.ia.server.db.entities.AccountBookDeleteTbl;
+import com.nan.ia.server.db.entities.AccountBookMemberTbl;
+import com.nan.ia.server.db.entities.AccountBookMemberTblId;
 import com.nan.ia.server.db.entities.AccountBookTbl;
 import com.nan.ia.server.db.entities.UserTbl;
 
@@ -66,42 +69,48 @@ public class DBService {
 		try {
 			// 新账本
 			List<AccountBookTbl> newAccountBookTbls = new ArrayList<AccountBookTbl>();
-			for (int i = 0; i < requestData.getNewAccountBooks().size(); i++) {
-				AccountBook item = requestData.getNewAccountBooks().get(i);
-				
-				AccountBookTbl tbl = new AccountBookTbl();
-				tbl.setAccountBookId(0);
-				tbl.setName(item.getName());
-				tbl.setDescription(item.getDescription());
-				tbl.setCreateUserId(item.getCreateUserId());
-				
-				newAccountBookTbls.add(tbl);
+			if (null != requestData.getNewAccountBooks()) {
+				for (int i = 0; i < requestData.getNewAccountBooks().size(); i++) {
+					AccountBook item = requestData.getNewAccountBooks().get(i);
+					
+					AccountBookTbl tbl = new AccountBookTbl();
+					tbl.setAccountBookId(0);
+					tbl.setName(item.getName());
+					tbl.setDescription(item.getDescription());
+					tbl.setCreateUserId(item.getCreateUserId());
+					
+					newAccountBookTbls.add(tbl);
+				}
 			}
 			
 			// 修改账本
 			List<AccountBookTbl> updateAccountBookTbls = new ArrayList<AccountBookTbl>();
-			for (int i = 0; i < requestData.getUpdateAccountBooks().size(); i++) {
-				AccountBook item = requestData.getUpdateAccountBooks().get(i);
-				
-				AccountBookTbl tbl = new AccountBookTbl();
-				tbl.setAccountBookId(item.getAccountBookId());
-				tbl.setName(item.getName());
-				tbl.setDescription(item.getDescription());
-				tbl.setCreateUserId(item.getCreateUserId());
-				
-				updateAccountBookTbls.add(tbl);
+			if (null != requestData.getUpdateAccountBooks()) {
+				for (int i = 0; i < requestData.getUpdateAccountBooks().size(); i++) {
+					AccountBook item = requestData.getUpdateAccountBooks().get(i);
+					
+					AccountBookTbl tbl = new AccountBookTbl();
+					tbl.setAccountBookId(item.getAccountBookId());
+					tbl.setName(item.getName());
+					tbl.setDescription(item.getDescription());
+					tbl.setCreateUserId(item.getCreateUserId());
+					
+					updateAccountBookTbls.add(tbl);
+				}
 			}
 			
 			// 删除账本
 			List<AccountBookDeleteTbl> accountBookDeleteTbls = new ArrayList<AccountBookDeleteTbl>();
-			for (int i = 0; i < requestData.getAccountBookDeletes().size(); i++) {
-				AccountBookDelete item = requestData.getAccountBookDeletes().get(i);
-				
-				AccountBookDeleteTbl tbl = new AccountBookDeleteTbl();
-				tbl.setAccountBookId(item.getAccountBookId());
-				tbl.setDeleteUserId(item.getDeleteUserId());
-				
-				accountBookDeleteTbls.add(tbl);
+			if (null != requestData.getAccountBookDeletes()) {
+				for (int i = 0; i < requestData.getAccountBookDeletes().size(); i++) {
+					AccountBookDelete item = requestData.getAccountBookDeletes().get(i);
+					
+					AccountBookDeleteTbl tbl = new AccountBookDeleteTbl();
+					tbl.setAccountBookId(item.getAccountBookId());
+					tbl.setDeleteUserId(item.getDeleteUserId());
+					
+					accountBookDeleteTbls.add(tbl);
+				}
 			}
 			
 			// 修改数据库
@@ -124,6 +133,13 @@ public class DBService {
 			}
 			
 			trans.commit();
+			
+			// 添加书的创建者为书的成员
+			for (int i = 0; i < newAccountBookTbls.size(); i++) {
+				insertAccountBookMember(newAccountBookTbls.get(i).getCreateUserId(),
+						newAccountBookTbls.get(i).getAccountBookId());
+			}
+			
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -136,26 +152,23 @@ public class DBService {
 	 * 检查是否需要更新账本信息
 	 * @return
 	 */
-	public boolean checkNeedUpdateAccountBooks(int userId, long lastUpdateTime, boolean dest) {
-		dest = false;
+	public boolean checkNeedUpdateAccountBooks(int userId, long lastUpdateTime) {
 		
 		try {
 			Session session = HibernateUtil.getSession();
 			// 检查原表是否有更新
-			Query query = session.createQuery("FROM AccountBookTbl r, AccountBookMemberTbl s WHERE s.memberUserId = ? AND r.accountBookId = s.accountBookId AND r.updateTime > ?");
-			query.setParameter(0, new Date(userId));
+			Query query = session.createQuery("FROM AccountBookTbl r, AccountBookMemberTbl s WHERE s.id.memberUserId = ? AND r.accountBookId = s.id.accountBookId AND r.updateTime > ?");
+			query.setParameter(0, userId);
 			query.setParameter(1, new Date(lastUpdateTime));
 			if (query.list().size() > 0) {
-				dest = true;
 				return true;
 			};
 			
 			// 检查删除表是否有新删除
-			query = session.createQuery("FROM AccountBookTbl r, AccountBookMemberTbl s, AccountBookDeleteTbl t WHERE s.memberUserId = ? AND r.accountBookId = s.accountBookId AND s.accountBookId = t.accountBookId AND s.deleteTime > ?");
-			query.setParameter(0, new Date(userId));
+			query = session.createQuery("FROM AccountBookTbl r, AccountBookMemberTbl s, AccountBookDeleteTbl t WHERE s.id.memberUserId = ? AND r.accountBookId = s.id.accountBookId AND s.id.accountBookId = t.accountBookId AND t.deleteTime > ?");
+			query.setParameter(0, userId);
 			query.setParameter(1, new Date(lastUpdateTime));
 			if (query.list().size() > 0) {
-				dest = true;
 				return true;
 			};
 			
@@ -172,20 +185,20 @@ public class DBService {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean getAccountBooksByUserId(int userId, List<AccountBookTbl> dest) {
-		dest = new ArrayList<AccountBookTbl>();
+	public BoolResult<List<AccountBookTbl>> getAccountBooksByUserId(int userId) {
+		List<AccountBookTbl> accountBookTbls = new ArrayList<AccountBookTbl>();
 		try {
 			Session session = HibernateUtil.getSession();
-			Query query = session.createQuery("SELECT r FROM AccountBookTbl r, AccountBookMemberTbl s WHERE s.memberUserId = ? AND r.accountBookId = s.accountBookId");
+			Query query = session.createQuery("SELECT r FROM AccountBookTbl r, AccountBookMemberTbl s WHERE s.id.memberUserId = ? AND r.accountBookId = s.id.accountBookId");
 			query.setParameter(0, userId);
-			dest.addAll(query.list());
+			accountBookTbls.addAll(query.list());
 			
-			return true;
+			return BoolResult.True(accountBookTbls);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return false;
+		return BoolResult.False();
 	}
 	
 	public boolean deleteCategoryByAccountBookId(int accountBookId) {
@@ -210,6 +223,27 @@ public class DBService {
 			query.setParameter(0, accountBookId);
 			query.executeUpdate();
 			
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	public boolean insertAccountBookMember(int userId, int accountBookId) {
+		try {
+			Session session = HibernateUtil.getSession();
+			Transaction trans = session.beginTransaction();
+			
+			AccountBookMemberTbl tbl = new AccountBookMemberTbl();
+			AccountBookMemberTblId tblId = new AccountBookMemberTblId();
+			tblId.setMemberUserId(userId);
+			tblId.setAccountBookId(accountBookId);
+			tbl.setId(tblId);
+			session.save(tbl);
+			
+			trans.commit();
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

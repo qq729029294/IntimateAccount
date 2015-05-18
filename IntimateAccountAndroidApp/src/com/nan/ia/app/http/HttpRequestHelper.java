@@ -29,9 +29,9 @@ public class HttpRequestHelper {
     public static CustomHttpResponse postByHttpClient(Context context,
     		boolean useCache, String url, NameValuePair... nameValuePairs) throws Exception {
     	CustomHttpResponse response = new CustomHttpResponse();
-    	String urlKey = makeUrlKey("POST", url, nameValuePairs);
     	// 使用缓存
     	if (useCache) {
+    		String urlKey = makeUrlKey("POST", url, nameValuePairs);
     		response.setResponse(getResponseFromCache(context, urlKey));
     		if (response.getResponse() != null && response.getResponse() != "") {
     			response.setStatusCode(HttpStatus.SC_OK);
@@ -40,9 +40,10 @@ public class HttpRequestHelper {
 		}
     	
     	response = HttpUtil.postByHttpClient(context, url, nameValuePairs);
-    	if (response.getStatusCode() == HttpStatus.SC_OK) {
-				HttpRequestHelper.saveResponseToCache(context, urlKey, response.getResponse());
-				}
+    	if (useCache && response.getStatusCode() == HttpStatus.SC_OK) {
+    		String urlKey = makeUrlKey("POST", url, nameValuePairs);
+			HttpRequestHelper.saveResponseToCache(context, urlKey, response.getResponse());
+		}
     	
         return response;
     }

@@ -7,6 +7,7 @@
 		<mapping class="com.nan.ia.server.db.entities.UserTbl" />
 		<mapping class="com.nan.ia.server.db.entities.AccountBookDeleteTbl" />
 		<mapping class="com.nan.ia.server.db.entities.AccountBookMemberTbl" />
+		<mapping class="com.nan.ia.server.db.entities.AccountBookMemberTblId" />
 		<mapping class="com.nan.ia.server.db.entities.AccountBookTbl" />
 		<mapping class="com.nan.ia.server.db.entities.AccountCategoryDeleteTbl" />
 		<mapping class="com.nan.ia.server.db.entities.AccountCategoryTbl" />

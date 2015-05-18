@@ -140,7 +140,7 @@ public abstract class BaseServerCmd<REQUEST_DATA, RESPONSE_DATA> {
 			}
 			
 			// 设置错误信息
-			serverResponse.setErrMsg(jsonObject.optString("msg", ""));
+			serverResponse.setErrMsg(jsonObject.optString("errMsg", ""));
 			
 			if (serverResponse.getRet() == ServerErrorCode.RET_SUCCESS) {
 				// 成功，转换返回数据
@@ -149,7 +149,7 @@ public abstract class BaseServerCmd<REQUEST_DATA, RESPONSE_DATA> {
 				serverResponse.setData(data);
 			} else {
 				if (serverResponse.getErrMsg().isEmpty()) {
-					serverResponse.setErrMsg(context.getString(R.string.fmt_server_error));
+					serverResponse.setErrMsg(context.getString(R.string.fmt_server_error) + serverResponse.getRet());
 				}
 				
 				// 弹出错误信息

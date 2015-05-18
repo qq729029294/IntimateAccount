@@ -1,6 +1,6 @@
 package com.nan.ia.server.db.entities;
 
-// Generated 2015-5-18 15:27:41 by Hibernate Tools 3.4.0.CR1
+// Generated 2015-5-19 1:58:08 by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import javax.persistence.AttributeOverride;
@@ -20,14 +20,14 @@ import javax.persistence.TemporalType;
 public class AccountBookMemberTbl implements java.io.Serializable {
 
 	private AccountBookMemberTblId id;
-	private Date updateTime;
+	private Date createTime;
 
 	public AccountBookMemberTbl() {
 	}
 
-	public AccountBookMemberTbl(AccountBookMemberTblId id, Date updateTime) {
+	public AccountBookMemberTbl(AccountBookMemberTblId id, Date createTime) {
 		this.id = id;
-		this.updateTime = updateTime;
+		this.createTime = createTime;
 	}
 
 	@EmbeddedId
@@ -43,13 +43,13 @@ public class AccountBookMemberTbl implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "update_time", nullable = false, length = 19)
-	public Date getUpdateTime() {
-		return this.updateTime;
+	@Column(name = "create_time", nullable = false, length = 19)
+	public Date getCreateTime() {
+		return this.createTime;
 	}
 
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 
 }

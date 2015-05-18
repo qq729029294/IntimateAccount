@@ -74,6 +74,7 @@ public class CustomHttpClient {
             UrlEncodedFormEntity urlEncoded = new UrlEncodedFormEntity(params,
             		CHARSET_UTF8);
             HttpPost httpPost = new HttpPost(url);
+            httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
             httpPost.setEntity(urlEncoded);
             DefaultHttpClient client = getHttpClient(context);
             if (cookieStore != null) {
@@ -121,6 +122,7 @@ public class CustomHttpClient {
         LogUtils.d(TAG, "Htttp get, url=" + sb.toString());
         // HttpGet连接对象
         HttpGet httpRequest = new HttpGet(sb.toString());
+        httpRequest.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
         // 取得HttpClient对象
         DefaultHttpClient httpclient = getHttpClient(context);
         if (cookieStore != null) {
