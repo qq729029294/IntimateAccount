@@ -13,7 +13,6 @@ import com.nan.ia.common.http.cmd.entities.ServerResponse;
 import com.nan.ia.common.http.cmd.entities.SyncDataRequestData;
 import com.nan.ia.common.http.cmd.entities.SyncDataResponseData;
 
-import android.media.audiofx.AcousticEchoCanceler;
 import android.os.Bundle;
 
 public class MainActivity extends BaseActivity {

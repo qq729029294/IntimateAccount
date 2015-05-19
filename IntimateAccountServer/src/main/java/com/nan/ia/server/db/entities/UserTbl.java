@@ -1,6 +1,6 @@
 package com.nan.ia.server.db.entities;
 
-// Generated 2015-5-19 1:58:08 by Hibernate Tools 3.4.0.CR1
+// Generated 2015-5-19 11:44:35 by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -20,8 +20,6 @@ import javax.persistence.TemporalType;
 public class UserTbl implements java.io.Serializable {
 
 	private Integer userId;
-	private String username;
-	private String password;
 	private String nickname;
 	private String description;
 	private Date createTime;
@@ -30,19 +28,14 @@ public class UserTbl implements java.io.Serializable {
 	public UserTbl() {
 	}
 
-	public UserTbl(String username, String password, String nickname,
-			Date createTime, Date updateTime) {
-		this.username = username;
-		this.password = password;
+	public UserTbl(String nickname, Date createTime, Date updateTime) {
 		this.nickname = nickname;
 		this.createTime = createTime;
 		this.updateTime = updateTime;
 	}
 
-	public UserTbl(String username, String password, String nickname,
-			String description, Date createTime, Date updateTime) {
-		this.username = username;
-		this.password = password;
+	public UserTbl(String nickname, String description, Date createTime,
+			Date updateTime) {
 		this.nickname = nickname;
 		this.description = description;
 		this.createTime = createTime;
@@ -58,24 +51,6 @@ public class UserTbl implements java.io.Serializable {
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
-	}
-
-	@Column(name = "username", nullable = false, length = 45)
-	public String getUsername() {
-		return this.username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	@Column(name = "password", nullable = false, length = 45)
-	public String getPassword() {
-		return this.password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	@Column(name = "nickname", nullable = false, length = 45)

@@ -49,8 +49,6 @@ public class DBService {
 			
 			UserTbl userTbl = new UserTbl();
 			userTbl.setUserId(0);
-			userTbl.setUsername(username);
-			userTbl.setPassword(password);
 			userTbl.setNickname(nickname);
 			userTbl.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			

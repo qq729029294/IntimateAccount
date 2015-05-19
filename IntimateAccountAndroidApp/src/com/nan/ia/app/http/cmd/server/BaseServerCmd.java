@@ -7,18 +7,15 @@
 
 package com.nan.ia.app.http.cmd.server;
 
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.List;
 
 import junit.framework.AssertionFailedError;
 
 import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
-import org.apache.http.protocol.ResponseDate;
 import org.json.JSONObject;
 
-import android.R.integer;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Looper;
@@ -26,7 +23,6 @@ import android.os.Looper;
 import com.google.gson.Gson;
 import com.nan.ia.app.R;
 import com.nan.ia.app.http.CustomHttpResponse;
-import com.nan.ia.app.http.cmd.BaseHttpCmd;
 import com.nan.ia.app.http.cmd.BaseHttpCmd.HttpCmdInfo;
 import com.nan.ia.app.http.cmd.ServerHttpCmd;
 import com.nan.ia.app.http.cmd.ServerHttpInput;
@@ -59,7 +55,7 @@ public abstract class BaseServerCmd<REQUEST_DATA, RESPONSE_DATA> {
 
 			@Override
 			protected ServerResponse<RESPONSE_DATA> doInBackground(Integer... params) {
-				return send(context, requestData, typeOfResponse, useCache);
+				return send(context, requestData, useCache);
 			}
 
 			@Override
@@ -81,7 +77,7 @@ public abstract class BaseServerCmd<REQUEST_DATA, RESPONSE_DATA> {
 	 * @param useCache
 	 * @return
 	 */
-	public ServerResponse<RESPONSE_DATA> send(Context context, REQUEST_DATA requestData, Class<RESPONSE_DATA> typeOfResponse, boolean useCache) {
+	public ServerResponse<RESPONSE_DATA> send(Context context, REQUEST_DATA requestData, boolean useCache) {
 		if (mHttpCmd == null) {
 			mHttpCmd = new ServerHttpCmd(this.createHttpCmdInfo());
 		}
@@ -91,7 +87,7 @@ public abstract class BaseServerCmd<REQUEST_DATA, RESPONSE_DATA> {
 		input.setData(dataJson);
 		
 		CustomHttpResponse httpResponse = mHttpCmd.send(context, input, useCache);
-		ServerResponse<RESPONSE_DATA> response = this.handleServerResponse(context, httpResponse, typeOfResponse);
+		ServerResponse<RESPONSE_DATA> response = this.handleServerResponse(context, httpResponse);
 		return response;
 	}
 	
@@ -101,8 +97,7 @@ public abstract class BaseServerCmd<REQUEST_DATA, RESPONSE_DATA> {
 	 * @param response
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	protected ServerResponse<RESPONSE_DATA> handleServerResponse(Context context, CustomHttpResponse response, Class<RESPONSE_DATA> typeOfResponse) {
+	protected ServerResponse<RESPONSE_DATA> handleServerResponse(Context context, CustomHttpResponse response) {
 		final ServerResponse<RESPONSE_DATA> serverResponse = new ServerResponse<RESPONSE_DATA>();
 		try {
 			
@@ -145,6 +140,7 @@ public abstract class BaseServerCmd<REQUEST_DATA, RESPONSE_DATA> {
 			if (serverResponse.getRet() == ServerErrorCode.RET_SUCCESS) {
 				// 成功，转换返回数据
 				String dataJson = jsonObject.optString("data", "");
+				Type typeOfResponse = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1] ;  
 				RESPONSE_DATA data = mGson.fromJson(dataJson, typeOfResponse);
 				serverResponse.setData(data);
 			} else {

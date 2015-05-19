@@ -53,7 +53,6 @@ public class App extends Application {
 	public boolean isRunningForeground ()
 	{
 	    ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-	    @SuppressWarnings("deprecation")
 		ComponentName componentName = activityManager.getRunningTasks(1).get(0).topActivity;
 	    String currentPackageName = componentName.getPackageName();
 	    if(!TextUtils.isEmpty(currentPackageName) && currentPackageName.equals(getPackageName()))
