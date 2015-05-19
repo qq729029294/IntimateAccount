@@ -28,11 +28,17 @@
         
         <activity
             android:name=".ui.MainActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:label="@string/title_main" >
         </activity>
         
         <activity
             android:name=".ui.StartActivity" >
+        </activity>
+        
+        <activity
+            android:name=".ui.LoginActivity"
+            android:label="@string/title_login" >
         </activity>
     </application>
 

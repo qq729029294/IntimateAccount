@@ -8,21 +8,24 @@
 package com.nan.ia.app.widget;
 
 import com.nan.ia.app.R;
-import com.nan.ia.app.utils.Utils;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-public class CustomActionBar extends LinearLayout {
-	private static int MIN_MARGIN = 12;
-	private static int DEFAULT_HEIGHT = 10;
+public class CustomActionBar extends RelativeLayout {
+	RelativeLayout layoutCenterContainer = null;
+	RelativeLayout layoutLeftContainer = null;
+	RelativeLayout layoutRightContainer = null;
 	
-	View centerView = null;
-	View leftView = null;
-	View rightView = null;
+	// 默认控件
+	ImageView imageViewBack = null;
+	TextView textBack = null;
+	TextView textTiTle = null;
 
 	public CustomActionBar(Context context) {
 		super(context);
@@ -43,52 +46,78 @@ public class CustomActionBar extends LinearLayout {
 	}
 	
 	private void initialize(final Context context) {
-		setBackgroundResource(R.drawable.ic_action_bar_bg);
+		LayoutInflater.from(getContext()).inflate(R.layout.view_actionbar, this, true);
+		
+		layoutLeftContainer = (RelativeLayout) findViewById(R.id.left_container);
+		layoutCenterContainer = (RelativeLayout) findViewById(R.id.center_container);
+		layoutRightContainer = (RelativeLayout) findViewById(R.id.right_container);
+		
+		imageViewBack = (ImageView) layoutLeftContainer.findViewById(R.id.image_back);
+		textBack = (TextView) layoutLeftContainer.findViewById(R.id.text_back);
+		textTiTle = (TextView) layoutCenterContainer.findViewById(R.id.text_title);
 	}
 	
-	public void customCenterView(Context context, View view) {
-		if (null != centerView) {
-			this.removeView(centerView);
+	// 默认定制接口
+	public void enableBack(String text, final OnClickListener listener) {
+		if (null != textBack) {
+			// 已经自定义控件了，设置无效
+			return;
 		}
 		
-		centerView = view;
-		RelativeLayout.LayoutParams layoutParams = (android.widget.RelativeLayout.LayoutParams) centerView.getLayoutParams();
-		layoutParams.alignWithParent = true;
-		layoutParams.leftMargin = Utils.dip2px(context, MIN_MARGIN);
-		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL, RelativeLayout.TRUE);
-		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-		centerView.setLayoutParams(layoutParams);
-		
-		this.addView(centerView);
+		imageViewBack.setVisibility(View.VISIBLE);
+		textBack.setVisibility(View.VISIBLE);
+		textBack.setText(text);
+		layoutLeftContainer.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (null != listener) {
+					listener.onClick(v);
+				}
+			}
+		});
+	}
+	
+	public void unableBack() {
+		imageViewBack.setVisibility(View.GONE);
+		textBack.setVisibility(View.GONE);
+	}
+	
+	public void setTitle(String text) {
+		if (null != textTiTle) {
+			textTiTle.setText(text);
+		}
+	}
+	
+	public void setOnBackClickListenr(final OnClickListener listener) {
+		layoutLeftContainer.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (null != listener) {
+					listener.onClick(v);
+				}
+			}
+		});
+	}
+	
+	// 自定义接口
+	public void customCenterView(Context context, View view) {
+		textTiTle = null;
+		layoutCenterContainer.removeAllViews();
+		layoutCenterContainer.addView(view);
 	}
 	
 	public void customLeftView(Context context, View view) {
-		if (null != leftView) {
-			this.removeView(leftView);
-		}
-		
-		leftView = view;
-		RelativeLayout.LayoutParams layoutParams = (android.widget.RelativeLayout.LayoutParams) leftView.getLayoutParams();
-		layoutParams.alignWithParent = true;
-		layoutParams.leftMargin = Utils.dip2px(context, MIN_MARGIN);
-		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-		leftView.setLayoutParams(layoutParams);
-		
-		this.addView(leftView);
+		imageViewBack = null;
+		textBack = null;
+		layoutLeftContainer.setOnClickListener(null);
+		layoutLeftContainer.removeAllViews();
+		layoutLeftContainer.addView(view);
 	}
 	
 	public void customRightView(Context context, View view) {
-		if (null != rightView) {
-			this.removeView(rightView);
-		}
-		
-		rightView = view;
-		RelativeLayout.LayoutParams layoutParams = (android.widget.RelativeLayout.LayoutParams) rightView.getLayoutParams();
-		layoutParams.alignWithParent = true;
-		layoutParams.rightMargin = Utils.dip2px(context, MIN_MARGIN);
-		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-		rightView.setLayoutParams(layoutParams);
-		
-		this.addView(rightView);
+		layoutRightContainer.removeAllViews();
+		layoutRightContainer.addView(view);
 	}
 }

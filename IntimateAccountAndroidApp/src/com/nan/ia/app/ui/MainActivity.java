@@ -13,9 +13,10 @@ import com.nan.ia.common.http.cmd.entities.ServerResponse;
 import com.nan.ia.common.http.cmd.entities.SyncDataRequestData;
 import com.nan.ia.common.http.cmd.entities.SyncDataResponseData;
 
+import android.content.Intent;
 import android.os.Bundle;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,14 @@ public class MainActivity extends BaseActivity {
 				LogUtils.d("XXXXXXXXXXXXXXXXXXX");
 			}
 		});
+		
+		this.getContentView().postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				MainActivity.this.startActivity(new Intent(MainActivity.this, LoginActivity.class));
+			}
+		}, 5000);
 		
 		//BizFacade.getInstance().createAccountBooks("哈哈哈", "XXXX");
 	}

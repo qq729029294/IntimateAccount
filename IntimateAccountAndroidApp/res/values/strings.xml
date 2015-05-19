@@ -6,4 +6,8 @@
     <string name="fmt_server_error">请求服务器错误，错误代码：</string>
     <string name="server_not_responding">服务器没有响应</string>
     <string name="unable_parse_responding">无法解析服务器响应</string>
+    <color name="white">#FFFFFF</color>
+    <color name="white_text_press">#88FFFFFF</color>
+    <string name="title_main">亲密账</string>
+    <string name="title_login">用户登录</string>
 </resources>
