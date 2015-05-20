@@ -44,6 +44,11 @@
             android:name=".ui.RegisterActivity"
             android:label="@string/title_register" >
         </activity>
+        
+        <activity
+            android:name=".ui.VerifyRegisterActivity"
+            android:label="@string/title_verify_register" >
+        </activity>
     </application>
 
 </manifest>

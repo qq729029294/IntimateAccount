@@ -13,10 +13,15 @@
     <string name="title_default_back">返回</string>
     <string name="btn_login">登录</string>
     <dimen name="margin_vertical">12dp</dimen>
-    <dimen name="margin_vertical_large">24dp</dimen>
-    <dimen name="margin_horizontal_large">36dp</dimen>
-    <dimen name="margin_horizontal">24dp</dimen>
+    <dimen name="margin_vertical_large">18dp</dimen>
+    <dimen name="margin_horizontal_large">18dp</dimen>
+    <dimen name="margin_horizontal">12dp</dimen>
+    <dimen name="margin_large">18dp</dimen>
+    <dimen name="margin">12dp</dimen>
     <string name="title_register">注册</string>
+    <string name="title_verify_register">填写验证码</string>
     <string name="hint_username">邮箱/手机</string>
     <string name="hint_password">密码</string>
+    <string name="hint_email_register">请输入您的电子邮箱地址</string>
+    <string name="btn_next">下一步</string>
 </resources>

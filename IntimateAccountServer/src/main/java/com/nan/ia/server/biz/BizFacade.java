@@ -7,9 +7,14 @@
 
 package com.nan.ia.server.biz;
 
+import java.util.Map;
+
+import com.nan.ia.server.entities.RegistionVfCode;
+
 public class BizFacade {
-	private static BizFacade sInstance = null;
+	Map<String, RegistionVfCode> mapVfCode;
 	
+	private static BizFacade sInstance = null;
 	public static BizFacade getInstance() {
 		if (null != sInstance) {
 			return sInstance;
@@ -23,4 +28,14 @@ public class BizFacade {
 		
 		return sInstance;
 	}
+	
+	// 添加注册码
+	public void pushCacheVfCode(String username, int vfCode) {
+//		RegistionVfCode code = new RegistionVfCode();
+//		code.setUsername(username);
+//		
+//		mapVfCode
+	}
+	
+	//
 }
