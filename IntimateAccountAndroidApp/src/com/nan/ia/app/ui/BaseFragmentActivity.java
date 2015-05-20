@@ -30,7 +30,6 @@ public class BaseFragmentActivity extends FragmentActivity {
 	public void finish()
 	{
 		super.finish();
-		overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 	}
 	
 	public void defaultFinish()

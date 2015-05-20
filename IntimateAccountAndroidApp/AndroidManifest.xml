@@ -28,8 +28,7 @@
         
         <activity
             android:name=".ui.MainActivity"
-            android:launchMode="singleTask"
-            android:label="@string/title_main" >
+            android:launchMode="singleTask" >
         </activity>
         
         <activity
@@ -39,6 +38,11 @@
         <activity
             android:name=".ui.LoginActivity"
             android:label="@string/title_login" >
+        </activity>
+        
+        <activity
+            android:name=".ui.RegisterActivity"
+            android:label="@string/title_register" >
         </activity>
     </application>
 

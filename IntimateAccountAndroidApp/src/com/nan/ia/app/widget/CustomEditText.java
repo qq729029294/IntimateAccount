@@ -8,6 +8,7 @@
 package com.nan.ia.app.widget;
 
 import com.nan.ia.app.R;
+import com.nan.ia.app.utils.Utils;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -30,32 +31,31 @@ public class CustomEditText extends EditText implements OnFocusChangeListener,
 	public CustomEditText(Context context) {
 		this(context, null);
 
-		initialize();
+		initialize(context);
 	}
 
 	public CustomEditText(Context context, AttributeSet attrs) {
 		this(context, attrs, android.R.attr.editTextStyle);
 
-		initialize();
+		initialize(context);
 	}
 
 	public CustomEditText(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 
-		initialize();
+		initialize(context);
 	}
 
-	private void initialize() {
+	private void initialize(Context context) {
 		setBackgroundResource(R.drawable.ic_edit_bg_normal);
-
+		
 		mClearDrawable = getCompoundDrawables()[2];
 		if (mClearDrawable == null) {
 			mClearDrawable = getResources()
 					.getDrawable(R.drawable.ic_edt_clear);
 		}
 
-		mClearDrawable.setBounds(0, 0, mClearDrawable.getIntrinsicWidth(),
-				mClearDrawable.getIntrinsicHeight());
+		mClearDrawable.setBounds(0, 0, 96, 96);
 		setClearIconVisible(false);
 		setOnFocusChangeListener(this);
 		addTextChangedListener(this);

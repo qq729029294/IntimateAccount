@@ -7,6 +7,8 @@
 
 package com.nan.ia.app.ui;
 
+import java.lang.reflect.Type;
+
 import com.nan.ia.app.R;
 import com.nan.ia.app.widget.CustomActionBar;
 
@@ -62,6 +64,18 @@ public abstract class BaseActionBarActivity extends BaseActivity {
 		
 		mActionBar.setTitle(toTitle);
 	}
+	
+	protected void enableActionBarGo(String text, final Intent startActivityIntent) {
+		mActionBar.enableGo(text, new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (null != startActivityIntent) {
+					BaseActionBarActivity.this.startActivity(startActivityIntent);
+				}
+			}
+		});
+	}
 
 	protected View getContentView() {
 		return mContentView;
@@ -94,38 +108,66 @@ public abstract class BaseActionBarActivity extends BaseActivity {
 		return mContentView.findViewById(id);
 	}
 
+	// 重新startActivity/finish部分，加入动画，传递导航栏值
 	@Override
 	public void startActivityForResult(Intent intent, int requestCode) {
-		// 将Title写入
-		intent.putExtra(EXTRA_KEY_FROM_TITLE, getTitle());
+		intent.putExtra(EXTRA_KEY_FROM_TITLE, getFromTitle());
 		super.startActivityForResult(intent, requestCode);
+		
+		overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 	}
 
 	@Override
 	public void startActivityForResult(Intent intent, int requestCode,
 			Bundle options) {
-		// 将Title写入
-		intent.putExtra(EXTRA_KEY_FROM_TITLE, getTitle());
+		intent.putExtra(EXTRA_KEY_FROM_TITLE, getFromTitle());
 		super.startActivityForResult(intent, requestCode, options);
+		
+		overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 	}
 
 	@Override
 	public void startActivity(Intent intent) {
-		// 将Title写入
-		intent.putExtra(EXTRA_KEY_FROM_TITLE, getTitle());
+		intent.putExtra(EXTRA_KEY_FROM_TITLE, getFromTitle());
 		super.startActivity(intent);
+		
+		overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 	}
 
 	@Override
 	public void startActivity(Intent intent, Bundle options) {
-		// 将Title写入
-		intent.putExtra(EXTRA_KEY_FROM_TITLE, getTitle());
+		intent.putExtra(EXTRA_KEY_FROM_TITLE, getFromTitle());
 		super.startActivity(intent, options);
+		
+		overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
 	}
 	
 	public void startActivityWithToTitle(Intent intent, String toTitle) {
-		// 将Title写入
+		intent.putExtra(EXTRA_KEY_FROM_TITLE, getFromTitle());
 		intent.putExtra(EXTRA_KEY_TO_TITLE, toTitle);
 		super.startActivity(intent);
+		
+		overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+	}
+
+	@Override
+	public void finish() {
+		super.finish();
+		
+		if (mActionBar.canBack()) {
+			overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+		}
+	}
+	
+	/**
+	 * 获得跳转的Title
+	 */
+	protected String getFromTitle() {
+		String title = getTitle().toString();
+		if (null == title || title.isEmpty()) {
+			title = getString(R.string.title_default_back);
+		}
+		
+		return title;
 	}
 }

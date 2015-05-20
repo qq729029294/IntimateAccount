@@ -28,8 +28,6 @@ public class CustomButton extends Button {
 	}
 
 	private void initialize() {
-		super.invalidate();
-		
 		setBackgroundResource(R.drawable.seletor_btn);
 		setTextSize(18);
 		setTextColor(Color.WHITE);

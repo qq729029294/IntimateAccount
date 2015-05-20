@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">IntimateAccountAndroidApp</string>
+    <string name="app_name">亲密帐</string>
     <string name="start">立即开始</string>
     <string name="http_request_exception">网络请求出现异常</string>
     <string name="fmt_http_request_error">网络请求错误，错误代码：</string>
@@ -9,5 +9,14 @@
     <color name="white">#FFFFFF</color>
     <color name="white_text_press">#88FFFFFF</color>
     <string name="title_main">亲密账</string>
-    <string name="title_login">用户登录</string>
+    <string name="title_login">登录</string>
+    <string name="title_default_back">返回</string>
+    <string name="btn_login">登录</string>
+    <dimen name="margin_vertical">12dp</dimen>
+    <dimen name="margin_vertical_large">24dp</dimen>
+    <dimen name="margin_horizontal_large">36dp</dimen>
+    <dimen name="margin_horizontal">24dp</dimen>
+    <string name="title_register">注册</string>
+    <string name="hint_username">邮箱/手机</string>
+    <string name="hint_password">密码</string>
 </resources>

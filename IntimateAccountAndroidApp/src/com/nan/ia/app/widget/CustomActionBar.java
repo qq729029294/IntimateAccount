@@ -26,6 +26,7 @@ public class CustomActionBar extends RelativeLayout {
 	ImageView imageViewBack = null;
 	TextView textBack = null;
 	TextView textTiTle = null;
+	TextView textGo = null;
 
 	public CustomActionBar(Context context) {
 		super(context);
@@ -55,11 +56,12 @@ public class CustomActionBar extends RelativeLayout {
 		imageViewBack = (ImageView) layoutLeftContainer.findViewById(R.id.image_back);
 		textBack = (TextView) layoutLeftContainer.findViewById(R.id.text_back);
 		textTiTle = (TextView) layoutCenterContainer.findViewById(R.id.text_title);
+		textGo = (TextView) layoutRightContainer.findViewById(R.id.text_go);
 	}
 	
 	// 默认定制接口
 	public void enableBack(String text, final OnClickListener listener) {
-		if (null != textBack) {
+		if (null == textBack) {
 			// 已经自定义控件了，设置无效
 			return;
 		}
@@ -78,9 +80,40 @@ public class CustomActionBar extends RelativeLayout {
 		});
 	}
 	
+	public boolean canBack() {
+		return (null != textBack || textBack.getVisibility() == View.GONE);
+	}
+	
 	public void unableBack() {
 		imageViewBack.setVisibility(View.GONE);
 		textBack.setVisibility(View.GONE);
+	}
+	
+	public void enableGo(String text, final OnClickListener listener) {
+		if (null == textGo) {
+			// 已经自定义控件了，设置无效
+			return;
+		}
+		
+		textGo.setVisibility(View.VISIBLE);
+		textGo.setText(text);
+		textGo.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (null != listener) {
+					listener.onClick(v);
+				}
+			}
+		});
+	}
+	
+	public boolean canGo() {
+		return (null != textGo || textGo.getVisibility() == View.GONE);
+	}
+	
+	public void unableGo() {
+		textGo.setVisibility(View.GONE);
 	}
 	
 	public void setTitle(String text) {
@@ -117,6 +150,8 @@ public class CustomActionBar extends RelativeLayout {
 	}
 	
 	public void customRightView(Context context, View view) {
+		textGo.setOnClickListener(null);
+		textGo = null;
 		layoutRightContainer.removeAllViews();
 		layoutRightContainer.addView(view);
 	}
