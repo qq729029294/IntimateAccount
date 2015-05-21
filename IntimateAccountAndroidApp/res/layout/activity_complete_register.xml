@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+    
+    <com.nan.ia.app.widget.FullLineEditControl
+        android:id="@+id/full_line_edit_control_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_vertical" >
+
+    </com.nan.ia.app.widget.FullLineEditControl>
+
+    <com.nan.ia.app.widget.FullLineEditControl
+        android:id="@+id/full_line_edit_control_confirm_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/full_line_edit_control_password"
+        android:layout_marginTop="@dimen/margin_vertical" >
+    </com.nan.ia.app.widget.FullLineEditControl>
+
+    <com.nan.ia.app.widget.CustomButton
+        android:id="@+id/btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/full_line_edit_control_confirm_password"
+        android:layout_marginLeft="@dimen/margin_horizontal"
+        android:layout_marginRight="@dimen/margin_horizontal"
+        android:layout_marginTop="@dimen/margin_vertical_large"
+        android:text="@string/btn_register" />
+
+</RelativeLayout>

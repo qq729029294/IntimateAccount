@@ -70,7 +70,7 @@ public class VerifyVfCodeActivity extends BaseActionBarActivity {
 					protected void onPostExecute(ServerResponse<Object> result) {
 						super.onPostExecute(result);
 						if (result.getRet() == ServerErrorCode.RET_SUCCESS) {
-							startActivity(new Intent(VerifyVfCodeActivity.this, LoginActivity.class));
+							startActivity(new Intent(VerifyVfCodeActivity.this, CompleteRegisterActivity.class));
 						}
 					}
 				}.execute(0);
