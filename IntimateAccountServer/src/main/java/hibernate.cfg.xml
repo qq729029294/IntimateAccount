@@ -16,5 +16,8 @@
 		<mapping class="com.nan.ia.server.db.entities.AccountTargetTbl" />
 		<mapping class="com.nan.ia.server.db.entities.UserExtendTbl" />
 		<mapping class="com.nan.ia.server.db.entities.UserTbl" />
+		<mapping class="com.nan.ia.server.db.entities.LoginAccountTbl" />
+		<mapping class="com.nan.ia.server.db.entities.LoginAccountTblId" />
+		<mapping class="com.nan.ia.server.db.entities.LoginStateTbl" />
 	</session-factory>
 </hibernate-configuration>

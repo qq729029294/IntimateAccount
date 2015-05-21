@@ -7,13 +7,23 @@
 
 package com.nan.ia.server.biz;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.nan.ia.common.utils.BoolResult;
+import com.nan.ia.server.ServerConfigs;
+import com.nan.ia.server.controller.HomeController;
 import com.nan.ia.server.entities.RegistionVfCode;
 import com.nan.ia.server.utils.SendMail;
 
 public class BizFacade {
-	Map<String, RegistionVfCode> mapVfCode;
+	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	
+	Map<String, RegistionVfCode> mMapVfCodeCache = new HashMap<String, RegistionVfCode>();
 	
 	private static BizFacade sInstance = null;
 	public static BizFacade getInstance() {
@@ -30,35 +40,68 @@ public class BizFacade {
 		return sInstance;
 	}
 	
-	// 添加注册码
-	public void pushCacheVfCode(String username, int vfCode) {
-//		RegistionVfCode code = new RegistionVfCode();
-//		code.setUsername(username);
-//		
-//		mapVfCode
-	}
-	
-	public void sendVerificationCodeByEmail(String mailAddress) {
+	/**
+	 * 发送邮件验证码
+	 * @param mail
+	 */
+	public boolean sendVfCodeByMail(String mail) {
+		Random random = new Random();
+        int vfCode = random.nextInt(9999);
+        
         SendMail sendMail = new SendMail();
-        sendMail.setSmtpServer("smtp.126.com");
-        //此处设置登录的用户名
-        sendMail.setUsername("weijiangnan@126.com");
-        //此处设置登录的密码
-        sendMail.setPassword("lj86598095");
-        //设置收件人的地址
-        sendMail.setTo("729029294@qq.com");
-        //设置发送人地址
-        sendMail.setFrom("weijiangnan@126.com");
-        //设置标题
-        sendMail.setSubject("测试邮件标题！");
-        //设置内容
-        sendMail.setContent("你好这是一个带多附件的测试邮件！"); 
-        //粘贴附件
-        //sendMail.attachfile("C:/Login6 (1).jpg");
+        sendMail.setSmtpServer(ServerConfigs.MAIL_SMTP_SERVER);
+        sendMail.setUsername(ServerConfigs.MAIL_FROM_MAIL);
+        sendMail.setPassword(ServerConfigs.MAIL_FROM_MAIL_PASSWORD);
+        sendMail.setTo(mail);
+        sendMail.setFrom(ServerConfigs.MAIL_FROM_MAIL);
+        sendMail.setSubject(ServerConfigs.MAIL_SUBJECT);
+        
+        String content = ServerConfigs.MAIL_FMT_CONTENT.replace(ServerConfigs.MAIL_KEY_VERIFICATION_CODE,
+        		String.valueOf(vfCode));
+        sendMail.setContent(content);
         if (sendMail.send())
         {
-            System.out.println("---邮件发送成功---");
+        	logger.debug("邮件发送成功，邮件地址：" + mail);
+        	
+        	// 发送成功，添加验证码信息到内存中
+    		RegistionVfCode registionVfCode = new RegistionVfCode();
+    		registionVfCode.setUsername(mail);
+    		registionVfCode.setVfCode(vfCode);
+    		registionVfCode.setUpdateTime(System.currentTimeMillis());
+    		
+        	synchronized (mMapVfCodeCache) {
+				mMapVfCodeCache.put(mail, registionVfCode);
+			}
+        	
+        	return true;
+        } else {
+        	logger.error("邮件发送失败，邮件地址：" + mail);
+        	
+        	return false;
         }
 	}
-
+	
+	/**
+	 * 验证验证码是否有效
+	 * @param username
+	 * @param vfCode
+	 * @return
+	 */
+	public BoolResult<Object> verificationCode(String username, int vfCode) {
+		if (!mMapVfCodeCache.containsKey(username) || null == mMapVfCodeCache.get(username)) {
+			return BoolResult.False("无效的验证码");
+		}
+		
+		RegistionVfCode registionVfCode = mMapVfCodeCache.get(username);
+		if (Integer.valueOf(registionVfCode.getVfCode()) == vfCode) {
+			if (System.currentTimeMillis() - registionVfCode.getUpdateTime()
+					< ServerConfigs.VERIFICATION_CODE_EXPIRED_TIME) {
+				return BoolResult.True();
+			} else {
+				return BoolResult.False("验证码已过期，请重新发送");
+			}
+		} else {
+			return BoolResult.False("无效的验证码");
+		}
+	}
 }

@@ -5,25 +5,25 @@
     tools:context=".MainActivity" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/text_lbl_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin"
-        android:text="我们已给你的邮箱 weijiangnan@126.com 发送了一封验证邮件。"
+        android:text="@string/fmt_lbl_send_mail"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <com.nan.ia.app.widget.FullLineEditControl
-        android:id="@+id/full_line_edit_control_email"
+        android:id="@+id/full_line_edit_control_vf_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1" >
+        android:layout_below="@+id/text_lbl_send" >
     </com.nan.ia.app.widget.FullLineEditControl>
 
     <com.nan.ia.app.widget.CustomButton
         android:id="@+id/btn_next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/full_line_edit_control_email"
+        android:layout_below="@+id/full_line_edit_control_vf_code"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/margin_horizontal"
         android:layout_marginRight="@dimen/margin_horizontal"

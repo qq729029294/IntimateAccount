@@ -1,6 +1,5 @@
 package com.nan.ia.server.db;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +16,8 @@ import com.nan.ia.server.db.entities.AccountBookDeleteTbl;
 import com.nan.ia.server.db.entities.AccountBookMemberTbl;
 import com.nan.ia.server.db.entities.AccountBookMemberTblId;
 import com.nan.ia.server.db.entities.AccountBookTbl;
+import com.nan.ia.server.db.entities.LoginAccountTbl;
+import com.nan.ia.server.db.entities.LoginAccountTblId;
 import com.nan.ia.server.db.entities.UserTbl;
 
 public class DBService {
@@ -42,19 +43,31 @@ public class DBService {
 		return 0;
 	}
 	
-	public boolean registerUser(String username, String password, String nickname) {
+	public boolean registerUser(String username, String password, int accountType) {
 		try {
 			Session session = HibernateUtil.getSession();
-			Transaction trans = session.beginTransaction();
 			
+			// 先创建新用户
+			Transaction trans = session.beginTransaction();
 			UserTbl userTbl = new UserTbl();
 			userTbl.setUserId(0);
-			userTbl.setNickname(nickname);
-			userTbl.setCreateTime(new Timestamp(System.currentTimeMillis()));
-			
+			userTbl.setNickname("无名小辈");
+			userTbl.setDescription("很懒哦，什么都没有留下");
 			session.save(userTbl);
-			
 			trans.commit();
+			
+			trans = session.beginTransaction();
+			// 创建登录账户
+			LoginAccountTbl loginAccountTbl = new LoginAccountTbl();
+			LoginAccountTblId loginAccountTblId = new LoginAccountTblId();
+			loginAccountTblId.setUsername(username);
+			loginAccountTblId.setAccountType(accountType);
+			
+			loginAccountTbl.setId(loginAccountTblId);
+			loginAccountTbl.setUserId(userTbl.getUserId());
+			loginAccountTbl.setPassword(password);
+			trans.commit();
+			
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -151,7 +164,6 @@ public class DBService {
 	 * @return
 	 */
 	public boolean checkNeedUpdateAccountBooks(int userId, long lastUpdateTime) {
-		
 		try {
 			Session session = HibernateUtil.getSession();
 			// 检查原表是否有更新
@@ -243,6 +255,23 @@ public class DBService {
 			
 			trans.commit();
 			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	public boolean exitUsername(String username) {
+		try {
+			Session session = HibernateUtil.getSession();
+			// 检查是否已经存在用户名
+			Query query = session.createQuery("FROM LoginAccountTbl r WHERE r.id.username = ?");
+			query.setParameter(0, username);
+			if (query.list().size() > 0) {
+				return true;
+			};
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

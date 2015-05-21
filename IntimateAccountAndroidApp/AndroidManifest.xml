@@ -46,8 +46,8 @@
         </activity>
         
         <activity
-            android:name=".ui.VerifyRegisterActivity"
-            android:label="@string/title_verify_register" >
+            android:name=".ui.VerifyVfCodeActivity"
+            android:label="@string/title_verify_vf_code" >
         </activity>
     </application>
 

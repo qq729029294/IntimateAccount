@@ -1,13 +1,21 @@
 package com.nan.ia.app.biz;
 
+import java.net.ContentHandler;
 import java.util.Date;
 import java.util.List;
 
+import android.content.Context;
+
 import com.nan.ia.app.data.AppData;
+import com.nan.ia.app.http.cmd.server.VerifyMailServerCmd;
+import com.nan.ia.app.http.cmd.server.VerifyVfCodeServerCmd;
 import com.nan.ia.common.entities.AccountBook;
 import com.nan.ia.common.entities.AccountBookDelete;
 import com.nan.ia.common.entities.AccountCategory;
 import com.nan.ia.common.entities.AccountItem;
+import com.nan.ia.common.http.cmd.entities.ServerResponse;
+import com.nan.ia.common.http.cmd.entities.VerifyMailRequestData;
+import com.nan.ia.common.http.cmd.entities.VerifyVfCodeRequestData;
 
 public class BizFacade {
 
@@ -168,5 +176,33 @@ public class BizFacade {
 	// 同步服务器数据
 	public void syncDataToServer() {
 		// 获取本地新增的数据信息
+	}
+	
+	// 用户相关接口
+	
+	
+	/**
+	 * 验证邮箱
+	 * @param mail
+	 */
+	public ServerResponse<Object> verifyMail(Context context, String mail) {
+		VerifyMailRequestData requestData = new VerifyMailRequestData();
+		requestData.setMail(mail);
+		return new VerifyMailServerCmd().send(context, requestData, false);
+	}
+	
+	/**
+	 * 验证验证码
+	 * @param context
+	 * @param mail
+	 * @param vfCode
+	 * @return
+	 */
+	public ServerResponse<Object> verifyVfCode(Context context, String username, int accountType, int vfCode) {
+		VerifyVfCodeRequestData requestData = new VerifyVfCodeRequestData();
+		requestData.setUsername(username);
+		requestData.setAccountType(accountType);
+		requestData.setVfCode(vfCode);
+		return new VerifyVfCodeServerCmd().send(context, requestData, false);
 	}
 }

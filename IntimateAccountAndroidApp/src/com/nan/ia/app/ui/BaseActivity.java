@@ -1,14 +1,19 @@
 package com.nan.ia.app.ui;
 
+import java.io.Serializable;
+
 import com.nan.ia.app.utils.LogUtils;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Window;
 
 public class BaseActivity extends Activity {
+	protected static final String EXTRA_KEY_TRANS_DATA = "EXTRA_KEY_TRANS_DATA";
+	
 	private static final String TAG = "BaseActivity";
-
 	/******************************** 【Activity LifeCycle For Debug】 *******************************************/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,5 +60,18 @@ public class BaseActivity extends Activity {
 		LogUtils.d(TAG, this.getClass().getSimpleName()
 				+ " onDestroy() invoked!!");
 		super.onDestroy();
+	}
+	
+	protected void putTransData(Intent intent, Serializable transData) {
+		if (null == intent) {
+			return;
+		}
+		
+		intent.putExtra(EXTRA_KEY_TRANS_DATA, transData);
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected <T> T readTransData() {
+		return (T) getIntent().getSerializableExtra(EXTRA_KEY_TRANS_DATA);
 	}
 }

@@ -1,8 +1,8 @@
 /**
  * @ClassName:     BoolResult.java
- * @Description:   bool返回值的包装类，包含bool值，错误信息，和返回对象 
+ * @Description:   bool锟斤拷锟斤拷值锟侥帮拷装锟洁，锟斤拷锟斤拷bool值锟斤拷锟斤拷锟斤拷锟斤拷息锟斤拷锟酵凤拷锟截讹拷锟斤拷 
  * 
- * @author         weijiangnan create on 2015年5月18日 
+ * @author         weijiangnan create on 2015锟斤拷5锟斤拷18锟斤拷 
  */
 
 package com.nan.ia.common.utils;

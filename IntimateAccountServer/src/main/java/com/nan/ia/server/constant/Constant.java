@@ -1,4 +1,4 @@
-package com.nan.ia.app.constant;
+package com.nan.ia.server.constant;
 
 public class Constant {
 	// 邮箱账户

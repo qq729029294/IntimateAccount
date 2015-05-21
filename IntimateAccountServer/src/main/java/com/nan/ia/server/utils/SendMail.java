@@ -166,8 +166,10 @@ public class SendMail
             mex.printStackTrace();
             return false;
         }
+        
         return true;
     }
+    
     public static void main(String[] args)
     {
         SendMail sendMail = new SendMail();

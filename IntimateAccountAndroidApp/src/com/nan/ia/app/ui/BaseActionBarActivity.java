@@ -7,8 +7,6 @@
 
 package com.nan.ia.app.ui;
 
-import java.lang.reflect.Type;
-
 import com.nan.ia.app.R;
 import com.nan.ia.app.widget.CustomActionBar;
 

@@ -83,12 +83,41 @@ public class RequestHelper {
 	 * 成功
 	 * @return
 	 */
+	public static String responseSuccess() {
+		ServerResponse<Object> response = new ServerResponse<Object>();
+		response.setRet(ServerErrorCode.RET_SUCCESS);
+		String errMsg = "请求成功";
+		response.setErrMsg(errMsg);
+		
+		Gson gson = new Gson();
+		return gson.toJson(response);
+	}
+	
+	/**
+	 * 成功
+	 * @return
+	 */
 	public static <T> String responseSuccess(T responseData) {
 		ServerResponse<T> response = new ServerResponse<T>();
 		response.setRet(ServerErrorCode.RET_SUCCESS);
 		String errMsg = "请求成功";
 		response.setErrMsg(errMsg);
 		response.setData(responseData);
+		
+		Gson gson = new Gson();
+		return gson.toJson(response);
+	}
+	
+	/**
+	 * 错误
+	 * @param ret
+	 * @param otherMsg
+	 * @return
+	 */
+	public static String responseError(int ret, String msg) {
+		ServerResponse<Object> response = new ServerResponse<Object>();
+		response.setRet(ret);
+		response.setErrMsg(msg);
 		
 		Gson gson = new Gson();
 		return gson.toJson(response);

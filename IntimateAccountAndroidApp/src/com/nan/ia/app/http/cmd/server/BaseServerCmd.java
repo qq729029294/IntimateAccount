@@ -140,9 +140,11 @@ public abstract class BaseServerCmd<REQUEST_DATA, RESPONSE_DATA> {
 			if (serverResponse.getRet() == ServerErrorCode.RET_SUCCESS) {
 				// 成功，转换返回数据
 				String dataJson = jsonObject.optString("data", "");
-				Type typeOfResponse = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1] ;  
-				RESPONSE_DATA data = mGson.fromJson(dataJson, typeOfResponse);
-				serverResponse.setData(data);
+				if (!dataJson.isEmpty()) {
+					Type typeOfResponse = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1] ;  
+					RESPONSE_DATA data = mGson.fromJson(dataJson, typeOfResponse);
+					serverResponse.setData(data);
+				}
 			} else {
 				if (serverResponse.getErrMsg().isEmpty()) {
 					serverResponse.setErrMsg(context.getString(R.string.fmt_server_error) + serverResponse.getRet());
