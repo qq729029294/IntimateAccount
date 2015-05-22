@@ -19,6 +19,7 @@ import com.nan.ia.common.http.cmd.entities.ServerResponse;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,7 +40,7 @@ public class VerifyVfCodeActivity extends BaseActionBarActivity {
 		editControlVfCode = (FullLineEditControl) findViewById(R.id.full_line_edit_control_vf_code);
 		editControlVfCode.getEditText().setHint(R.string.hint_username);
 		editControlVfCode.getEditText().setInputType(InputType.TYPE_CLASS_NUMBER);
-		editControlVfCode.getEditText().setMaxEms(4);
+		editControlVfCode.getEditText().setFilters(new InputFilter[] {new InputFilter.LengthFilter(4)});
 		
 		final TransData transData = readTransData();
 		if (null == transData) {
@@ -70,7 +71,15 @@ public class VerifyVfCodeActivity extends BaseActionBarActivity {
 					protected void onPostExecute(ServerResponse<Object> result) {
 						super.onPostExecute(result);
 						if (result.getRet() == ServerErrorCode.RET_SUCCESS) {
-							startActivity(new Intent(VerifyVfCodeActivity.this, CompleteRegisterActivity.class));
+							Intent intent = new Intent(VerifyVfCodeActivity.this, CompleteRegisterActivity.class);
+							
+							CompleteRegisterActivity.TransData toTransData = new CompleteRegisterActivity.TransData();
+							toTransData.setUsername(transData.getUsername());
+							toTransData.setAccountType(transData.getAccountType());
+							toTransData.setVfCode(Integer.valueOf(editControlVfCode.getEditText().getText().toString()));
+							setTransData(intent, toTransData);
+							
+							startActivity(intent);
 						}
 					}
 				}.execute(0);

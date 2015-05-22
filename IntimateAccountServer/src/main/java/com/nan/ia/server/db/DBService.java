@@ -18,6 +18,7 @@ import com.nan.ia.server.db.entities.AccountBookMemberTblId;
 import com.nan.ia.server.db.entities.AccountBookTbl;
 import com.nan.ia.server.db.entities.LoginAccountTbl;
 import com.nan.ia.server.db.entities.LoginAccountTblId;
+import com.nan.ia.server.db.entities.LoginStateTbl;
 import com.nan.ia.server.db.entities.UserTbl;
 
 public class DBService {
@@ -66,6 +67,7 @@ public class DBService {
 			loginAccountTbl.setId(loginAccountTblId);
 			loginAccountTbl.setUserId(userTbl.getUserId());
 			loginAccountTbl.setPassword(password);
+			session.save(loginAccountTbl);
 			trans.commit();
 			
 			return true;
@@ -262,7 +264,7 @@ public class DBService {
 		return false;
 	}
 	
-	public boolean exitUsername(String username) {
+	public boolean existUsername(String username) {
 		try {
 			Session session = HibernateUtil.getSession();
 			// 检查是否已经存在用户名
@@ -272,6 +274,47 @@ public class DBService {
 				return true;
 			};
 			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public BoolResult<LoginAccountTbl> getLoginAccount(String username, int accountType) {
+		try {
+			Session session = HibernateUtil.getSession();
+			// 检查是否已经存在用户名
+			Query query = session.createQuery("FROM LoginAccountTbl r WHERE r.id.username = ? AND r.id.accountType = ?");
+			query.setParameter(0, username);
+			query.setParameter(1, accountType);
+			
+			List<LoginAccountTbl> tbls = query.list();
+			if (tbls.size() == 1) {
+				return BoolResult.True(tbls.get(0));
+			} else {
+				return BoolResult.True(null);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return BoolResult.False();
+	}
+	
+	public boolean updateLoginState(int userId, String token) {
+		try {
+			Session session = HibernateUtil.getSession();
+			Transaction trans = session.beginTransaction();
+			LoginStateTbl tbl = new LoginStateTbl();
+			tbl.setUserId(userId);
+			tbl.setToken(token);
+			
+			session.saveOrUpdate(tbl);
+			trans.commit();
+			
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

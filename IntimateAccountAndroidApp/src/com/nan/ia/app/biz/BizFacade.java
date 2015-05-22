@@ -1,18 +1,23 @@
 package com.nan.ia.app.biz;
 
-import java.net.ContentHandler;
 import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
 
+import com.nan.ia.app.constant.Constant;
 import com.nan.ia.app.data.AppData;
+import com.nan.ia.app.http.cmd.server.AccountLoginServerCmd;
+import com.nan.ia.app.http.cmd.server.RegisterServerCmd;
 import com.nan.ia.app.http.cmd.server.VerifyMailServerCmd;
 import com.nan.ia.app.http.cmd.server.VerifyVfCodeServerCmd;
 import com.nan.ia.common.entities.AccountBook;
 import com.nan.ia.common.entities.AccountBookDelete;
 import com.nan.ia.common.entities.AccountCategory;
 import com.nan.ia.common.entities.AccountItem;
+import com.nan.ia.common.http.cmd.entities.AccountLoginRequestData;
+import com.nan.ia.common.http.cmd.entities.AccountLoginResponseData;
+import com.nan.ia.common.http.cmd.entities.RegisterRequestData;
 import com.nan.ia.common.http.cmd.entities.ServerResponse;
 import com.nan.ia.common.http.cmd.entities.VerifyMailRequestData;
 import com.nan.ia.common.http.cmd.entities.VerifyVfCodeRequestData;
@@ -204,5 +209,39 @@ public class BizFacade {
 		requestData.setAccountType(accountType);
 		requestData.setVfCode(vfCode);
 		return new VerifyVfCodeServerCmd().send(context, requestData, false);
+	}
+	
+	/**
+	 * 注册
+	 * @param context
+	 * @param username
+	 * @param accountType
+	 * @param vfCode
+	 * @return
+	 */
+	public ServerResponse<Object> register(Context context, String username, String password, int accountType, int vfCode) {
+		RegisterRequestData requestData = new RegisterRequestData();
+		requestData.setUsername(username);
+		requestData.setPassword(password);
+		requestData.setAccountType(accountType);
+		requestData.setVfCode(vfCode);
+		return new RegisterServerCmd().send(context, requestData, false);
+	}
+	
+	/**
+	 * 账户登录
+	 * @param context
+	 * @param username
+	 * @param password
+	 * @param accountType
+	 * @param vfCode
+	 * @return
+	 */
+	public ServerResponse<AccountLoginResponseData> accountLogin(Context context, String username, String password) {
+		AccountLoginRequestData requestData = new AccountLoginRequestData();
+		requestData.setUsername(username);
+		requestData.setPassword(password);
+		requestData.setAccountType(Constant.ACCOUNT_TYPE_MAIL);
+		return new AccountLoginServerCmd().send(context, requestData, false);
 	}
 }

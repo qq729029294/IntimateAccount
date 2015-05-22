@@ -15,4 +15,5 @@ public class Url {
 	public static final String URL_VERIFY_MAIL = URL_PREFIX + "/verify_mail";
 	public static final String URL_VERIFY_VF_CODE = URL_PREFIX + "/verify_vf_code";
 	public static final String URL_REGISTER = URL_PREFIX + "/register";
+	public static final String URL_ACCOUNT_LOGIN = URL_PREFIX + "/account_login";
 }

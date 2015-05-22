@@ -62,7 +62,7 @@ public class BaseActivity extends Activity {
 		super.onDestroy();
 	}
 	
-	protected void putTransData(Intent intent, Serializable transData) {
+	protected void setTransData(Intent intent, Serializable transData) {
 		if (null == intent) {
 			return;
 		}

@@ -8,6 +8,7 @@
 package com.nan.ia.server.controller;
 
 import java.util.Locale;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nan.ia.common.constant.ServerErrorCode;
+import com.nan.ia.common.http.cmd.entities.AccountLoginRequestData;
+import com.nan.ia.common.http.cmd.entities.AccountLoginResponseData;
 import com.nan.ia.common.http.cmd.entities.RegisterRequestData;
 import com.nan.ia.common.http.cmd.entities.VerifyMailRequestData;
 import com.nan.ia.common.http.cmd.entities.VerifyVfCodeRequestData;
@@ -26,6 +29,7 @@ import com.nan.ia.common.utils.BoolResult;
 import com.nan.ia.server.biz.BizFacade;
 import com.nan.ia.server.constant.Constant;
 import com.nan.ia.server.db.DBService;
+import com.nan.ia.server.db.entities.LoginAccountTbl;
 
 @Controller
 public class UserController {
@@ -44,7 +48,7 @@ public class UserController {
 		VerifyMailRequestData requestData = result.result();
 		
 		// 判断是否已经存在用户
-		if (DBService.getInstance().exitUsername(requestData.getMail())) {
+		if (DBService.getInstance().existUsername(requestData.getMail())) {
 			// 邮箱已经被注册
 			return RequestHelper.responseError(ServerErrorCode.RET_MAIL_ALREADY_REGISTER, "该邮箱已经被注册");
 		}
@@ -112,5 +116,46 @@ public class UserController {
 		}
 		
 		return RequestHelper.responseSuccess();
+	}
+	
+	@RequestMapping(value = "/account_login"/*, method = RequestMethod.POST*/)
+	public @ResponseBody String accountLogin(HttpServletRequest request, Locale locale, Model model) {
+		logger.info("Welcome home! The client locale is {}.", model);
+		
+		// 检查参数
+		BoolResult<AccountLoginRequestData> result =
+				RequestHelper.parseRequestData(request, AccountLoginRequestData.class);
+		if (result.isFalse()) {
+			return RequestHelper.responseParamError("");
+		};
+		
+		AccountLoginRequestData requestData = result.result();
+		// 再次验证验证码
+		BoolResult<LoginAccountTbl> resultGetLoginAccount =
+				DBService.getInstance().getLoginAccount(requestData.getUsername(), requestData.getAccountType());
+		
+		if (resultGetLoginAccount.isFalse()) {
+			return RequestHelper.responseAccessDBError("");
+		}
+		
+		if (resultGetLoginAccount.result() == null) {
+			return RequestHelper.responseError(ServerErrorCode.RET_USERNAME_NOT_EXIST, "用户名不存在");
+		}
+		
+		if (!resultGetLoginAccount.result().getPassword().equals(requestData.getPassword())) {
+			return RequestHelper.responseError(ServerErrorCode.RET_PARAM_ERROR, "密码错误");
+		}
+		
+		String token = UUID.randomUUID().toString();
+		if (!DBService.getInstance().updateLoginState(resultGetLoginAccount.result().getUserId(), token)) {
+			return RequestHelper.responseAccessDBError("");
+		}
+
+		AccountLoginResponseData responseData = new AccountLoginResponseData();
+		responseData.setUsername(resultGetLoginAccount.result().getId().getUsername());
+		responseData.setUserId(resultGetLoginAccount.result().getUserId());
+		responseData.setToken(token);
+		
+		return RequestHelper.responseSuccess(responseData);
 	}
 }

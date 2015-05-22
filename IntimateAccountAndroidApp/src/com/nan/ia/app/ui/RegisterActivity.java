@@ -20,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.SyncStateContract.Constants;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
@@ -43,7 +44,7 @@ public class RegisterActivity extends BaseActionBarActivity {
 		editControlEmail = (FullLineEditControl) findViewById(R.id.full_line_edit_control_email);
 		editControlEmail.getEditText().setHint(R.string.hint_email_register);
 		editControlEmail.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-		editControlEmail.getEditText().setMaxEms(45);
+		editControlEmail.getEditText().setFilters(new InputFilter[] {new InputFilter.LengthFilter(45)});
 		editControlEmail.getEditText().addTextChangedListener(new TextWatcher() {
 			
 			@Override
@@ -89,7 +90,7 @@ public class RegisterActivity extends BaseActionBarActivity {
 						transData.setAccountType(Constant.ACCOUNT_TYPE_MAIL);
 						
 						Intent intent = new Intent(RegisterActivity.this, VerifyVfCodeActivity.class);
-						putTransData(intent, transData);
+						setTransData(intent, transData);
 						startActivity(intent);
 					}
 				}.execute(0);
