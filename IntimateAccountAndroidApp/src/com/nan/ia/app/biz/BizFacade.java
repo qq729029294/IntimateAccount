@@ -71,14 +71,14 @@ public class BizFacade {
 		return false;
 	}
 	
-	public int obtainNewAccountBookId() {
+	public int allocateNewAccountBookId() {
 		AppData.setCreateAccountBookId(AppData.getCreateAccountBookId() - 1);
 		return AppData.getCreateAccountBookId() + 1;
 	}
 	
 	public void createAccountBooks(String name, String description) {
 		AccountBook accountBook = new AccountBook();
-		accountBook.setAccountBookId(obtainNewAccountBookId());
+		accountBook.setAccountBookId(allocateNewAccountBookId());
 		accountBook.setCreateUserId(AppData.getUserLoginInfo().getUserId());
 		accountBook.setName(name);
 		accountBook.setDescription(description);

@@ -54,6 +54,11 @@
             android:name=".ui.CompleteRegisterActivity"
             android:label="@string/title_complete_register" >
         </activity>
+        
+        <activity
+            android:name=".ui.AccountBookActivity"
+            android:label="@string/title_account_book" >
+        </activity>
     </application>
 
 </manifest>
