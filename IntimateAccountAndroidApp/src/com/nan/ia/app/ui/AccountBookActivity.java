@@ -24,8 +24,6 @@ import android.widget.TextView;
 
 import com.nan.ia.app.R;
 import com.nan.ia.app.data.AppData;
-import com.nan.ia.app.widget.CustomText;
-import com.nan.ia.app.widget.XXXFullLineEditControl;
 import com.nan.ia.common.entities.AccountBook;
 
 public class AccountBookActivity extends BaseActionBarActivity {
