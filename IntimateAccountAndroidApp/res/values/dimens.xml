@@ -9,4 +9,5 @@
     <dimen name="margin_large">18dp</dimen>
     <dimen name="margin">12dp</dimen>
     <dimen name="margin_small">6dp</dimen>
+    <dimen name="list_account_book_item_swipe_menu_width">120dp</dimen>
 </resources>

@@ -9,7 +9,6 @@ package com.nan.ia.app.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.ListView;
 
 import com.fortysevendeg.swipelistview.SwipeListView;
 

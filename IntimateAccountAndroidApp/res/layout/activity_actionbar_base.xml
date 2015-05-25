@@ -7,7 +7,7 @@
     <com.nan.ia.app.widget.CustomActionBar
         android:id="@+id/actionBar"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="48dp"
         android:background="@drawable/ic_action_bar_bg" >
 
     </com.nan.ia.app.widget.CustomActionBar>

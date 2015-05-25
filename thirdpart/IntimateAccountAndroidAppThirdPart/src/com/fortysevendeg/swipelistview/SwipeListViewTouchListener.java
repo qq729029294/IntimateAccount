@@ -155,8 +155,8 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
             public boolean onLongClick(View v) {
                 if (swipeOpenOnLongPress) {
                     if (downPosition >= 0) {
-                    	// add by weijiangnan on 20150525 strat
-                    	closeOpenedItems();
+                    	// add by weijiangnan on 20150525 start
+                    	closeOpenedItemsExt(ListView.INVALID_POSITION);
                     	// add by weijiangnan on 20150525 end
                         openAnimate(childPosition);
                     }
@@ -529,9 +529,9 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
      * @param position  Position of list
      */
     private void generateAnimate(final View view, final boolean swap, final boolean swapRight, final int position) {
-//        if(SwipeListView.DEBUG){
+        if(SwipeListView.DEBUG){
             Log.d(SwipeListView.TAG, "swap: " + swap + " - swapRight: " + swapRight + " - position: " + position);
-//        }
+        }
         if (swipeCurrentAction == SwipeListView.SWIPE_ACTION_REVEAL) {
             generateRevealAnimate(view, swap, swapRight, position);
         }
@@ -817,7 +817,6 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
                 return true;
             }
 
-            case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP: {
                 if (velocityTracker == null || !swiping || downPosition == ListView.INVALID_POSITION) {
                     break;
@@ -856,6 +855,7 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
                     swap = true;
                     swapRight = deltaX > 0;
                 }
+
 
                 generateAnimate(frontView, swap, swapRight, downPosition);
                 if (swipeCurrentAction == SwipeListView.SWIPE_ACTION_CHOICE) {
@@ -932,10 +932,9 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
                             swipeCurrentAction = SwipeListView.SWIPE_ACTION_REVEAL;
                         }
                         
-                    	// add by weijiangnan on 20150525 strat
-                    	closeOpenedItems();
+                    	// add by weijiangnan on 20150525 start
+                        closeOpenedItemsExt(downPosition);
                     	// add by weijiangnan on 20150525 end
-                    	
                         swipeListView.onStartOpen(downPosition, swipeCurrentAction, swipingRight);
                     }
                     swipeListView.requestDisallowInterceptTouchEvent(true);
@@ -952,9 +951,6 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
                     if (opened.get(downPosition)) {
                         deltaX += openedRight.get(downPosition) ? viewWidth - rightOffset : -viewWidth + leftOffset;
                     }
-                    
-                    deltaX = Math.min(0, Math.max(deltaX, -viewWidth + leftOffset));
-                    
                     move(deltaX);
                     return true;
                 }
@@ -1154,5 +1150,49 @@ public class SwipeListViewTouchListener implements View.OnTouchListener {
             }
         }
     }
-
+    
+	// add by weijiangnan on 20150525 strat
+    void closeOpenedItemsExt(int excludePosition) {
+        if (opened != null) {
+            int start = swipeListView.getFirstVisiblePosition();
+            int end = swipeListView.getLastVisiblePosition();
+            for (int i = start; i <= end; i++) {
+            	final int position = i;
+            	final boolean swapRight = false;
+            	if (excludePosition == position) {
+            		continue;
+				}
+            	
+                View view = swipeListView.getChildAt(i - start).findViewById(swipeFrontView);
+                if (opened.get(i) || view.getX() != 0) {
+                    int moveTo = 0;
+                    animationRunning = true;
+                    animate(view)
+                            .translationX(moveTo)
+                            .setDuration(animationTime)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    swipeListView.resetScrolling();
+                                    if (true) {
+                                        boolean aux = !opened.get(position);
+                                        opened.set(position, aux);
+                                        if (aux) {
+                                            swipeListView.onOpened(position, swapRight);
+                                            openedRight.set(position, swapRight);
+                                        } else {
+                                            swipeListView.onClosed(position, openedRight.get(position));
+                                        }
+                                    }
+                                    
+                                    animationRunning = false;
+                                }
+                            });
+                    
+                }
+            }
+        }
+    }
+	
+	// add by weijiangnan on 20150525 end
 }

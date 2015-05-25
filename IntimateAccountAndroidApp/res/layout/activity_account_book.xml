@@ -14,7 +14,7 @@
         swipe:swipeCloseAllItemsWhenMoveList="true"
         swipe:swipeFrontView="@+id/id_front"
         swipe:swipeMode="left"
-        swipe:swipeOffsetLeft="230dp"
+        swipe:swipeOffsetLeft="@dimen/list_account_book_item_swipe_menu_width"
         swipe:swipeOpenOnLongPress="true" >
     </com.nan.ia.app.widget.CustomSwipeListView>
 
