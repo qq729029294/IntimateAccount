@@ -3,18 +3,12 @@ package com.nan.ia.common.entities;
 import java.util.Date;
 
 public class AccountCategory {
-	private Integer accountCategoryId;
 	private int accountBookId;
 	private String category;
 	private String superCategory;
 	private Date createTime;
 	private Date updateTime;
-	public Integer getAccountCategoryId() {
-		return accountCategoryId;
-	}
-	public void setAccountCategoryId(Integer accountCategoryId) {
-		this.accountCategoryId = accountCategoryId;
-	}
+	
 	public int getAccountBookId() {
 		return accountBookId;
 	}

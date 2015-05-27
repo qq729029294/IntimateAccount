@@ -4,13 +4,12 @@ import java.io.Serializable;
 
 import com.nan.ia.app.utils.LogUtils;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Window;
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends FragmentActivity {
 	protected static final String EXTRA_KEY_TRANS_DATA = "EXTRA_KEY_TRANS_DATA";
 	
 	private static final String TAG = "BaseActivity";
@@ -62,12 +61,13 @@ public class BaseActivity extends Activity {
 		super.onDestroy();
 	}
 	
-	protected void setTransData(Intent intent, Serializable transData) {
+	protected Intent createTransDataIntent(Intent intent, Serializable transData) {
 		if (null == intent) {
-			return;
+			return null;
 		}
 		
 		intent.putExtra(EXTRA_KEY_TRANS_DATA, transData);
+		return intent;
 	}
 	
 	@SuppressWarnings("unchecked")

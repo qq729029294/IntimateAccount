@@ -12,8 +12,8 @@
 
         <RelativeLayout
             android:id="@+id/btn_edit"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:background="@color/light_gray"
             android:clickable="true" >
@@ -23,13 +23,13 @@
                 android:layout_height="32dp"
                 android:layout_centerInParent="true"
                 android:layout_marginLeft="@dimen/margin"
-                android:src="@drawable/seletor_btn_edit_blue" />
+                android:src="@drawable/selector_btn_edit_blue" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/btn_delete"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:background="@color/red"
             android:clickable="true" >
@@ -39,7 +39,7 @@
                 android:layout_height="32dp"
                 android:layout_centerInParent="true"
                 android:layout_marginLeft="@dimen/margin"
-                android:src="@drawable/seletor_btn_delete" />
+                android:src="@drawable/selector_btn_delete" />
         </RelativeLayout>
     </LinearLayout>
 

@@ -10,14 +10,22 @@ package com.nan.ia.common.entities;
 import java.util.Date;
 
 public class AccountCategoryDelete {
-	private int accountCategoryId;
+	private int accountBookId;
+	private String category;
 	private int deleteUserId;
 	private Date deleteTime;
-	public int getAccountCategoryId() {
-		return accountCategoryId;
+	
+	public int getAccountBookId() {
+		return accountBookId;
 	}
-	public void setAccountCategoryId(int accountCategoryId) {
-		this.accountCategoryId = accountCategoryId;
+	public void setAccountBookId(int accountBookId) {
+		this.accountBookId = accountBookId;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
 	}
 	public int getDeleteUserId() {
 		return deleteUserId;

@@ -1,0 +1,37 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res/com.nan.ia.app"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+    
+    <com.nan.ia.app.widget.FullLineEditControl
+        android:id="@+id/full_line_edit_control_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/full_line_edit_control_name"
+        android:layout_marginTop="-1dp"
+        app:fulllineedit_left_text="@string/lbl_description" >
+    </com.nan.ia.app.widget.FullLineEditControl>
+    
+    <com.nan.ia.app.widget.FullLineEditControl
+        android:id="@+id/full_line_edit_control_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_vertical"
+        app:fulllineedit_left_text="@string/lbl_name" >
+    </com.nan.ia.app.widget.FullLineEditControl>
+
+    <com.nan.ia.app.widget.CustomButton
+        android:id="@+id/btn_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="@dimen/margin_vertical_large"
+        android:layout_marginLeft="@dimen/margin_horizontal"
+        android:layout_marginRight="@dimen/margin_horizontal"
+        android:layout_below="@+id/full_line_edit_control_description"
+        android:text="@string/btn_ok" />
+
+</RelativeLayout>

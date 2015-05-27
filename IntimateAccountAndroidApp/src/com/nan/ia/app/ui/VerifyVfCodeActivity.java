@@ -77,9 +77,8 @@ public class VerifyVfCodeActivity extends BaseActionBarActivity {
 							toTransData.setUsername(transData.getUsername());
 							toTransData.setAccountType(transData.getAccountType());
 							toTransData.setVfCode(Integer.valueOf(editControlVfCode.getEditText().getText().toString()));
-							setTransData(intent, toTransData);
 							
-							startActivity(intent);
+							startActivity(createTransDataIntent(intent, transData));
 						}
 					}
 				}.execute(0);

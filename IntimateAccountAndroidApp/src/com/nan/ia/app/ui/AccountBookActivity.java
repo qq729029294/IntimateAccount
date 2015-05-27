@@ -7,25 +7,24 @@
 
 package com.nan.ia.app.ui;
 
-import java.util.ArrayList;
-
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
+import android.widget.ImageView;
 import android.widget.Scroller;
 import android.widget.TextView;
 
 import com.nan.ia.app.R;
+import com.nan.ia.app.biz.BizFacade;
 import com.nan.ia.app.data.AppData;
+import com.nan.ia.app.ui.EditAccountBookActivity.EditAccountBookType;
 import com.nan.ia.app.utils.Utils;
+import com.nan.ia.app.widget.CustomDialogBuilder;
 import com.nan.ia.app.widget.CustomSwipeListView;
 import com.nan.ia.app.widget.CustomToast;
 import com.nan.ia.common.entities.AccountBook;
@@ -40,58 +39,44 @@ public class AccountBookActivity extends BaseActionBarActivity {
 		
 		setContentView(R.layout.activity_account_book);
 		
-		// 造数据
-		AccountBook accountBook = new AccountBook();
-		accountBook.setName("生活账本");
-		accountBook.setDescription("记录生活中的支出收入点滴");
-		AppData.setAccountBooks(new ArrayList<AccountBook>());
-		AppData.getAccountBooks().add(accountBook);
-		AppData.getAccountBooks().add(accountBook);
-		AppData.getAccountBooks().add(accountBook);
-		AppData.getAccountBooks().add(accountBook);
-		AppData.getAccountBooks().add(accountBook);
-		AppData.getAccountBooks().add(accountBook);
-		AppData.getAccountBooks().add(accountBook);
-		AppData.getAccountBooks().add(accountBook);
-		AppData.getAccountBooks().add(accountBook);
-		AppData.getAccountBooks().add(accountBook);
-		AppData.getAccountBooks().add(accountBook);
-		AppData.getAccountBooks().add(accountBook);
-		AppData.getAccountBooks().add(accountBook);
-		AppData.getAccountBooks().add(accountBook);
-		AppData.getAccountBooks().add(accountBook);
-		
 		mListView = (CustomSwipeListView) findViewById(R.id.list_account_book);
-		mListView.setAdapter(new AccoutBookAdapter(this));
-		mListView.setOffsetLeft(mListView.getWidth() -
-				Utils.dip2px(this, getResources().getDimension(R.dimen.list_account_book_item_swipe_menu_width)));
-		mListView.setOnLongClickListener(new OnLongClickListener() {
+		mListView.setAdapter(new AccountBookAdapter(this));
+		mListView.setOffsetLeft(getWindowManager().getDefaultDisplay().getWidth() -
+				getResources().getDimension(R.dimen.list_account_book_item_swipe_menu_width));
+		
+		ImageView imageView = new ImageView(this);
+		imageView.setImageResource(R.drawable.btn_add_white);
+		imageView.setClickable(true);
+		imageView.setLayoutParams(new LayoutParams(Utils.dip2px(this, 32), Utils.dip2px(this, 32)));
+		imageView.setOnClickListener(new OnClickListener() {
 			
 			@Override
-			public boolean onLongClick(View v) {
+			public void onClick(View v) {
+				EditAccountBookActivity.TransData transData = new EditAccountBookActivity.TransData();
+				transData.editAccountBookType = EditAccountBookType.NEW;
 				
-				return false;
+				Intent intent = new Intent(AccountBookActivity.this, EditAccountBookActivity.class);
+				startActivity(createTransDataIntent(intent, transData));
 			}
 		});
 		
-//		mListView.postInvalidate();
-//		mScroller = new Scroller(mListView.getContext());
-//		mListView.setOnItemClickListener(new OnItemClickListener() {
-//
-//			@Override
-//			public void onItemClick(AdapterView<?> parent, View view,
-//					int position, long id) {
-//				mListView.startScroll(view);
-//			}
-//		});
+		mActionBar.customRightView(this, imageView);
 	}
 	
-    private static class AccoutBookAdapter extends BaseAdapter {
-        private LayoutInflater mInflater;
+    @Override
+	protected void onStop() {
+    	mListView.closeOpenedItems();
+		super.onStop();
+	}
 
-        public AccoutBookAdapter(Context context) {
+	private static class AccountBookAdapter extends BaseAdapter {
+        private LayoutInflater mInflater;
+        private AccountBookActivity mActivity;
+
+        public AccountBookAdapter(AccountBookActivity activity) {
             // Cache the LayoutInflate to avoid asking for a new one each time.
-            mInflater = LayoutInflater.from(context);
+            mInflater = LayoutInflater.from(activity);
+            mActivity = activity;
         }
 
         /**
@@ -125,25 +110,11 @@ public class AccountBookActivity extends BaseActionBarActivity {
             return position;
         }
 
-        /**
-         * Make a view to hold each row.
-         *
-         * @see android.widget.ListAdapter#getView(int, android.view.View,
-         *      android.view.ViewGroup)
-         */
         public View getView(final int position, View convertView, ViewGroup parent) {
-            // A ViewHolder keeps references to children views to avoid unneccessary calls
-            // to findViewById() on each row.
             ViewHolder holder;
-
-            // When convertView is not null, we can reuse it directly, there is no need
-            // to reinflate it. We only inflate a new View when the convertView supplied
-            // by ListView is null.
             if (convertView == null) {
                 convertView = mInflater.inflate(R.layout.list_item_account_book, null);
 
-                // Creates a ViewHolder and store references to the two children views
-                // we want to bind data to.
                 holder = new ViewHolder();
                 View frontView = convertView.findViewById(R.id.id_front);
                 holder.textAccountBookName = (TextView) frontView.findViewById(R.id.text_account_book_name);
@@ -154,12 +125,9 @@ public class AccountBookActivity extends BaseActionBarActivity {
 
                 convertView.setTag(holder);
             } else {
-                // Get the ViewHolder back to get fast access to the TextView
-                // and the ImageView.
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            // Bind the data efficiently with the holder.
             holder.textAccountBookName.setText(AppData.getAccountBooks().get(position).getName());
             holder.textAccountBookDescription.setText(AppData.getAccountBooks().get(position).getDescription());
 
@@ -167,7 +135,7 @@ public class AccountBookActivity extends BaseActionBarActivity {
 				
 				@Override
 				public void onClick(View v) {
-					CustomToast.showToast("btnEdit:" + position);
+					editAccountBook(position);
 				}
 			});
             
@@ -175,7 +143,7 @@ public class AccountBookActivity extends BaseActionBarActivity {
 				
 				@Override
 				public void onClick(View v) {
-					CustomToast.showToast("btnDelete:" + position);
+					deleteAccountBook(position);
 				}
 			});
             
@@ -187,6 +155,63 @@ public class AccountBookActivity extends BaseActionBarActivity {
             TextView textAccountBookDescription;
         	View btnDelete;
         	View btnEdit;
+        }
+        
+        void editAccountBook(int position) {
+			if (0 > position || position >= AppData.getAccountBooks().size()) {
+				return;
+			}
+
+			EditAccountBookActivity.TransData transData = new EditAccountBookActivity.TransData();
+			transData.editAccountBookType = EditAccountBookType.EDIT;
+			transData.accountBook = AppData.getAccountBooks().get(
+					position);
+			
+			Intent intent = new Intent(mActivity, EditAccountBookActivity.class);
+			mActivity.startActivity(mActivity.createTransDataIntent(intent, transData));
+        }
+        
+		void deleteAccountBook(int position) {
+			if (0 > position || position >= AppData.getAccountBooks().size()) {
+				return;
+			}
+
+			final AccountBook accountBook = AppData.getAccountBooks().get(
+					position);
+			
+			if (accountBook.getAccountBookId() == AppData.getCurrentAccountBookId()) {
+				// 无法删除当前账本
+				CustomToast.showToast(R.string.msg_can_not_delete_account_book);
+				return;
+			}
+			
+			final CustomDialogBuilder dialogBuilder = CustomDialogBuilder
+					.getInstance(mActivity);
+			String msg = String.format(mActivity.getString(R.string.fmt_msg_makesure_delete_account_book),
+					accountBook.getName());
+			dialogBuilder.withButton2Drawable(R.drawable.selector_btn_inverse)
+					.withMessage(msg)
+					.withButton2TextColor(mActivity.getResources().getColor(R.color.app_main_color))
+					.withButton1Drawable(R.drawable.selector_btn_red)
+					.withButton1Text(mActivity.getString(R.string.btn_delete))
+					.withButton2Text(mActivity.getString(R.string.btn_cancel))
+					.setButton1Click(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							BizFacade.getInstance().deleteAccountBook(
+									accountBook.getAccountBookId());
+							dialogBuilder.dismiss();
+							AccountBookAdapter.this.notifyDataSetChanged();
+						}
+					}).setButton2Click(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							dialogBuilder.dismiss();
+						}
+					}).show();
+			
+			// 关闭菜单
+			mActivity.mListView.closeOpenedItems();
         }
     }
 }

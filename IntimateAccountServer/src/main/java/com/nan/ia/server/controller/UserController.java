@@ -29,7 +29,7 @@ import com.nan.ia.common.utils.BoolResult;
 import com.nan.ia.server.biz.BizFacade;
 import com.nan.ia.server.constant.Constant;
 import com.nan.ia.server.db.DBService;
-import com.nan.ia.server.db.entities.LoginAccountTbl;
+import com.nan.ia.server.db.entities.AccountTbl;
 
 @Controller
 public class UserController {
@@ -131,8 +131,8 @@ public class UserController {
 		
 		AccountLoginRequestData requestData = result.result();
 		// 再次验证验证码
-		BoolResult<LoginAccountTbl> resultGetLoginAccount =
-				DBService.getInstance().getLoginAccount(requestData.getUsername(), requestData.getAccountType());
+		BoolResult<AccountTbl> resultGetLoginAccount =
+				DBService.getInstance().getAccount(requestData.getUsername(), requestData.getAccountType());
 		
 		if (resultGetLoginAccount.isFalse()) {
 			return RequestHelper.responseAccessDBError("");

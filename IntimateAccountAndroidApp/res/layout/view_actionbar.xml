@@ -20,7 +20,7 @@
             android:maxHeight="30dp"
             android:maxWidth="24dp"
             android:scaleType="fitXY"
-            android:src="@drawable/seletor_btn_back"
+            android:src="@drawable/selector_btn_back"
             android:visibility="gone" />
 
 		<TextView
@@ -31,7 +31,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/image_back"
-            android:textColor="@drawable/seletor_color_white_text"
+            android:textColor="@drawable/selector_color_white_text"
             android:visibility="gone" />
     </RelativeLayout>
 
@@ -65,7 +65,7 @@
             android:text=""
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_centerVertical="true"
-            android:textColor="@drawable/seletor_color_white_text"
+            android:textColor="@drawable/selector_color_white_text"
             android:visibility="gone"
             android:clickable="true" />
 

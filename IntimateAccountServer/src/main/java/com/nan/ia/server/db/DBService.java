@@ -16,8 +16,8 @@ import com.nan.ia.server.db.entities.AccountBookDeleteTbl;
 import com.nan.ia.server.db.entities.AccountBookMemberTbl;
 import com.nan.ia.server.db.entities.AccountBookMemberTblId;
 import com.nan.ia.server.db.entities.AccountBookTbl;
-import com.nan.ia.server.db.entities.LoginAccountTbl;
-import com.nan.ia.server.db.entities.LoginAccountTblId;
+import com.nan.ia.server.db.entities.AccountTbl;
+import com.nan.ia.server.db.entities.AccountTblId;
 import com.nan.ia.server.db.entities.LoginStateTbl;
 import com.nan.ia.server.db.entities.UserTbl;
 
@@ -59,15 +59,15 @@ public class DBService {
 			
 			trans = session.beginTransaction();
 			// 创建登录账户
-			LoginAccountTbl loginAccountTbl = new LoginAccountTbl();
-			LoginAccountTblId loginAccountTblId = new LoginAccountTblId();
-			loginAccountTblId.setUsername(username);
-			loginAccountTblId.setAccountType(accountType);
+			AccountTbl AccountTbl = new AccountTbl();
+			AccountTblId AccountTblId = new AccountTblId();
+			AccountTblId.setUsername(username);
+			AccountTblId.setAccountType(accountType);
 			
-			loginAccountTbl.setId(loginAccountTblId);
-			loginAccountTbl.setUserId(userTbl.getUserId());
-			loginAccountTbl.setPassword(password);
-			session.save(loginAccountTbl);
+			AccountTbl.setId(AccountTblId);
+			AccountTbl.setUserId(userTbl.getUserId());
+			AccountTbl.setPassword(password);
+			session.save(AccountTbl);
 			trans.commit();
 			
 			return true;
@@ -268,7 +268,7 @@ public class DBService {
 		try {
 			Session session = HibernateUtil.getSession();
 			// 检查是否已经存在用户名
-			Query query = session.createQuery("FROM LoginAccountTbl r WHERE r.id.username = ?");
+			Query query = session.createQuery("FROM AccountTbl r WHERE r.id.username = ?");
 			query.setParameter(0, username);
 			if (query.list().size() > 0) {
 				return true;
@@ -282,15 +282,15 @@ public class DBService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public BoolResult<LoginAccountTbl> getLoginAccount(String username, int accountType) {
+	public BoolResult<AccountTbl> getAccount(String username, int accountType) {
 		try {
 			Session session = HibernateUtil.getSession();
 			// 检查是否已经存在用户名
-			Query query = session.createQuery("FROM LoginAccountTbl r WHERE r.id.username = ? AND r.id.accountType = ?");
+			Query query = session.createQuery("FROM AccountTbl r WHERE r.id.username = ? AND r.id.accountType = ?");
 			query.setParameter(0, username);
 			query.setParameter(1, accountType);
 			
-			List<LoginAccountTbl> tbls = query.list();
+			List<AccountTbl> tbls = query.list();
 			if (tbls.size() == 1) {
 				return BoolResult.True(tbls.get(0));
 			} else {

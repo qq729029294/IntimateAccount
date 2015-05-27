@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="padding">12dp</dimen>
+    <dimen name="padding_large">18dp</dimen>
     <dimen name="margin_text">6dp</dimen>
     <dimen name="margin_vertical">12dp</dimen>
     <dimen name="margin_vertical_large">18dp</dimen>
@@ -9,5 +10,5 @@
     <dimen name="margin_large">18dp</dimen>
     <dimen name="margin">12dp</dimen>
     <dimen name="margin_small">6dp</dimen>
-    <dimen name="list_account_book_item_swipe_menu_width">120dp</dimen>
+    <dimen name="list_account_book_item_swipe_menu_width">180dp</dimen>
 </resources>

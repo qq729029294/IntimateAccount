@@ -59,6 +59,16 @@
             android:name=".ui.AccountBookActivity"
             android:label="@string/title_account_book" >
         </activity>
+        
+        <activity
+            android:name=".ui.EditAccountBookActivity"
+            android:label="@string/title_edit_account_book" >
+        </activity>
+        <activity
+            android:name=".ui.EditAccountBookItemActivity"
+            android:label="@string/title_edit_account_item_book" >
+        </activity>
+
     </application>
 
 </manifest>

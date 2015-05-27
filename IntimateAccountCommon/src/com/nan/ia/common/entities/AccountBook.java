@@ -1,8 +1,11 @@
 package com.nan.ia.common.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class AccountBook {
+public class AccountBook implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private Integer accountBookId;
 	private String name;
 	private String description;

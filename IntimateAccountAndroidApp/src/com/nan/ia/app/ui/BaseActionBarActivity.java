@@ -157,6 +157,18 @@ public abstract class BaseActionBarActivity extends BaseActivity {
 		}
 	}
 	
+	@Override
+	public void setTitle(CharSequence title) {
+		mActionBar.setTitle(title.toString());
+		super.setTitle(title);
+	}
+
+	@Override
+	public void setTitle(int titleId) {
+		mActionBar.setTitle(getString(titleId));
+		super.setTitle(titleId);
+	}
+
 	/**
 	 * 获得跳转的Title
 	 */

@@ -1,34 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:background="@drawable/ic_text_bg_full_line"
+    android:background="@drawable/ic_full_line_text_bg"
     android:orientation="horizontal" >
-
+    
     <RelativeLayout
         android:id="@+id/left_container"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical" >
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true" >
 
+        <TextView
+            android:id="@+id/text_left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_btn_white"
+            android:gravity="center"
+            android:paddingLeft="@dimen/padding_large"
+            android:paddingRight="@dimen/padding_large"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/app_main_color"
+            android:visibility="gone" />
     </RelativeLayout>
+    
+    <ImageView
+        android:id="@+id/image_divider_left"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/left_container"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_full_line_text_divider"
+        android:visibility="gone" />
 
     <com.nan.ia.app.widget.CustomEditText
         android:id="@+id/edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:ems="10"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/image_divider_left"
         android:singleLine="true" >
+
         <requestFocus />
     </com.nan.ia.app.widget.CustomEditText>
-
+    
+	<ImageView
+        android:id="@+id/image_divider_right"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/edit_text"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_full_line_text_divider"
+        android:visibility="gone" />
+    
     <RelativeLayout
         android:id="@+id/right_container"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical" >
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/image_divider_right"
+        android:layout_alignParentRight="true" >
 
+        <TextView
+            android:id="@+id/text_right"
+            android:paddingLeft="@dimen/padding_large"
+            android:paddingRight="@dimen/padding_large"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="@drawable/selector_btn_white"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/app_main_color"
+            android:visibility="gone" >
+        </TextView>
     </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>

@@ -1,8 +1,10 @@
 package com.nan.ia.app.ui;
 
 import com.nan.ia.app.R;
+import com.nan.ia.app.biz.BizFacade;
 import com.nan.ia.app.data.AppData;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.content.Intent;
@@ -24,9 +26,22 @@ public class LoadingActivity extends BaseActivity {
 		super.onStart();
 		
         mBeginLoadTime = System.currentTimeMillis();
-        // TODO start load.
-        
-        this.beginLoadComplete();
+        new AsyncTask<Integer, Integer, Integer>() {
+
+			@Override
+			protected Integer doInBackground(Integer... params) {
+				// 初始化程序内容
+				BizFacade.getInstance().appInit();
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Integer result) {
+				LoadingActivity.this.beginLoadComplete();
+				super.onPostExecute(result);
+			}
+			
+		}.execute(0);
 	}
 	
 	@Override

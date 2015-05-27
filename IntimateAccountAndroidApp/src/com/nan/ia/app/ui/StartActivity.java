@@ -7,7 +7,7 @@ import com.nan.ia.app.R;
 import com.nan.ia.app.adapter.StartFragmentAdapter;
 import com.viewpagerindicator.CirclePageIndicator;
 
-public class StartActivity extends BaseFragmentActivity {
+public class StartActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

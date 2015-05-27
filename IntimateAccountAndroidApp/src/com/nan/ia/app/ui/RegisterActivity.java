@@ -90,8 +90,7 @@ public class RegisterActivity extends BaseActionBarActivity {
 						transData.setAccountType(Constant.ACCOUNT_TYPE_MAIL);
 						
 						Intent intent = new Intent(RegisterActivity.this, VerifyVfCodeActivity.class);
-						setTransData(intent, transData);
-						startActivity(intent);
+						startActivity(createTransDataIntent(intent, transData));
 					}
 				}.execute(0);
 			}
