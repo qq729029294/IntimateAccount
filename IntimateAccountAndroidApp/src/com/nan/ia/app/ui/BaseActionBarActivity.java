@@ -101,10 +101,10 @@ public abstract class BaseActionBarActivity extends BaseActivity {
 		mLayoutContainer.addView(mContentView, params);
 	}
 	
-	@Override
-	public View findViewById(int id) {
-		return mContentView.findViewById(id);
-	}
+//	@Override
+//	public View findViewById(int id) {
+//		return mContentView.findViewById(id);
+//	}
 
 	// 重新startActivity/finish部分，加入动画，传递导航栏值
 	@Override

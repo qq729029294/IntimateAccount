@@ -20,7 +20,7 @@ public class MainActivity extends BaseActionBarActivity {
 			@Override
 			public void onClick(View v) {
 //				MainActivity.this.startActivity(new Intent(MainActivity.this, LoginActivity.class));
-				MainActivity.this.startActivity(new Intent(MainActivity.this, EditAccountBookItemActivity.class));
+				MainActivity.this.startActivity(new Intent(MainActivity.this, RecordActivity.class));
 			}
 		});
 		

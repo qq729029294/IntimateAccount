@@ -24,17 +24,15 @@ public class CategoryGridAdapter extends BaseAdapter {
 	public static final int PER_PAGER_ITEM_COUNT = 12;
 	
 	private LayoutInflater mInflater;
-	private int mPosition;
 	List<AccountCategory> mAccountCategories;
 
-	public CategoryGridAdapter(Context context, int position, List<AccountCategory> accountCategories) {
+	public CategoryGridAdapter(Context context, List<AccountCategory> accountCategories) {
 		mInflater = LayoutInflater.from(context);
-		mPosition = position;
 		mAccountCategories = accountCategories;
 	}
 
 	public int getCount() {
-		return Math.min(PER_PAGER_ITEM_COUNT, mAccountCategories.size() - mPosition * PER_PAGER_ITEM_COUNT);
+		return mAccountCategories.size();
 	}
 
 	public Object getItem(int position) {
@@ -60,7 +58,7 @@ public class CategoryGridAdapter extends BaseAdapter {
 		}
 		
 		holder.imageIcon.setImageResource(R.drawable.ic_category_0);
-		holder.textCategory.setText(mAccountCategories.get(position + mPosition * PER_PAGER_ITEM_COUNT).getCategory());
+		holder.textCategory.setText(mAccountCategories.get(position).getCategory());
 		return convertView;
 	}
 

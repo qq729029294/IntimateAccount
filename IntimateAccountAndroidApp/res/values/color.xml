@@ -5,6 +5,15 @@
     <color name="white_text_press">#88FFFFFF</color>
     <color name="gray">#FF7F7F7F</color>
     <color name="light_gray">#FFCCCCCC</color>
+    <color name="ltlt_gray">#FFF0F0F0</color>
     <color name="red">#FFFF0000</color>
     <color name="app_main_color">#FF187CEB</color>
+    <color name="keyboard_key_unpress">#ff686868</color>
+    <color name="keyboard_key_press">#ff575757</color>
+    <color name="keyboard">#ff454545</color>
+    <color name="line_1dp_gray">#ffbababa</color>
+    <color name="line_1dp_light_gray">#ffe4e4e4</color>
+    <color name="black">#ff000000</color>
+    <color name="blue_light_qn">#ffe6f1f5</color>
+    <color name="blue_qn">#ff009cfe</color>
 </resources>

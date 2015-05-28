@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChatActivity" >
+    tools:context=".ChatActivity"
+    android:background="@color/white" >
 
     <com.nan.ia.app.widget.CustomActionBar
         android:id="@+id/actionBar"

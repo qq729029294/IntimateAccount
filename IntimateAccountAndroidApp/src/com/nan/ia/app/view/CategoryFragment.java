@@ -34,7 +34,7 @@ public class CategoryFragment extends Fragment {
 //    	gridView.setColumnWidth(Utils.dip2px(getActivity(), 100));
     	
     	GridView gridView = (GridView) LayoutInflater.from(getActivity()).inflate(R.layout.grid_category, null);
-		gridView.setAdapter(new CategoryGridAdapter(getActivity(), mPosition, mAccountCategories));
+//		gridView.setAdapter(new CategoryGridAdapter(getActivity(), mPosition, mAccountCategories));
         return gridView;
     }
 }
