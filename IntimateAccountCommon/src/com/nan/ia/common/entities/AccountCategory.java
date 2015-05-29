@@ -6,6 +6,7 @@ public class AccountCategory {
 	private int accountBookId;
 	private String category;
 	private String superCategory;
+	private String icon;
 	private Date createTime;
 	private Date updateTime;
 	
@@ -20,6 +21,12 @@ public class AccountCategory {
 	}
 	public void setCategory(String category) {
 		this.category = category;
+	}
+	public String getIcon() {
+		return icon;
+	}
+	public void setIcon(String icon) {
+		this.icon = icon;
 	}
 	public String getSuperCategory() {
 		return superCategory;

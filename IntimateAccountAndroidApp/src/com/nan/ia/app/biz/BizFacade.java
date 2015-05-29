@@ -9,6 +9,7 @@ import android.content.Context;
 import com.nan.ia.app.App;
 import com.nan.ia.app.constant.Constant;
 import com.nan.ia.app.data.AppData;
+import com.nan.ia.app.data.ResourceMapper;
 import com.nan.ia.app.entities.AccountInfo;
 import com.nan.ia.app.http.cmd.server.AccountLoginServerCmd;
 import com.nan.ia.app.http.cmd.server.RegisterServerCmd;
@@ -97,21 +98,34 @@ public class BizFacade {
 	 * @param accountBookId
 	 */
 	private void createDefaultCategory(int accountBookId) {
-		createCategory(accountBookId, "", "支出");
-		createCategory(accountBookId, "支出", "餐饮");
-		createCategory(accountBookId, "支出", "交通");
-		createCategory(accountBookId, "支出", "购物");
-		createCategory(accountBookId, "支出", "娱乐");
-		createCategory(accountBookId, "支出", "医教");
-		createCategory(accountBookId, "支出", "居家");
-		createCategory(accountBookId, "支出", "投资");
-		createCategory(accountBookId, "支出", "人情");
-		createCategory(accountBookId, "支出", "生意");
+		createCategory(accountBookId, "", "支出", ResourceMapper.icon_category_45);
+		createCategory(accountBookId, "支出", "餐饮", ResourceMapper.icon_category_32);
+		createCategory(accountBookId, "支出", "交通", ResourceMapper.icon_category_2);
+		createCategory(accountBookId, "支出", "购物", ResourceMapper.icon_category_34);
+		createCategory(accountBookId, "支出", "水果零食", ResourceMapper.icon_category_41);
+		createCategory(accountBookId, "支出", "酒水饮料", ResourceMapper.icon_category_44);
+		createCategory(accountBookId, "支出", "居家", ResourceMapper.icon_category_37);
+		createCategory(accountBookId, "支出", "手机通讯", ResourceMapper.icon_category_40);
+		createCategory(accountBookId, "支出", "报销账", ResourceMapper.icon_category_31);
+		createCategory(accountBookId, "支出", "借出", ResourceMapper.icon_category_36);
+		createCategory(accountBookId, "支出", "娱乐", ResourceMapper.icon_category_47);
+		createCategory(accountBookId, "支出", "淘宝", ResourceMapper.icon_category_43);
+		createCategory(accountBookId, "支出", "人情礼物", ResourceMapper.icon_category_39);
+		createCategory(accountBookId, "支出", "医疗教育", ResourceMapper.icon_category_46);
+		createCategory(accountBookId, "支出", "书籍", ResourceMapper.icon_category_42);
+		createCategory(accountBookId, "支出", "美容运动", ResourceMapper.icon_category_38);
+		createCategory(accountBookId, "支出", "宠物", ResourceMapper.icon_category_33);
 		
-		createCategory(accountBookId, "", "收入");
-		createCategory(accountBookId, "收入", "工资");
-		createCategory(accountBookId, "收入", "博彩");
-		createCategory(accountBookId, "收入", "拾取");
+		createCategory(accountBookId, "", "收入", ResourceMapper.icon_category_21);
+		createCategory(accountBookId, "收入", "工资", ResourceMapper.icon_category_21);
+		createCategory(accountBookId, "收入", "奖金", ResourceMapper.icon_category_23);
+		createCategory(accountBookId, "收入", "外快兼职", ResourceMapper.icon_category_24);
+		createCategory(accountBookId, "收入", "借入", ResourceMapper.icon_category_25);
+		createCategory(accountBookId, "收入", "投资收入", ResourceMapper.icon_category_29);
+		createCategory(accountBookId, "收入", "红包", ResourceMapper.icon_category_22);
+		createCategory(accountBookId, "收入", "零花钱", ResourceMapper.icon_category_26);
+		createCategory(accountBookId, "收入", "生活费", ResourceMapper.icon_category_28);
+		createCategory(accountBookId, "收入", "其他", ResourceMapper.icon_category_27);
 	}
 	
 	// 账本相关接口
@@ -238,10 +252,11 @@ public class BizFacade {
 		return false;
 	}
 	
-	public AccountCategory createCategory(int accountBookId, String superCategory, String category) {
+	public AccountCategory createCategory(int accountBookId, String superCategory, String category, String icon) {
 		AccountCategory accountCategory = new AccountCategory();
 		accountCategory.setAccountBookId(accountBookId);
 		accountCategory.setCategory(category);
+		accountCategory.setIcon(icon);
 		accountCategory.setSuperCategory(superCategory);
 		accountCategory.setCreateTime(new Date());
 		accountCategory.setUpdateTime(new Date());

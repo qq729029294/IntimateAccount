@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res/com.nan.ia.app"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RecordActivity" >
@@ -72,51 +73,101 @@
         android:id="@+id/image_line1"
         android:layout_width="fill_parent"
         android:layout_height="0.8000001dip"
+        android:layout_above="@+id/layout_remarks"
+        android:background="@color/line_1dp_light_gray" />
+    
+    <RelativeLayout
+        android:id="@+id/layout_remarks"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:layout_above="@+id/image_line2"
+        android:background="#f5ffffff"
+        android:orientation="horizontal" >
+        
+        <TextView
+            android:id="@+id/text_remarks"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
+            android:background="@null"
+            android:clickable="true"
+            android:ems="10"
+            android:focusable="false"
+            android:gravity="center"
+            android:hint="点击这里，写点备注吧~"
+            android:singleLine="true"
+            android:textColor="#ff333333"
+            android:textSize="18.0sp" />
+    </RelativeLayout>
+    
+    <ImageView
+        android:id="@id/image_line2"
+        android:layout_width="fill_parent"
+        android:layout_height="0.8000001dip"
         android:layout_above="@+id/layout_options"
         android:background="@color/line_1dp_light_gray" />
     
     <RelativeLayout
         android:id="@+id/layout_options"
         android:layout_width="fill_parent"
-        android:layout_height="54.0dip"
+        android:layout_height="48dp"
         android:background="#f5ffffff"
         android:layout_above="@+id/keyboard_number"
         android:orientation="horizontal" >
-
+        
         <ImageView
-            android:id="@+id/btn_remarks"
-            android:layout_width="50.0dip"
-            android:layout_height="wrap_content"
+            android:id="@+id/btn_date"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitXY"
+            android:layout_marginLeft="@dimen/margin_small"
             android:layout_alignParentLeft="true"
-            android:layout_marginRight="60.0dip"
-            android:padding="13.0dip"
-            android:src="@drawable/ic_category_0" />
-
-        <ImageView
-            android:id="@+id/btn_time"
-            android:layout_width="50.0dip"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginRight="110.0dip"
-            android:padding="13.0dip"
-            android:src="@drawable/ic_category_0" />
-
-        <FrameLayout
-            android:id="@+id/frame_btn_photo"
-            android:layout_width="50.0dip"
+            android:layout_centerVertical="true"
+            android:padding="8.0dip"
+            android:src="@drawable/icon_date" />
+        
+        <TextView
+            android:id="@+id/text_date"
+            android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_marginRight="10.0dip"
-            android:padding="8.0dip" >
+            android:layout_toRightOf="@id/btn_date"
+            android:layout_toLeftOf="@+id/frame_btn_photo"
+            android:layout_marginRight="@dimen/margin_large"
+            android:background="@null"
+            android:clickable="true"
+            android:ems="10"
+            android:focusable="false"
+            android:gravity="center|left"
+            android:hint="05/29 12:25"
+            android:singleLine="true"
+            android:textColor="#ff333333"
+            android:textSize="18.0sp" />
+        
+        <FrameLayout
+            android:id="@id/frame_btn_photo"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_toLeftOf="@+id/btn_microphone" >
 
             <ImageView
                 android:id="@+id/btn_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:padding="5.0dip"
-                android:src="@drawable/ic_category_0" />
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:scaleType="fitXY"
+                android:padding="8.0dip"
+                android:src="@drawable/icon_photo" />
         </FrameLayout>
+
+        <ImageView
+            android:id="@id/btn_microphone"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:scaleType="fitXY"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/margin"
+            android:padding="8.0dip"
+            android:src="@drawable/icon_microphone" />
     </RelativeLayout>
 
     <com.nan.ia.app.widget.KeyboardNumber

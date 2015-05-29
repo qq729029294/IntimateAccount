@@ -8,6 +8,7 @@
 package com.nan.ia.app.data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
@@ -21,6 +22,7 @@ import com.nan.ia.common.entities.AccountCategory;
 import com.nan.ia.common.entities.AccountCategoryDelete;
 
 public class AppData {
+	// getter and setter
 	static boolean init;
 	static AccountInfo accountInfo;
 	static int createAccountBookId;
@@ -124,6 +126,9 @@ public class AppData {
 	}
 	
 	public static void readAppData() {
+		// 初始化资源映射类
+		ResourceMapper.initMap();
+		
 		init = AppDataStoreHelper.getBoolean("init", false);
 		accountInfo = AppDataStoreHelper.getObject("accountInfo", AccountInfo.class, null);
 		createAccountBookId = AppDataStoreHelper.getInt("createAccountBookId", Constant.DEFAULT_CREATE_ACCOUNT_BOOK_ID);
@@ -144,5 +149,9 @@ public class AppData {
 		
 		lastSyncDataServerTime = AppDataStoreHelper.getLong("lastSyncDataServerTime", 0);
 		lastSyncDataLocalTime = AppDataStoreHelper.getLong("lastSyncDataLocalTime", 0);
+	}
+	
+	public static void readCategoryIconInfo() {
+		
 	}
 }

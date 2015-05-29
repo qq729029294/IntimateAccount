@@ -10,6 +10,7 @@ package com.nan.ia.app.adapter;
 import java.util.List;
 
 import com.nan.ia.app.R;
+import com.nan.ia.app.data.ResourceMapper;
 import com.nan.ia.common.entities.AccountCategory;
 
 import android.content.Context;
@@ -57,7 +58,7 @@ public class CategoryGridAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		
-		holder.imageIcon.setImageResource(R.drawable.ic_category_0);
+		holder.imageIcon.setImageResource(ResourceMapper.mappingResouce(mAccountCategories.get(position).getIcon()));
 		holder.textCategory.setText(mAccountCategories.get(position).getCategory());
 		return convertView;
 	}
