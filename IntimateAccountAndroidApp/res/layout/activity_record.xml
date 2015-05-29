@@ -45,7 +45,7 @@
             android:gravity="center|right"
             android:hint="0.00"
             android:inputType="numberSigned"
-            android:maxLength="8"
+            android:maxLength="13"
             android:singleLine="true"
             android:textColor="#ff333333"
             android:textSize="37.0sp" />
@@ -65,9 +65,13 @@
         android:layout_above="@+id/keyboard_number"
         android:layout_below="@id/image_line0"
         android:background="@color/ltlt_gray"
-        android:columnWidth="90dp"
+        android:columnWidth="70dp"
+        android:gravity="center_horizontal"
         android:numColumns="auto_fit"
-        android:stretchMode="spacingWidthUniform" />
+        android:listSelector="@color/transparent"
+        android:clipToPadding="false"
+        android:paddingBottom="100dp"
+        android:stretchMode="columnWidth" />
     
     <ImageView
         android:id="@+id/image_line1"

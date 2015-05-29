@@ -16,4 +16,6 @@
     <color name="black">#ff000000</color>
     <color name="blue_light_qn">#ffe6f1f5</color>
     <color name="blue_qn">#ff009cfe</color>
+    <color name="click_marks">#33000000</color>
+    <color name="transparent">#00000000</color>
 </resources>

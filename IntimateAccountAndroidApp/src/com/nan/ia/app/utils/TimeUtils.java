@@ -53,4 +53,8 @@ public class TimeUtils {
             return time;
         }
     }
+    
+    public static String getMMddhhmmTime(Date date) {
+    	return DateFormat.format("MM-dd hh:mm", date).toString();
+    }
 }

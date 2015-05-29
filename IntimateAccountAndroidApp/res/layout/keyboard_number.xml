@@ -236,7 +236,7 @@
             android:textSize="34.0sp" />
 
         <TextView
-            android:id="@+id/keybord_number_txt_queding"
+            android:id="@+id/keybord_number_txt_ok"
             android:layout_width="16.0dip"
             android:layout_height="fill_parent"
             android:layout_alignParentEnd="false"
