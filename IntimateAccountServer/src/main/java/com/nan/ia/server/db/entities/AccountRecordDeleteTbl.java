@@ -1,6 +1,6 @@
 package com.nan.ia.server.db.entities;
 
-// Generated 2015-5-31 5:53:22 by Hibernate Tools 3.4.0.CR1
+// Generated 2015-6-1 23:38:06 by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import javax.persistence.Column;

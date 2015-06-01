@@ -1,6 +1,6 @@
 package com.nan.ia.server.db.entities;
 
-// Generated 2015-5-31 5:53:22 by Hibernate Tools 3.4.0.CR1
+// Generated 2015-6-1 23:38:06 by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -25,7 +25,7 @@ public class AccountRecordTbl implements java.io.Serializable {
 	private Double waterValue;
 	private String description;
 	private Date recordTime;
-	private int createUserId;
+	private int recordUserId;
 	private Date createTime;
 	private Date updateTime;
 
@@ -33,24 +33,24 @@ public class AccountRecordTbl implements java.io.Serializable {
 	}
 
 	public AccountRecordTbl(int accountBookId, String category,
-			Date recordTime, int createUserId, Date createTime, Date updateTime) {
+			Date recordTime, int recordUserId, Date createTime, Date updateTime) {
 		this.accountBookId = accountBookId;
 		this.category = category;
 		this.recordTime = recordTime;
-		this.createUserId = createUserId;
+		this.recordUserId = recordUserId;
 		this.createTime = createTime;
 		this.updateTime = updateTime;
 	}
 
 	public AccountRecordTbl(int accountBookId, String category,
 			Double waterValue, String description, Date recordTime,
-			int createUserId, Date createTime, Date updateTime) {
+			int recordUserId, Date createTime, Date updateTime) {
 		this.accountBookId = accountBookId;
 		this.category = category;
 		this.waterValue = waterValue;
 		this.description = description;
 		this.recordTime = recordTime;
-		this.createUserId = createUserId;
+		this.recordUserId = recordUserId;
 		this.createTime = createTime;
 		this.updateTime = updateTime;
 	}
@@ -112,13 +112,13 @@ public class AccountRecordTbl implements java.io.Serializable {
 		this.recordTime = recordTime;
 	}
 
-	@Column(name = "create_user_id", nullable = false)
-	public int getCreateUserId() {
-		return this.createUserId;
+	@Column(name = "record_user_id", nullable = false)
+	public int getRecordUserId() {
+		return this.recordUserId;
 	}
 
-	public void setCreateUserId(int createUserId) {
-		this.createUserId = createUserId;
+	public void setRecordUserId(int recordUserId) {
+		this.recordUserId = recordUserId;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)

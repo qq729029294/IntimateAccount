@@ -6,6 +6,7 @@ import android.text.format.DateFormat;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -56,5 +57,46 @@ public class TimeUtils {
     
     public static String getMMddhhmmTime(Date date) {
     	return DateFormat.format("MM-dd hh:mm", date).toString();
+    }
+    
+    /**
+     * 返回星期
+     * @param date
+     * @return 周x
+     */
+    public static String dateFormatWeekCN(Date date) {
+    	Calendar calendar = Calendar.getInstance();
+    	calendar.setTime(date);
+    	int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+    	switch (dayOfWeek) {
+		case Calendar.SUNDAY:
+			return "周日";
+		case Calendar.MONDAY:
+			return "周一";
+		case Calendar.TUESDAY:
+			return "周二";
+		case Calendar.WEDNESDAY:
+			return "周三";
+		case Calendar.THURSDAY:
+			return "周四";
+		case Calendar.FRIDAY:
+			return "周五";
+		case Calendar.SATURDAY:
+			return "周六";
+
+		default:
+			break;
+		}
+    	
+    	return "";
+    }
+    
+    /**
+     * 返回每月几号
+     * @param date
+     * @return 每月几号
+     */
+    public static String dateFormatdd(Date date) {
+    	return DateFormat.format("dd", date).toString();
     }
 }

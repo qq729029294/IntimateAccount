@@ -12,7 +12,7 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/text_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -24,7 +24,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/text_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/layout_month"
@@ -42,6 +42,16 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="24dp"
         android:layout_toRightOf="@+id/layout_date"
+        android:background="@color/line_1dp_light_gray" />
+    
+    <ImageView
+        android:id="@+id/image_line_last"
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:layout_marginRight="-24dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@id/image_line0"
         android:background="@color/line_1dp_light_gray" />
 
     <ImageView
@@ -80,7 +90,7 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/TextView03"
+            android:id="@+id/text_remarks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -101,7 +111,7 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/TextView01"
+            android:id="@+id/text_water_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -114,20 +124,20 @@
             android:layout_height="wrap_content" >
 
             <ImageView
-                android:id="@+id/text_creator_avatar"
+                android:id="@+id/image_recorder_avatar"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/icon_default_avatar" />
 
             <TextView
-                android:id="@+id/text_creator_name"
+                android:id="@+id/text_recorder_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_small"
                 android:text="韦江南"
-                android:textColor="@color/font_lt"
+                android:textColor="@color/font_ltlt"
                 android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>

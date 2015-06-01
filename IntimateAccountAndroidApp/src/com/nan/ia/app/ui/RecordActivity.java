@@ -51,6 +51,7 @@ public class RecordActivity extends BaseActionBarActivity {
 	
 	CategoryGridAdapter mCategoryGridAdapter;
 	List<AccountCategory> mCategories;
+	String rootCategory;
 	
 	AccountRecord mCurrentRecord;
 	
@@ -77,7 +78,7 @@ public class RecordActivity extends BaseActionBarActivity {
 			mCurrentRecord.setAccountBookId(AppData.getCurrentAccountBookId());
 			mCurrentRecord.setRecordTime(new Date());
 			mCurrentRecord.setCategory(Constant.CATEGORY_EXPEND);
-			mCurrentRecord.setCreateUserId(AppData.getAccountInfo().getUserId());
+			mCurrentRecord.setRecordUserId(AppData.getAccountInfo().getUserId());
 		} else {
 			mCurrentRecord = mTransData.getAccountRecord();
 		}
@@ -96,19 +97,22 @@ public class RecordActivity extends BaseActionBarActivity {
 		DoubleSelectButton doubleSelectButton = new DoubleSelectButton(this);
 		doubleSelectButton.setLeftText(categoryExpend.getCategory());
 		doubleSelectButton.setRightText(categoryIncome.getCategory());
-		boolean selectLeft = BizFacade.getInstance().getRootCategory(AppData.getCurrentAccountBookId(),
-				mCurrentRecord.getCategory()).getCategory().equals(Constant.CATEGORY_EXPEND);
+		rootCategory = BizFacade.getInstance().getRootCategory(AppData.getCurrentAccountBookId(),
+				mCurrentRecord.getCategory()).getCategory();
+		boolean selectLeft = rootCategory.equals(Constant.CATEGORY_EXPEND);
 		doubleSelectButton.selectLeft(selectLeft);
 		doubleSelectButton.setListener(new DoubleSelectBtnListener() {
 			
 			@Override
 			public void onRightSelected(View v) {
+				rootCategory = categoryIncome.getCategory();
 				setParentCategory(categoryIncome);
 				selectCategory(categoryIncome);
 			}
 			
 			@Override
 			public void onLeftSelected(View v) {
+				rootCategory = categoryExpend.getCategory();
 				setParentCategory(categoryExpend);
 				selectCategory(categoryExpend);
 			}
@@ -118,7 +122,7 @@ public class RecordActivity extends BaseActionBarActivity {
 		// 金额
 		if (mCurrentRecord.getWaterValue() != 0) {
 			DecimalFormat df = new DecimalFormat("0.##");
-			mTextAmount.setText(String.valueOf(df.format(mCurrentRecord.getWaterValue())));
+			mTextAmount.setText(String.valueOf(df.format(Math.abs(mCurrentRecord.getWaterValue()))));
 		}
 		
 		// 备注
@@ -165,13 +169,19 @@ public class RecordActivity extends BaseActionBarActivity {
 		mKeyboardNumber.setListener(new KeyboardNumberListener() {
 			
 			@Override
-			public void onValueChanged(String enterValue, float value) {
+			public void onValueChanged(String enterValue, double value) {
 				mTextAmount.setText(enterValue);
-				mCurrentRecord.setWaterValue(value);
+				
+				// 支出为负数，收入为正数
+				if (rootCategory.equals(Constant.CATEGORY_EXPEND)) {
+					mCurrentRecord.setWaterValue(-value);
+				} else {
+					mCurrentRecord.setWaterValue(-value);
+				}
 			}
 
 			@Override
-			public void onOKClicked(String enterValue, float value) {
+			public void onOKClicked(String enterValue, double value) {
 				// 完成编辑
 				if (mTransData.getType() == RecordActivityType.NEW) {
 					BizFacade.getInstance().createAccountRecord(mCurrentRecord);
@@ -179,7 +189,7 @@ public class RecordActivity extends BaseActionBarActivity {
 				}
 			}
 		});
-		mKeyboardNumber.initKeyboardNumber((float) mCurrentRecord.getWaterValue(), 8, 2);
+		mKeyboardNumber.initKeyboardNumber(Math.abs(mCurrentRecord.getWaterValue()), 8, 2);
 		
 		// 设置父分类和选择分类
 		setParentCategory(BizFacade.getInstance().getRootCategory(AppData.getCurrentAccountBookId(), mCurrentRecord.getCategory()));

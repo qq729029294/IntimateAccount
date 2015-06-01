@@ -1,5 +1,6 @@
 package com.nan.ia.app.ui;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +9,9 @@ import com.nan.ia.app.R;
 import com.nan.ia.app.biz.BizFacade;
 import com.nan.ia.app.constant.Constant;
 import com.nan.ia.app.data.AppData;
+import com.nan.ia.app.data.ResourceMapper;
+import com.nan.ia.app.utils.TimeUtils;
+import com.nan.ia.common.entities.AccountCategory;
 import com.nan.ia.common.entities.AccountRecord;
 import com.ryg.expandable.ui.PinnedHeaderExpandableListView;
 import com.ryg.expandable.ui.PinnedHeaderExpandableListView.OnHeaderUpdateListener;
@@ -17,12 +21,15 @@ import com.ryg.expandable.ui.StickyLayout.OnGiveUpTouchEventListener;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.SyncStateContract.Constants;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.AbsListView.LayoutParams;
 
 public class MainActivity extends BaseActionBarActivity {
@@ -50,10 +57,21 @@ public class MainActivity extends BaseActionBarActivity {
 		initUI();
 	}
 	
+	
+	@Override
+	protected void onStart() {
+		// 刷新数据
+		mAdapter.setData(BizFacade.getInstance().getMoreAccountRecords(AppData.getCurrentAccountBookId(),
+				System.currentTimeMillis()));
+		mAdapter.notifyDataSetChanged();
+		
+		super.onStart();
+	}
+
 	private void initUI() {
 		mListViewRecords = (PinnedHeaderExpandableListView) findViewById(R.id.list_records);
 		mAdapter = new RecordsExpandableListAdapter(this);
-		mAdapter.setDate(BizFacade.getInstance().getMoreAccountRecords(AppData.getCurrentAccountBookId(),
+		mAdapter.setData(BizFacade.getInstance().getMoreAccountRecords(AppData.getCurrentAccountBookId(),
 				System.currentTimeMillis()));
 		mListViewRecords.setAdapter(mAdapter);
 		mListViewRecords.setDividerHeight(0);
@@ -123,15 +141,18 @@ public class MainActivity extends BaseActionBarActivity {
         }
         
         @SuppressWarnings("deprecation")
-		public void setDate(List<AccountRecord> accountRecords) {
+		public void setData(List<AccountRecord> accountRecords) {
         	// 制作数据
         	mListGroupRecords.clear();
         	mListItemRecordsList.clear();
         	
         	ListGroupRecord currentGroup = null;
-        	int currentDay = -1;
         	for (int i = 0; i < accountRecords.size(); i++) {
         		AccountRecord record = accountRecords.get(i);
+        		// 上一条记录，用于比较是否显示日期，等
+        		AccountRecord preRecord = i - 1 < 0 ? null : accountRecords.get(i - 1);
+        		// 下一条记录，用于比较是否是当天最后一项
+        		AccountRecord nextRecord = i + 1 >= accountRecords.size() ? null : accountRecords.get(i + 1);
         		
         		if (currentGroup == null
         			|| currentGroup.getDate().getYear() != record.getRecordTime().getYear()
@@ -141,8 +162,6 @@ public class MainActivity extends BaseActionBarActivity {
 					currentGroup.setDate(record.getRecordTime());
 					mListGroupRecords.add(currentGroup);
 					
-					// 重置当前日
-					currentDay = -1;
 					// 同时添加一组记录
 					mListItemRecordsList.add(new ArrayList<ListItemRecord>());
 				}
@@ -157,9 +176,21 @@ public class MainActivity extends BaseActionBarActivity {
         		// 添加item
         		ListItemRecord item = new ListItemRecord();
         		item.setAccountRecord(record);
-        		// 设置显示日期值
-        		item.showDay = (currentDay != record.getRecordTime().getDay());
-        		currentDay = record.getRecordTime().getDay();
+        		
+        		if (null == preRecord || preRecord.getRecordTime().getDay() != record.getRecordTime().getDay()) {
+        			// 没有上一条记录，或者日期变更，设置显示日期值
+        			item.showDay = true;
+				} else {
+					item.showDay = false;
+				}
+        		
+        		if (null == nextRecord || nextRecord.getRecordTime().getDay() != record.getRecordTime().getDay()) {
+					// 没有下一条记录，或者日期变更，则是最后一条记录
+        			item.lastItemOfDay = true;
+				} else {
+					item.lastItemOfDay = false;
+				}
+        		
         		mListItemRecordsList.get(mListItemRecordsList.size() - 1).add(item);
 			}
         }
@@ -232,30 +263,70 @@ public class MainActivity extends BaseActionBarActivity {
         @Override
         public View getChildView(int groupPosition, int childPosition,
                 boolean isLastChild, View convertView, ViewGroup parent) {
-//            ChildHolder childHolder = null;
+            ChildHolder childHolder = null;
             if (convertView == null) {
-//                childHolder = new ChildHolder();
+                childHolder = new ChildHolder();
                 convertView = inflater.inflate(R.layout.list_item_record, null);
 
-//                childHolder.textName = (TextView) convertView
-//                        .findViewById(R.id.name);
-//                childHolder.textAge = (TextView) convertView
-//                        .findViewById(R.id.age);
-//                childHolder.textAddress = (TextView) convertView
-//                        .findViewById(R.id.address);
-//                childHolder.imageView = (ImageView) convertView
-//                        .findViewById(R.id.image);
-//                Button button = (Button) convertView
-//                        .findViewById(R.id.button1);
-//                button.setOnClickListener(new OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Toast.makeText(MainActivity.this, "clicked pos=", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//
-//                convertView.setTag(childHolder);
+                childHolder.textDay = (TextView) convertView.findViewById(R.id.text_day);
+                childHolder.textWeek = (TextView) convertView.findViewById(R.id.text_week);
+                childHolder.imageCategory = (ImageView) convertView.findViewById(R.id.image_category);
+                childHolder.textCategory = (TextView) convertView.findViewById(R.id.text_category);
+                childHolder.textRemarks = (TextView) convertView.findViewById(R.id.text_remarks);
+                childHolder.textWaterValue = (TextView) convertView.findViewById(R.id.text_water_value);
+                childHolder.imageRecorderAvatar = (ImageView) convertView.findViewById(R.id.image_recorder_avatar);
+                childHolder.textRecorderName = (TextView) convertView.findViewById(R.id.text_recorder_name);
+                childHolder.imageLineLast = (ImageView) convertView.findViewById(R.id.image_line_last);
+                
+                convertView.setTag(childHolder);
+            } else {
+            	childHolder = (ChildHolder) convertView.getTag();
             }
+            
+            ListItemRecord item = (ListItemRecord) getChild(groupPosition, childPosition);
+            AccountRecord record = item.getAccountRecord();
+            if (item.showDay) {
+            	childHolder.textWeek.setText(TimeUtils.dateFormatWeekCN(record.getRecordTime()));
+            	childHolder.textDay.setText(TimeUtils.dateFormatdd(record.getRecordTime()));
+            	childHolder.textWeek.setVisibility(View.VISIBLE);
+				childHolder.textDay.setVisibility(View.VISIBLE);
+			} else {
+				childHolder.textWeek.setVisibility(View.INVISIBLE);
+				childHolder.textDay.setVisibility(View.INVISIBLE);
+			}
+            
+            AccountCategory category = BizFacade.getInstance().getCategory(record.getAccountBookId(), record.getCategory());
+            childHolder.imageCategory.setImageResource(ResourceMapper.mappingResouce(category.getIcon()));
+            childHolder.textCategory.setText(category.getCategory());
+            childHolder.textRemarks.setText(record.getDescription());
+			childHolder.textRemarks
+					.setVisibility(record.getDescription() == null
+							|| record.getDescription().isEmpty() ? View.GONE
+							: View.VISIBLE);
+            
+			DecimalFormat df = new DecimalFormat("0.##");
+        	childHolder.textWaterValue.setText(df.format(record.getWaterValue()));
+            if (BizFacade.getInstance().getRootCategory(record.getAccountBookId(),
+            		record.getCategory()).getCategory().equals(Constant.CATEGORY_EXPEND)) {
+            	// 支出
+            	childHolder.textWaterValue.setTextColor(getResources().getColor(R.color.expend));
+            } else {
+            	// 收入
+            	childHolder.textWaterValue.setTextColor(getResources().getColor(R.color.income));
+            }
+            
+            // 如果是本人，不显示创建者
+            if (record.getRecordUserId() == AppData.getAccountInfo().getUserId()) {
+            	childHolder.imageRecorderAvatar.setVisibility(View.GONE);
+            	childHolder.textRecorderName.setVisibility(View.GONE);
+			} else {
+				// TODO 还没有数据
+				childHolder.imageRecorderAvatar.setVisibility(View.VISIBLE);
+				childHolder.textRecorderName.setVisibility(View.VISIBLE);
+			}
+            
+            // 每天最后一项的线
+            childHolder.imageLineLast.setVisibility(item.lastItemOfDay ? View.VISIBLE : View.INVISIBLE);
 
             return convertView;
         }
@@ -264,16 +335,38 @@ public class MainActivity extends BaseActionBarActivity {
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return true;
         }
+        
+        public class ChildHolder {
+        	TextView textDay;
+        	TextView textWeek;
+        	
+           	ImageView imageCategory;
+        	TextView textCategory;
+           	TextView textRemarks;
+        	
+        	TextView textWaterValue;
+        	ImageView imageRecorderAvatar;
+        	TextView textRecorderName;
+        	
+        	ImageView imageLineLast;
+        }
     }
     
     public static class ListItemRecord {
     	boolean showDay;
+    	boolean lastItemOfDay;
     	AccountRecord accountRecord;
 		public boolean isShowDay() {
 			return showDay;
 		}
 		public void setShowDay(boolean showDay) {
 			this.showDay = showDay;
+		}
+		public boolean isLastItemOfDay() {
+			return lastItemOfDay;
+		}
+		public void setLastItemOfDay(boolean lastItemOfDay) {
+			this.lastItemOfDay = lastItemOfDay;
 		}
 		public AccountRecord getAccountRecord() {
 			return accountRecord;

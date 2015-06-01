@@ -3,33 +3,32 @@ package com.nan.ia.common.entities;
 import java.util.Date;
 
 public class AccountRecord {
-	private Integer accountRecordId;
+	private int accountRecordId;
 	private int accountBookId;
 	private String category;
 	private double waterValue;
 	private String description;
 	private Date recordTime;
-	private int createUserId;
+	private int recordUserId;
 	private Date createTime;
 	private Date updateTime;
-	
-	public Integer getAccountRecordId() {
+	public int getAccountRecordId() {
 		return accountRecordId;
 	}
-	public void setAccountRecordId(Integer accountRecordId) {
+	public void setAccountRecordId(int accountRecordId) {
 		this.accountRecordId = accountRecordId;
-	}
-	public String getCategory() {
-		return category;
-	}
-	public void setCategory(String category) {
-		this.category = category;
 	}
 	public int getAccountBookId() {
 		return accountBookId;
 	}
 	public void setAccountBookId(int accountBookId) {
 		this.accountBookId = accountBookId;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
 	}
 	public double getWaterValue() {
 		return waterValue;
@@ -49,11 +48,11 @@ public class AccountRecord {
 	public void setRecordTime(Date recordTime) {
 		this.recordTime = recordTime;
 	}
-	public int getCreateUserId() {
-		return createUserId;
+	public int getRecordUserId() {
+		return recordUserId;
 	}
-	public void setCreateUserId(int createUserId) {
-		this.createUserId = createUserId;
+	public void setRecordUserId(int recordUserId) {
+		this.recordUserId = recordUserId;
 	}
 	public Date getCreateTime() {
 		return createTime;

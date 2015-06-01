@@ -39,7 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				+ "`water_value` DOUBLE NULL DEFAULT 0,"
 				+ "`description` VARCHAR(255) NULL,"
 				+ "`record_time` LONG NOT NULL,"
-				+ "`create_user_id` INT NOT NULL,"
+				+ "`record_user_id` INT NOT NULL,"
 				+ "`create_time` LONG NOT NULL,"
 				+ "`update_time` LONG NOT NULL,"
 				+ "PRIMARY KEY (`account_record_id`))");

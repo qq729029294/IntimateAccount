@@ -49,13 +49,13 @@ public class DBService {
 	public void createAccountRecord(AccountRecord record) {
 		long now = System.currentTimeMillis();
 		mDatabase.execSQL(
-						"INSERT INTO `account_record_tbl` (`account_book_id`, `category`, `water_value`, `description`, `record_time`, `create_user_id`, `create_time`, `update_time`) VALUES"
+						"INSERT INTO `account_record_tbl` (`account_book_id`, `category`, `water_value`, `description`, `record_time`, `record_user_id`, `create_time`, `update_time`) VALUES"
 								+ "(?, ?, ?, ?, ?, ?, ?, ?);",
 						new Object[] { record.getAccountBookId(),
 								record.getCategory(), record.getWaterValue(),
 								record.getDescription(),
 								record.getRecordTime().getTime(),
-								record.getCreateUserId(), now, now });
+								record.getRecordUserId(), now, now });
 	}
 	
 	public List<AccountRecord> queryMoreAccountRecords(int accountBookId, long beginTime) {
@@ -80,8 +80,8 @@ public class DBService {
 					.getColumnIndex("description")));
 			record.setRecordTime(new Date(cursor.getLong(cursor
 					.getColumnIndex("record_time"))));
-			record.setCreateUserId(cursor.getInt(cursor
-					.getColumnIndex("create_user_id")));
+			record.setRecordUserId(cursor.getInt(cursor
+					.getColumnIndex("record_user_id")));
 			record.setCreateTime(new Date(cursor.getLong(cursor
 					.getColumnIndex("create_time"))));
 			record.setUpdateTime(new Date(cursor.getLong(cursor

@@ -92,7 +92,7 @@ public class KeyboardNumber extends RelativeLayout {
 		textOk = (TextView) findViewById(R.id.keybord_number_txt_ok);
 	}
 	
-	public void initKeyboardNumber(float initialValue, int maxIntegerCount, int maxDecimalCount) {
+	public void initKeyboardNumber(double initialValue, int maxIntegerCount, int maxDecimalCount) {
 		mCalculator.initialDcalculator(initialValue, maxIntegerCount, maxDecimalCount);
 		mValue = mCalculator.formatToStringValue(initialValue);
 	}
@@ -102,8 +102,8 @@ public class KeyboardNumber extends RelativeLayout {
 	}
 	
 	public static interface KeyboardNumberListener {
-		public void onValueChanged(String enterValue, float value);
-		public void onOKClicked(String enterValue, float value);
+		public void onValueChanged(String enterValue, double value);
+		public void onOKClicked(String enterValue, double value);
 	}
 	
 	public static class SimpleDigitalcalculator {
@@ -242,12 +242,12 @@ public class KeyboardNumber extends RelativeLayout {
 			return Float.valueOf(mStrValue);
 		}
 		
-		public String formatToStringValue(float value) {
+		public String formatToStringValue(double value) {
 			DecimalFormat df = new DecimalFormat("0.##");
 			return df.format(value);
 		}
 		
-		public void initialDcalculator(float initialValue, int maxIntegerCount, int maxDecimalCount) {
+		public void initialDcalculator(double initialValue, int maxIntegerCount, int maxDecimalCount) {
 			mOperator = "";
 			mWaitForOperationValue = 0;
 			mStrValue = formatToStringValue(initialValue);
