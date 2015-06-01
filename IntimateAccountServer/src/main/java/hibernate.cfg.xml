@@ -12,8 +12,8 @@
 		<mapping class="com.nan.ia.server.db.entities.AccountCategoryDeleteTbl" />
 		<mapping class="com.nan.ia.server.db.entities.AccountCategoryTbl" />
 		<mapping class="com.nan.ia.server.db.entities.AccountCategoryTblId" />
-		<mapping class="com.nan.ia.server.db.entities.AccountItemDeleteTbl" />
-		<mapping class="com.nan.ia.server.db.entities.AccountItemTbl" />
+		<mapping class="com.nan.ia.server.db.entities.AccountRecordDeleteTbl" />
+		<mapping class="com.nan.ia.server.db.entities.AccountRecordTbl" />
 		<mapping class="com.nan.ia.server.db.entities.AccountTargetTbl" />
 		<mapping class="com.nan.ia.server.db.entities.UserExtendTbl" />
 		<mapping class="com.nan.ia.server.db.entities.UserTbl" />

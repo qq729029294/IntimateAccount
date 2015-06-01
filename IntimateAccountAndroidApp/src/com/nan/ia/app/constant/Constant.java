@@ -1,6 +1,11 @@
 package com.nan.ia.app.constant;
 
 public class Constant {
+	// 分类-支出
+	public static final String CATEGORY_EXPEND = "支出";
+	// 分类-收入
+	public static final String CATEGORY_INCOME = "收入";
+	
 	// 默认创建账本的初始ID
 	public static final int DEFAULT_CREATE_ACCOUNT_BOOK_ID = -1;
 	

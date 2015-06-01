@@ -64,7 +64,7 @@ public class EditAccountBookActivity extends BaseActionBarActivity {
 				String description = editControlDescription.getEditText().getText().toString();
 				
 				if (transData.getEditAccountBookType() == EditAccountBookType.NEW) {
-					BizFacade.getInstance().createAccountBooks(name, description);
+					BizFacade.getInstance().createAccountBook(name, description);
 				} else {
 					BizFacade.getInstance().editAccountBooksDetail(transData.getAccountBook().getAccountBookId(), name, description);
 				}

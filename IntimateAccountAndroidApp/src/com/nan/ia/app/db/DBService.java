@@ -1,8 +1,19 @@
 package com.nan.ia.app.db;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
+
+
+
+
+
+
+import com.nan.ia.common.entities.AccountRecord;
+
+import android.R.integer;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,6 +44,55 @@ public class DBService {
 		long currentTimeMillis = System.currentTimeMillis();
 		mDatabase.execSQL("INSERT INTO `account_book_tbl` (`name`, `description`, `create_user_id`, `update_time`, `create_time`) VALUES (?, ?, ?, ?, ?);",
 				new Object[] { name, description, userId, currentTimeMillis, currentTimeMillis });
+	}
+	
+	public void createAccountRecord(AccountRecord record) {
+		long now = System.currentTimeMillis();
+		mDatabase.execSQL(
+						"INSERT INTO `account_record_tbl` (`account_book_id`, `category`, `water_value`, `description`, `record_time`, `create_user_id`, `create_time`, `update_time`) VALUES"
+								+ "(?, ?, ?, ?, ?, ?, ?, ?);",
+						new Object[] { record.getAccountBookId(),
+								record.getCategory(), record.getWaterValue(),
+								record.getDescription(),
+								record.getRecordTime().getTime(),
+								record.getCreateUserId(), now, now });
+	}
+	
+	public List<AccountRecord> queryMoreAccountRecords(int accountBookId, long beginTime) {
+		Cursor cursor = mDatabase
+				.rawQuery(
+						"SELECT * FROM account_record_tbl WHERE account_book_id = ? AND record_time < ? LIMIT 0,100",
+						new String[] { String.valueOf(accountBookId), 
+								String.valueOf(beginTime) });
+		
+		List<AccountRecord> records = new ArrayList<AccountRecord>();
+		while (cursor.moveToNext()) {
+			AccountRecord record = new AccountRecord();
+			record.setAccountRecordId(cursor.getInt(cursor
+					.getColumnIndex("account_record_id")));
+			record.setAccountBookId(cursor.getInt(cursor
+					.getColumnIndex("account_book_id")));
+			record.setCategory(cursor.getString(cursor
+					.getColumnIndex("category")));
+			record.setWaterValue(cursor.getDouble(cursor
+					.getColumnIndex("water_value")));
+			record.setDescription(cursor.getString(cursor
+					.getColumnIndex("description")));
+			record.setRecordTime(new Date(cursor.getLong(cursor
+					.getColumnIndex("record_time"))));
+			record.setCreateUserId(cursor.getInt(cursor
+					.getColumnIndex("create_user_id")));
+			record.setCreateTime(new Date(cursor.getLong(cursor
+					.getColumnIndex("create_time"))));
+			record.setUpdateTime(new Date(cursor.getLong(cursor
+					.getColumnIndex("update_time"))));
+
+			records.add(record);
+		}
+		
+		cursor.close();
+		
+		return records;
 	}
 	
 	private int execOperateSQL(String sql) {

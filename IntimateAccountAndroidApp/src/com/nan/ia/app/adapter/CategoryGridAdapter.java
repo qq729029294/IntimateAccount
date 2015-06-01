@@ -31,6 +31,10 @@ public class CategoryGridAdapter extends BaseAdapter {
 		mInflater = LayoutInflater.from(context);
 		mAccountCategories = accountCategories;
 	}
+	
+	public void setData(List<AccountCategory> accountCategories) {
+		mAccountCategories = accountCategories;
+	}
 
 	public int getCount() {
 		return mAccountCategories.size();

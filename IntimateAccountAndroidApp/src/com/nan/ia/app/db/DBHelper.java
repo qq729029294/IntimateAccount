@@ -31,34 +31,18 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 
 	@Override
-	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("CREATE TABLE IF NOT EXISTS `account_book_tbl` ("
-				+ "`account_book_id` INTEGER,"
-				+ "`name` VARCHAR(32) NOT NULL,"
-				+ "`description` VARCHAR(255) NULL,"
-				+ "`create_user_id` INT NOT NULL,"
-				+ "`update_time` TIMESTAMP NOT NULL,"
-				+ "`create_time` TIMESTAMP NULL,"
-				+ "PRIMARY KEY (`account_book_id`));");
-		
-		db.execSQL("CREATE TABLE IF NOT EXISTS `account_category_tbl` ("
-				+ "`account_category_id` INTEGER,"
+	public void onCreate(SQLiteDatabase db) {		
+		db.execSQL("CREATE TABLE IF NOT EXISTS `account_record_tbl` ("
+				+ "`account_record_id` INTEGER,"
 				+ "`account_book_id` INT NOT NULL,"
 				+ "`category` VARCHAR(45) NOT NULL,"
-				+ "`type` INT NOT NULL,"
-				+ "`super_category` VARCHAR(45) NULL,"
-				+ "`create_time` TIMESTAMP NOT NULL,"
-				+ "PRIMARY KEY (`account_category_id`));");
-		
-		db.execSQL("CREATE TABLE IF NOT EXISTS `account_item_tbl` ("
-				+ "`account_item_id` INTEGER,"
-				+ "`account_book_id` INT NOT NULL,"
-				+ "`account_category_id` INT NOT NULL,"
-				+ "`create_user_id` INT NOT NULL,"
-				+ "`create_time` TIMESTAMP NOT NULL,"
-				+ "`water_value` INT NULL DEFAULT 0,"
+				+ "`water_value` DOUBLE NULL DEFAULT 0,"
 				+ "`description` VARCHAR(255) NULL,"
-				+ "PRIMARY KEY (`account_item_id`))");
+				+ "`record_time` LONG NOT NULL,"
+				+ "`create_user_id` INT NOT NULL,"
+				+ "`create_time` LONG NOT NULL,"
+				+ "`update_time` LONG NOT NULL,"
+				+ "PRIMARY KEY (`account_record_id`))");
 	}
 
 	@Override

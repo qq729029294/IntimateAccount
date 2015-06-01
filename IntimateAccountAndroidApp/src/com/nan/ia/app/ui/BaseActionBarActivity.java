@@ -31,7 +31,7 @@ public abstract class BaseActionBarActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		requestWindowFeature(Window.FEATURE_NO_TITLE);//设置窗口无标题栏
+		requestWindowFeature(Window.FEATURE_NO_TITLE); //设置窗口无标题栏
 		
 		super.setContentView(R.layout.activity_actionbar_base);
 		mActionBar = (CustomActionBar) getWindow().getDecorView().findViewById(R.id.actionBar);
@@ -45,7 +45,7 @@ public abstract class BaseActionBarActivity extends BaseActivity {
 		// 返回按钮
 		String fromTitle = getIntent().getStringExtra(EXTRA_KEY_FROM_TITLE);
 		if (null != fromTitle && !fromTitle.isEmpty()) {
-			mActionBar.enableBack(fromTitle, new OnClickListener() {
+			mActionBar.enableBack(/*fromTitle*/"", new OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {

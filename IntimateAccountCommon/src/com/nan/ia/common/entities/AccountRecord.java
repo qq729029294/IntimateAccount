@@ -2,20 +2,28 @@ package com.nan.ia.common.entities;
 
 import java.util.Date;
 
-public class AccountItem {
-	private Integer accountItemId;
+public class AccountRecord {
+	private Integer accountRecordId;
 	private int accountBookId;
-	private int accountCategoryId;
-	private Integer waterValue;
+	private String category;
+	private double waterValue;
 	private String description;
+	private Date recordTime;
 	private int createUserId;
 	private Date createTime;
 	private Date updateTime;
-	public Integer getAccountItemId() {
-		return accountItemId;
+	
+	public Integer getAccountRecordId() {
+		return accountRecordId;
 	}
-	public void setAccountItemId(Integer accountItemId) {
-		this.accountItemId = accountItemId;
+	public void setAccountRecordId(Integer accountRecordId) {
+		this.accountRecordId = accountRecordId;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
 	}
 	public int getAccountBookId() {
 		return accountBookId;
@@ -23,16 +31,10 @@ public class AccountItem {
 	public void setAccountBookId(int accountBookId) {
 		this.accountBookId = accountBookId;
 	}
-	public int getAccountCategoryId() {
-		return accountCategoryId;
-	}
-	public void setAccountCategoryId(int accountCategoryId) {
-		this.accountCategoryId = accountCategoryId;
-	}
-	public Integer getWaterValue() {
+	public double getWaterValue() {
 		return waterValue;
 	}
-	public void setWaterValue(Integer waterValue) {
+	public void setWaterValue(double waterValue) {
 		this.waterValue = waterValue;
 	}
 	public String getDescription() {
@@ -40,6 +42,12 @@ public class AccountItem {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public Date getRecordTime() {
+		return recordTime;
+	}
+	public void setRecordTime(Date recordTime) {
+		this.recordTime = recordTime;
 	}
 	public int getCreateUserId() {
 		return createUserId;

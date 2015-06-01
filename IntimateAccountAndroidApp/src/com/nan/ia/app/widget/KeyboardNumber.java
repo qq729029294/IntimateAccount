@@ -248,6 +248,8 @@ public class KeyboardNumber extends RelativeLayout {
 		}
 		
 		public void initialDcalculator(float initialValue, int maxIntegerCount, int maxDecimalCount) {
+			mOperator = "";
+			mWaitForOperationValue = 0;
 			mStrValue = formatToStringValue(initialValue);
 			mMaxIntegerCount = maxIntegerCount;
 			mMaxDecimalCount = maxDecimalCount;

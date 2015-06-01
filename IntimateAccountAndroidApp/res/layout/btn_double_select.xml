@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="32dp" >
+
+    <TextView
+        android:id="@+id/btn_letf"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/selector_btn_double_select_left"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="left"
+        android:paddingLeft="@dimen/padding_large"
+        android:paddingRight="@dimen/padding_large"
+        android:textColor="@drawable/selector_color_btn_double_select_text" />
+
+    <TextView
+        android:id="@+id/btn_right"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="-0.8dp"
+        android:background="@drawable/selector_btn_double_select_right"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="right"
+        android:paddingLeft="@dimen/padding_large"
+        android:paddingRight="@dimen/padding_large"
+        android:textColor="@drawable/selector_color_btn_double_select_text" />
+
+</LinearLayout>

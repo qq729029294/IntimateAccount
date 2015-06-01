@@ -10,6 +10,7 @@ import com.nan.ia.app.App;
 import com.nan.ia.app.constant.Constant;
 import com.nan.ia.app.data.AppData;
 import com.nan.ia.app.data.ResourceMapper;
+import com.nan.ia.app.db.DBService;
 import com.nan.ia.app.entities.AccountInfo;
 import com.nan.ia.app.http.cmd.server.AccountLoginServerCmd;
 import com.nan.ia.app.http.cmd.server.RegisterServerCmd;
@@ -19,7 +20,7 @@ import com.nan.ia.common.entities.AccountBook;
 import com.nan.ia.common.entities.AccountBookDelete;
 import com.nan.ia.common.entities.AccountCategory;
 import com.nan.ia.common.entities.AccountCategoryDelete;
-import com.nan.ia.common.entities.AccountItem;
+import com.nan.ia.common.entities.AccountRecord;
 import com.nan.ia.common.http.cmd.entities.AccountLoginRequestData;
 import com.nan.ia.common.http.cmd.entities.AccountLoginResponseData;
 import com.nan.ia.common.http.cmd.entities.RegisterRequestData;
@@ -90,7 +91,7 @@ public class BizFacade {
 	 * 创建默认账本
 	 */
 	private AccountBook createDefaultAccountBook() {
-		return createAccountBooks("生活账本（默认）", "记录生活中的点滴");
+		return createAccountBook("生活账本（默认）", "记录生活中的点滴");
 	}
 	
 	/**
@@ -164,7 +165,7 @@ public class BizFacade {
 		return AppData.getCreateAccountBookId() + 1;
 	}
 	
-	public AccountBook createAccountBooks(String name, String description) {
+	public AccountBook createAccountBook(String name, String description) {
 		AccountBook accountBook = new AccountBook();
 		accountBook.setAccountBookId(allocateNewAccountBookId());
 		accountBook.setCreateUserId(AppData.getAccountInfo().getUserId());
@@ -269,7 +270,7 @@ public class BizFacade {
 		return accountCategory;
 	}
 	
-	public AccountCategory getCategoryById(int accountBookId, String category) {
+	public AccountCategory getCategory(int accountBookId, String category) {
 		for (int i = 0; i < AppData.getAccountCategories().size(); i++) {
 			if (AppData.getAccountCategories().get(i).getCategory().equals(category)) {
 				return AppData.getAccountCategories().get(i);
@@ -282,16 +283,25 @@ public class BizFacade {
 	public List<AccountCategory> getSubCategories(int accountBookId, String category) {
 		List<AccountCategory> subAccountCategories = new ArrayList<AccountCategory>();
 		for (int i = 0; i < AppData.getAccountCategories().size(); i++) {
-			if (AppData.getAccountCategories().get(i).getCategory().equals(category)) {
+			if (AppData.getAccountCategories().get(i).getSuperCategory().equals(category)) {
 				subAccountCategories.add(AppData.getAccountCategories().get(i));
 			}
 		}
 		
 		return subAccountCategories;
 	}
+	
+	public AccountCategory getRootCategory(int accountBookId, String category) {
+		AccountCategory accountCategory = getCategory(accountBookId, category);
+		if (accountCategory.getSuperCategory() == null || accountCategory.getSuperCategory().isEmpty()) {
+			return accountCategory;
+		} else {
+			return getRootCategory(accountBookId, accountCategory.getSuperCategory());
+		}
+	}
 
 	public AccountCategory editCategory(int accountBookId, String category, String newCategory) {
-		AccountCategory accountCategory = getCategoryById(accountBookId, category);
+		AccountCategory accountCategory = getCategory(accountBookId, category);
 		if (null != accountCategory) {
 			// 修改分类
 			accountCategory.setCategory(newCategory);
@@ -311,7 +321,7 @@ public class BizFacade {
 	}
 	
 	public void deleteCategory(int accountBookId, String category) {
-		AccountCategory accountCategory = getCategoryById(accountBookId,
+		AccountCategory accountCategory = getCategory(accountBookId,
 				category);
 		if (null != accountCategory) {
 			return;
@@ -351,12 +361,12 @@ public class BizFacade {
 	}
 	
 	// 账本条目相关接口
-	public List<AccountItem> getAccountItems(int accountBookId, long lastCreateTime, int count) {
-		return null;
+	public List<AccountRecord> getMoreAccountRecords(int accountBookId, long beginTime) {
+		return DBService.getInstance(App.getInstance()).queryMoreAccountRecords(accountBookId, beginTime);
 	}
 
-	public AccountItem createAccountItem(AccountCategory category, double waterValue, String description) {
-		return null;
+	public void createAccountRecord(AccountRecord record) {
+		DBService.getInstance(App.getInstance()).createAccountRecord(record);
 	}
 
 	public void editAccountItemDetial(int accountItemId, AccountCategory category, double waterValue, String description) {
