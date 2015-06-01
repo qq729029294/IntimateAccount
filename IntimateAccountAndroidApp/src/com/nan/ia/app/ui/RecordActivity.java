@@ -30,7 +30,6 @@ import com.nan.ia.app.constant.Constant;
 import com.nan.ia.app.data.AppData;
 import com.nan.ia.app.data.ResourceMapper;
 import com.nan.ia.app.utils.TimeUtils;
-import com.nan.ia.app.widget.CustomToast;
 import com.nan.ia.app.widget.DoubleSelectButton;
 import com.nan.ia.app.widget.DoubleSelectButton.DoubleSelectBtnListener;
 import com.nan.ia.app.widget.KeyboardNumber;

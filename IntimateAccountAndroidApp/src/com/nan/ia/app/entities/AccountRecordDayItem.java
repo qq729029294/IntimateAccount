@@ -9,7 +9,7 @@ package com.nan.ia.app.entities;
 
 import java.util.Date;
 
-public class AccountRecordDayGroup {
+public class AccountRecordDayItem {
 	Date day;
 	double expend;
 	double income;

@@ -12,12 +12,45 @@
         android:layout_alignParentTop="true"
         android:text="Button" />
 
-    <com.ryg.expandable.ui.PinnedHeaderExpandableListView
-        android:id="@+id/list_records"
+    <com.ryg.expandable.ui.StickyLayout
+        android:id="@+id/sticky_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/btn_test" >
-    </com.ryg.expandable.ui.PinnedHeaderExpandableListView>
+        android:layout_below="@+id/btn_test"
+        android:layout_marginTop="0dp"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/sticky_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#78A524"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/keyboard_number" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sticky_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <com.ryg.expandable.ui.PinnedHeaderExpandableListView
+                android:id="@+id/list_records"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:cacheColorHint="@null"
+                android:childIndicatorLeft="0dp"
+                android:dividerHeight="0dp"
+                android:groupIndicator="@null"
+                android:scrollbarAlwaysDrawHorizontalTrack="false" >
+            </com.ryg.expandable.ui.PinnedHeaderExpandableListView>
+        </LinearLayout>
+    </com.ryg.expandable.ui.StickyLayout>
 
 </RelativeLayout>

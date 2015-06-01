@@ -18,4 +18,8 @@
     <color name="blue_qn">#ff009cfe</color>
     <color name="click_marks">#33000000</color>
     <color name="transparent">#00000000</color>
+    <color name="expend">#FF278D67</color>
+    <color name="income">#FFD73939</color>
+    <color name="font_lt">#FF7E7E7E</color>
+    <color name="font_ltlt">#FFAAAAAA</color>
 </resources>
