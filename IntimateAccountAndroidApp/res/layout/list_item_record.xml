@@ -15,9 +15,7 @@
             android:id="@+id/text_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center_horizontal"
             android:text="31"
             android:textColor="@color/font_lt"
             android:textSize="24sp"
@@ -27,7 +25,7 @@
             android:id="@+id/text_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/layout_month"
+            android:layout_below="@id/text_day"
             android:layout_gravity="center_horizontal"
             android:text="周四"
             android:textColor="@color/font_ltlt"
@@ -40,7 +38,7 @@
         android:layout_width="0.8dp"
         android:layout_height="60dp"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="24dp"
+        android:layout_marginLeft="30dp"
         android:layout_toRightOf="@+id/layout_date"
         android:background="@color/line_1dp_light_gray" />
     
@@ -48,7 +46,7 @@
         android:id="@+id/image_line_last"
         android:layout_width="match_parent"
         android:layout_height="0.8dp"
-        android:layout_marginRight="-24dp"
+        android:layout_marginRight="-30dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@id/image_line0"
@@ -59,7 +57,7 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="6dp"
+        android:layout_marginLeft="12dp"
         android:layout_toRightOf="@+id/layout_date"
         android:src="@drawable/icon_category_1" />
 
@@ -69,7 +67,7 @@
         android:layout_height="0.8dp"
         android:layout_alignParentBottom="true"
         android:layout_toRightOf="@+id/layout_date"
-        android:layout_marginLeft="24dp"
+        android:layout_marginLeft="30dp"
         android:background="@color/line_1dp_light_gray" />
 
     <LinearLayout

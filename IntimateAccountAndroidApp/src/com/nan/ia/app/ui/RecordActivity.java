@@ -176,7 +176,7 @@ public class RecordActivity extends BaseActionBarActivity {
 				if (rootCategory.equals(Constant.CATEGORY_EXPEND)) {
 					mCurrentRecord.setWaterValue(-value);
 				} else {
-					mCurrentRecord.setWaterValue(-value);
+					mCurrentRecord.setWaterValue(value);
 				}
 			}
 
@@ -187,6 +187,8 @@ public class RecordActivity extends BaseActionBarActivity {
 					BizFacade.getInstance().createAccountRecord(mCurrentRecord);
 					BizFacade.getInstance().getMoreAccountRecords(AppData.getCurrentAccountBookId(), System.currentTimeMillis());
 				}
+				
+				finish();
 			}
 		});
 		mKeyboardNumber.initKeyboardNumber(Math.abs(mCurrentRecord.getWaterValue()), 8, 2);

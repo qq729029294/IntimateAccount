@@ -99,4 +99,26 @@ public class TimeUtils {
     public static String dateFormatdd(Date date) {
     	return DateFormat.format("dd", date).toString();
     }
+    
+    /**
+     * 返回月份
+     * @param date
+     * @return 每月几号
+     */
+    public static String dateFormatMM(Date date) {
+    	return DateFormat.format("MM", date).toString();
+    }
+    
+    /**
+     * 获得2015.05.01-05.31的月份范围格式
+     * @param date
+     * @return
+     */
+	public static String dateFormatMonthRangeyyMMdd_MMdd(Date date) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		return String.format("%s.01-%02d.%02d", DateFormat.format("yy.MM", date)
+				.toString(), calendar.get(Calendar.MONTH) + 1, calendar
+				.getActualMaximum(Calendar.DAY_OF_MONTH));
+	}
 }

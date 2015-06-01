@@ -1,6 +1,7 @@
 package com.nan.ia.app.utils;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -100,5 +101,11 @@ public class Utils {
 			isValid = true;
 		}
 		return isValid;
+	}
+	
+	public static String formatCNY(double value) {
+		DecimalFormat df = new DecimalFormat("0.##");
+		String ret = df.format(value);
+		return ret + " ¥";
 	}
 }

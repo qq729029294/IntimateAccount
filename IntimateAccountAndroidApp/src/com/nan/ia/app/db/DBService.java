@@ -3,17 +3,7 @@ package com.nan.ia.app.db;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-
-
-
-
-
-
-
 import com.nan.ia.common.entities.AccountRecord;
-
-import android.R.integer;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -61,7 +51,7 @@ public class DBService {
 	public List<AccountRecord> queryMoreAccountRecords(int accountBookId, long beginTime) {
 		Cursor cursor = mDatabase
 				.rawQuery(
-						"SELECT * FROM account_record_tbl WHERE account_book_id = ? AND record_time < ? LIMIT 0,100",
+						"SELECT * FROM account_record_tbl WHERE account_book_id = ? AND record_time < ? ORDER BY record_time DESC LIMIT 0,100",
 						new String[] { String.valueOf(accountBookId), 
 								String.valueOf(beginTime) });
 		
