@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/selector_btn_white"
-    android:paddingTop="@dimen/margin_small"
-    android:paddingBottom="@dimen/margin_small"
-    android:paddingRight="@dimen/margin_large"
-    android:paddingLeft="@dimen/margin_large"
-    android:clickable="true" >
+    android:layout_height="60dp"
+    android:layout_alignParentBottom="true"
+    android:background="@color/white_lt_transparent"
+    android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/text_head"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/selector_btn_white"
-        android:text="邮箱呵呵"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/app_main_color"
-        android:clickable="true" >
-
-    </TextView>
+    <ImageView
+        android:id="@+id/image_line0"
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="@color/app_main_color" />
 
 </RelativeLayout>

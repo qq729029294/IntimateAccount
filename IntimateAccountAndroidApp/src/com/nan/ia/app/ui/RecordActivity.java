@@ -119,12 +119,6 @@ public class RecordActivity extends BaseActionBarActivity {
 		});
 		mActionBar.customCenterView(this, doubleSelectButton);
 		
-		// 金额
-		if (mCurrentRecord.getWaterValue() != 0) {
-			DecimalFormat df = new DecimalFormat("0.##");
-			mTextAmount.setText(String.valueOf(df.format(Math.abs(mCurrentRecord.getWaterValue()))));
-		}
-		
 		// 备注
 		mTextRemarks = (TextView) findViewById(R.id.text_remarks);
 		mTextRemarks.setText(mCurrentRecord.getDescription());
@@ -164,6 +158,11 @@ public class RecordActivity extends BaseActionBarActivity {
 		
 		// 数字键盘，金额
 		mTextAmount = (TextView) findViewById(R.id.text_amount);
+		// 金额
+		if (mCurrentRecord.getWaterValue() != 0) {
+			DecimalFormat df = new DecimalFormat("0.##");
+			mTextAmount.setText(String.valueOf(df.format(Math.abs(mCurrentRecord.getWaterValue()))));
+		}
 		
 		mKeyboardNumber = (KeyboardNumber) findViewById(R.id.keyboard_number);
 		mKeyboardNumber.setListener(new KeyboardNumberListener() {

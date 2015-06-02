@@ -1,42 +1,41 @@
 package com.nan.ia.app.ui;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import com.nan.ia.app.R;
 import com.nan.ia.app.adapter.RecordsExpandableListAdapter;
+import com.nan.ia.app.adapter.RecordsExpandableListAdapter.ListItemRecord;
 import com.nan.ia.app.biz.BizFacade;
-import com.nan.ia.app.constant.Constant;
 import com.nan.ia.app.data.AppData;
-import com.nan.ia.app.data.ResourceMapper;
-import com.nan.ia.app.utils.TimeUtils;
-import com.nan.ia.common.entities.AccountCategory;
-import com.nan.ia.common.entities.AccountRecord;
+import com.nan.ia.app.ui.EditAccountBookActivity.EditAccountBookType;
+import com.nan.ia.app.ui.RecordActivity.RecordActivityType;
+import com.nan.ia.app.utils.Utils;
+import com.nan.ia.app.widget.CustomActionBar;
+import com.nan.ia.app.widget.CustomToast;
 import com.ryg.expandable.ui.PinnedHeaderExpandableListView;
-import com.ryg.expandable.ui.PinnedHeaderExpandableListView.OnHeaderUpdateListener;
 import com.ryg.expandable.ui.StickyLayout;
 import com.ryg.expandable.ui.StickyLayout.OnGiveUpTouchEventListener;
+import com.special.ResideMenu.ResideMenu;
+import com.special.ResideMenu.ResideMenuItem;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.SyncStateContract.Constants;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.RelativeLayout.LayoutParams;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.AbsListView.LayoutParams;
 
 public class MainActivity extends BaseActionBarActivity {
     private PinnedHeaderExpandableListView mListViewRecords;
     private RecordsExpandableListAdapter mAdapter;
     private StickyLayout mStickyLayout;
+    
+    private ResideMenu mResideMenu;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,20 +43,8 @@ public class MainActivity extends BaseActionBarActivity {
 		
 		setContentView(R.layout.activity_main);
 		
-		findViewById(R.id.btn_test).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-//				MainActivity.this.startActivity(new Intent(MainActivity.this, LoginActivity.class));
-				MainActivity.this.startActivity(new Intent(MainActivity.this, RecordActivity.class));
-			}
-		});
-		
-		enableActionBarGo(getString(R.string.title_login), new Intent(MainActivity.this, AccountBookActivity.class));
-		
 		initUI();
 	}
-	
 	
 	@Override
 	protected void onStart() {
@@ -70,6 +57,16 @@ public class MainActivity extends BaseActionBarActivity {
 	}
 
 	private void initUI() {
+		// 记一笔
+		findViewById(R.id.btn_record).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// 新建记录，记一笔画面
+				MainActivity.this.startActivity(new Intent(MainActivity.this, RecordActivity.class));
+			}
+		});
+		
 		mListViewRecords = (PinnedHeaderExpandableListView) findViewById(R.id.list_records);
 		mAdapter = new RecordsExpandableListAdapter(this);
 		mAdapter.setData(BizFacade.getInstance().getMoreAccountRecords(AppData.getCurrentAccountBookId(),
@@ -83,10 +80,22 @@ public class MainActivity extends BaseActionBarActivity {
         }
 
         mListViewRecords.setOnHeaderUpdateListener(mAdapter);
+        mListViewRecords.setOnChildClickListener(new OnChildClickListener() {
+			
+			@Override
+			public boolean onChildClick(ExpandableListView parent, View v,
+					int groupPosition, int childPosition, long id) {
+				ListItemRecord item = (ListItemRecord) mAdapter.getChild(groupPosition, childPosition);
+				RecordActivity.TransData transData = new RecordActivity.TransData();
+				transData.setType(RecordActivityType.EDIT);
+				transData.setAccountRecord(item.getAccountRecord());
+				
+				Intent intent = new Intent(MainActivity.this, RecordActivity.class);
+				MainActivity.this.startActivity(createTransDataIntent(intent, transData));
+				return false;
+			}
+		});
         
-//        mListViewRecords.setOnChildClickListener(this);
-//        mListViewRecords.setOnGroupClickListener(this);
-//        mListViewRecords.setOnGiveUpTouchEventListener(this);
         mStickyLayout = (StickyLayout)findViewById(R.id.sticky_layout);
         mStickyLayout.setOnGiveUpTouchEventListener(new OnGiveUpTouchEventListener() {
 			
@@ -101,9 +110,72 @@ public class MainActivity extends BaseActionBarActivity {
 		        return false;
 			}
 		} );
+        
+        setupMenu();
+        
+        setupActionBar();
 	}
 	
-	private void initData() {
+	private void setupMenu() {
+        // attach to current activity;
+		mResideMenu = new ResideMenu(this);
+		mResideMenu.setBackground(R.drawable.menu_background);
+		mResideMenu.attachToActivity(this);
+        //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip. 
+		mResideMenu.setScaleValue(0.6f);
+
+        // create menu items;
 		
+		View view = LayoutInflater.from(this).inflate(R.layout.slide_menu_account, null);
+		mResideMenu.addCustomMenuItem(view, ResideMenu.DIRECTION_LEFT);
+		
+		ResideMenuItem itemLogin = new ResideMenuItem(this, R.drawable.icon_login, R.string.menu_account_login);
+		itemLogin.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(MainActivity.this, LoginActivity.class));
+			}
+		});
+		mResideMenu.addMenuItem(itemLogin, ResideMenu.DIRECTION_LEFT);
+		
+		ResideMenuItem itemAbout = new ResideMenuItem(this, R.drawable.icon_settings, R.string.menu_about);
+		itemAbout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				CustomToast.showToast("客服支持 QQ:729029294");
+			}
+		});
+		
+        mResideMenu.addMenuItem(itemAbout, ResideMenu.DIRECTION_LEFT);
+	}
+	
+	private void setupActionBar() {
+		ImageView imageView = new ImageView(this);
+		imageView.setImageResource(R.drawable.selector_btn_setting);
+		imageView.setClickable(true);
+		imageView.setLayoutParams(new LayoutParams(Utils.dip2px(this, 32), Utils.dip2px(this, 32)));
+		imageView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				mResideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
+			}
+		});
+		mActionBar.customLeftView(this, imageView);
+		
+		View mainTitle = LayoutInflater.from(this).inflate(R.layout.view_main_title, null);
+		mainTitle.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// 账本设定画面
+				startActivity(new Intent(MainActivity.this, AccountBookActivity.class));
+			}
+		});
+		TextView textTitle = (TextView) mainTitle.findViewById(R.id.text_account_book_name);
+		textTitle.setText(BizFacade.getInstance().getAccountBookById(AppData.getCurrentAccountBookId()).getName());
+		mActionBar.customCenterView(this, mainTitle);
 	}
 }

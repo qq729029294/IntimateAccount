@@ -124,7 +124,6 @@ public class RecordsExpandableListAdapter extends BaseExpandableListAdapter impl
 
     @Override
     public Object getGroup(int groupPosition) {
-
         return mListGroupRecords.get(groupPosition);
     }
 
@@ -247,6 +246,10 @@ public class RecordsExpandableListAdapter extends BaseExpandableListAdapter impl
 
     @Override
     public void updatePinnedHeader(View headerView, int firstVisibleGroupPos) {
+    	if (firstVisibleGroupPos < 0) {
+			return;
+		}
+    	
     	updateGroupView(headerView, firstVisibleGroupPos);
     }
     
@@ -255,8 +258,8 @@ public class RecordsExpandableListAdapter extends BaseExpandableListAdapter impl
 		GroupHolder groupHolder = new GroupHolder();
 		groupHolder.textMonth = (TextView) convertView.findViewById(R.id.text_month);
 		groupHolder.dateRange = (TextView) convertView.findViewById(R.id.text_date_range);
-		groupHolder.income = (TextView) convertView.findViewById(R.id.text_income);
-		groupHolder.expend = (TextView) convertView.findViewById(R.id.text_expend);
+//		groupHolder.income = (TextView) convertView.findViewById(R.id.text_income);
+//		groupHolder.expend = (TextView) convertView.findViewById(R.id.text_expend);
 		groupHolder.surplus = (TextView) convertView.findViewById(R.id.text_surplus);
 
 		convertView.setTag(groupHolder);
@@ -268,8 +271,8 @@ public class RecordsExpandableListAdapter extends BaseExpandableListAdapter impl
         ListGroupRecord group = (ListGroupRecord) getGroup(groupPosition);
         groupHolder.textMonth.setText(TimeUtils.dateFormatMM(group.getDate()));
         groupHolder.dateRange.setText(TimeUtils.dateFormatMonthRangeyyMMdd_MMdd(group.getDate()));
-        groupHolder.income.setText("收 " + Utils.formatCNY(group.getIncome()));
-        groupHolder.expend.setText("支 " + Utils.formatCNY(group.getExpend()));
+//        groupHolder.income.setText("收 " + Utils.formatCNY(group.getIncome()));
+//        groupHolder.expend.setText("支 " + Utils.formatCNY(group.getExpend()));
         groupHolder.surplus.setText(Utils.formatCNY(group.getIncome() + group.getExpend()));
 	}
     

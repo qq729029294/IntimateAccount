@@ -6,7 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@color/light_gray" >
+        android:background="@color/lt_gray" >
 
         <LinearLayout
             android:id="@+id/layout_date"
@@ -27,14 +27,16 @@
                     android:layout_height="wrap_content"
                     android:text="05"
                     android:textSize="26sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@color/font_lt" />
 
                 <TextView
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="月"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:textColor="@color/font_ltlt" />
             </LinearLayout>
 
             <TextView
@@ -42,7 +44,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="15.05.01-05.31"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:textColor="@color/font_ltlt" />
         </LinearLayout>
 
         <LinearLayout
@@ -54,13 +57,14 @@
             android:layout_toRightOf="@id/layout_date"
             android:orientation="vertical" >
 
+            <!-- 
             <TextView
                 android:id="@+id/text_income"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="收 ¥500.00"
-                android:textColor="@color/income"
-                android:textSize="12sp" />
+                android:textColor="@color/font_ltlt"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/text_expend"
@@ -68,8 +72,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/text_income"
                 android:text="支 ¥600.00"
-                android:textColor="@color/expend"
-                android:textSize="12sp" />
+                android:textColor="@color/font_ltlt"
+                android:textSize="14sp" />
+             -->
         </LinearLayout>
 
         <LinearLayout
@@ -87,14 +92,16 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:text="结余"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:textColor="@color/font_ltlt" />
 
             <TextView
                 android:id="@+id/text_surplus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-¥100.00"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@color/font_lt" />
 
         </LinearLayout>
     </RelativeLayout>
