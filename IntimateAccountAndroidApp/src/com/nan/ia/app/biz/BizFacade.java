@@ -99,6 +99,9 @@ public class BizFacade {
 	 * @param accountBookId
 	 */
 	private void createDefaultCategory(int accountBookId) {
+		// 开始存储
+		AppData.beginStore();
+		
 		createCategory(accountBookId, "", "支出", ResourceMapper.icon_category_45);
 		createCategory(accountBookId, "支出", "餐饮", ResourceMapper.icon_category_32);
 		createCategory(accountBookId, "支出", "交通", ResourceMapper.icon_category_2);
@@ -127,6 +130,8 @@ public class BizFacade {
 		createCategory(accountBookId, "收入", "零花钱", ResourceMapper.icon_category_26);
 		createCategory(accountBookId, "收入", "生活费", ResourceMapper.icon_category_28);
 		createCategory(accountBookId, "收入", "其他", ResourceMapper.icon_category_27);
+		
+		AppData.endStore();
 	}
 	
 	// 账本相关接口
@@ -175,13 +180,18 @@ public class BizFacade {
 		accountBook.setCreateTime(new Date());
 		accountBook.setUpdateTime(new Date());
 		
+		// 开始存储
+		AppData.beginStore();
+		
 		// 添加账本数据
 		AppData.getAccountBooks().add(accountBook);
 		// 保存数据
 		AppData.setAccountBooks(AppData.getAccountBooks());
-		
 		// 给该账本创建默认分类
 		createDefaultCategory(accountBook.getAccountBookId());
+		
+		// 结束存储
+		AppData.endStore();
 		
 		return accountBook;
 	}
@@ -212,7 +222,7 @@ public class BizFacade {
 	}
 	
 	public void deleteAccountBook(int accountBookId) {
-		List<AccountBook> accountBooks = AppData.getAccountBooks();
+		ArrayList<AccountBook> accountBooks = AppData.getAccountBooks();
 		for (int i = 0; i < accountBooks.size(); i++) {
 			AccountBook accountBook = accountBooks.get(i);
 			if (accountBookId == accountBooks.get(i).getAccountBookId()) {
@@ -272,7 +282,8 @@ public class BizFacade {
 	
 	public AccountCategory getCategory(int accountBookId, String category) {
 		for (int i = 0; i < AppData.getAccountCategories().size(); i++) {
-			if (AppData.getAccountCategories().get(i).getCategory().equals(category)) {
+			AccountCategory accountCategory = AppData.getAccountCategories().get(i);
+			if (accountBookId == accountCategory.getAccountBookId() && accountCategory.getCategory().equals(category)) {
 				return AppData.getAccountCategories().get(i);
 			}
 		}
@@ -283,7 +294,8 @@ public class BizFacade {
 	public List<AccountCategory> getSubCategories(int accountBookId, String category) {
 		List<AccountCategory> subAccountCategories = new ArrayList<AccountCategory>();
 		for (int i = 0; i < AppData.getAccountCategories().size(); i++) {
-			if (AppData.getAccountCategories().get(i).getSuperCategory().equals(category)) {
+			AccountCategory accountCategory = AppData.getAccountCategories().get(i);
+			if (accountBookId == accountCategory.getAccountBookId() && accountCategory.getSuperCategory().equals(category)) {
 				subAccountCategories.add(AppData.getAccountCategories().get(i));
 			}
 		}
@@ -369,12 +381,12 @@ public class BizFacade {
 		DBService.getInstance(App.getInstance()).createAccountRecord(record);
 	}
 
-	public void editAccountItemDetial(int accountItemId, AccountCategory category, double waterValue, String description) {
-		
+	public void editAccountRecord(AccountRecord record) {
+		DBService.getInstance(App.getInstance()).updateAccountRecord(record);
 	}
 	
-	public void deleteAccountItem(int accountItemId) {
-		
+	public void deleteAccountRecord(int accountRecordId) {
+		DBService.getInstance(App.getInstance()).deleteAccountRecord(accountRecordId);
 	}
 	
 	// 重新加载数据

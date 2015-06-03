@@ -81,7 +81,7 @@ public class CustomActionBar extends RelativeLayout {
 	}
 	
 	public boolean canBack() {
-		return (null != textBack || textBack.getVisibility() == View.GONE);
+		return (null != textBack && textBack.getVisibility() != View.GONE);
 	}
 	
 	public void unableBack() {

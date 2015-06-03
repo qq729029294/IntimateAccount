@@ -5,17 +5,52 @@
     android:layout_height="match_parent"
     tools:context=".AccountBookActivity" >
 
-    <com.nan.ia.app.widget.CustomSwipeListView
+    <ListView
         android:id="@+id/list_account_book"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        swipe:swipeActionLeft="reveal"
-        swipe:swipeBackView="@+id/id_back"
-        swipe:swipeCloseAllItemsWhenMoveList="true"
-        swipe:swipeFrontView="@+id/id_front"
-        swipe:swipeMode="left"
-        swipe:swipeOffsetLeft="@dimen/list_account_book_item_swipe_menu_width"
-        swipe:swipeOpenOnLongPress="true" >
-    </com.nan.ia.app.widget.CustomSwipeListView>
+        android:paddingBottom="48dp"
+        android:clipToPadding="false" >
+    </ListView>
+
+    <RelativeLayout
+        android:id="@+id/btn_new"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/selector_btn_white_lt_transparent"
+        android:clickable="true"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/image_line0"
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:background="@color/app_main_color" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/btn_new"
+                android:textColor="@color/app_main_color"
+                android:textSize="18dp" />
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center_vertical"
+                android:layout_toRightOf="@+id/textView2"
+                android:src="@drawable/btn_add_blue" />
+
+        </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

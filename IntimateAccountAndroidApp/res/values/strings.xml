@@ -36,4 +36,5 @@
     <string name="lbl_description">描述</string>
     <string name="menu_account_login">用户登录</string>
     <string name="menu_about">关于我们</string>
+    <string name="btn_new">新建</string>
 </resources>

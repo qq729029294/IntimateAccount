@@ -89,9 +89,9 @@ public class RecordActivity extends BaseActionBarActivity {
 		
 		// 两个父分类
 		final AccountCategory categoryExpend = BizFacade.getInstance().getCategory(
-				AppData.getCreateAccountBookId(), Constant.CATEGORY_EXPEND);
+				AppData.getCurrentAccountBookId(), Constant.CATEGORY_EXPEND);
 		final AccountCategory categoryIncome = BizFacade.getInstance().getCategory(
-				AppData.getCreateAccountBookId(), Constant.CATEGORY_INCOME);
+				AppData.getCurrentAccountBookId(), Constant.CATEGORY_INCOME);
 		
 		// 自定义title
 		DoubleSelectButton doubleSelectButton = new DoubleSelectButton(this);
@@ -183,8 +183,11 @@ public class RecordActivity extends BaseActionBarActivity {
 			public void onOKClicked(String enterValue, double value) {
 				// 完成编辑
 				if (mTransData.getType() == RecordActivityType.NEW) {
+					// 新建
 					BizFacade.getInstance().createAccountRecord(mCurrentRecord);
-					BizFacade.getInstance().getMoreAccountRecords(AppData.getCurrentAccountBookId(), System.currentTimeMillis());
+				} else {
+					// 编辑
+					BizFacade.getInstance().editAccountRecord(mCurrentRecord);
 				}
 				
 				finish();
