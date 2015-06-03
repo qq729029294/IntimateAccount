@@ -4,58 +4,17 @@
     android:layout_height="60dp" >
 
     <LinearLayout
-        android:id="@+id/id_back"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ffffffff"
-        android:gravity="center|right" >
-
-        <RelativeLayout
-            android:id="@+id/btn_edit"
-            android:layout_width="90dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:background="@color/lt_gray"
-            android:clickable="true" >
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="@dimen/margin"
-                android:src="@drawable/selector_btn_edit_blue" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/btn_delete"
-            android:layout_width="90dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:background="@color/red"
-            android:clickable="true" >
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="@dimen/margin"
-                android:src="@drawable/selector_btn_delete" />
-        </RelativeLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/id_front"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="60dp"
         android:background="#ffffffff" >
 
         <ImageView
             android:id="@+id/imageView1"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/margin"
-            android:src="@drawable/ic_account_book" />
+            android:src="@drawable/icon_account_book" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -70,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="生活账本"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textSize="18dp" />
 
             <TextView
                 android:id="@+id/text_account_book_description"
@@ -78,8 +37,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/text_account_book_name"
                 android:text="记录生活中的点点滴滴"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/gray" />
+                android:textSize="12dp"
+                android:textColor="@color/font_ltlt" />
         </RelativeLayout>
     </LinearLayout>
 
