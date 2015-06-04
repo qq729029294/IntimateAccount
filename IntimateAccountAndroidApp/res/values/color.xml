@@ -24,4 +24,5 @@
     <color name="font_ltlt">#FFAAAAAA</color>
     <color name="white_lt_transparent">#f5ffffff</color>
     <color name="white_lt_transparent_press">#f59DC8F7</color>
+    <color name="list_item_selected">#FFE9E9E9</color>
 </resources>

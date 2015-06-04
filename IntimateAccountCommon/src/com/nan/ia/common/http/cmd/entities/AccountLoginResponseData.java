@@ -7,10 +7,22 @@
 
 package com.nan.ia.common.http.cmd.entities;
 
+import com.nan.ia.common.entities.UserInfo;
+
 public class AccountLoginResponseData {
+	int accountType;
 	String username;
 	int userId;
 	String token;
+	
+	UserInfo userInfo;
+	
+	public int getAccountType() {
+		return accountType;
+	}
+	public void setAccountType(int accountType) {
+		this.accountType = accountType;
+	}
 	public String getUsername() {
 		return username;
 	}
@@ -28,5 +40,11 @@ public class AccountLoginResponseData {
 	}
 	public void setToken(String token) {
 		this.token = token;
+	}
+	public UserInfo getUserInfo() {
+		return userInfo;
+	}
+	public void setUserInfo(UserInfo userInfo) {
+		this.userInfo = userInfo;
 	}
 }

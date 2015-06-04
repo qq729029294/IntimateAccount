@@ -15,7 +15,6 @@
 		<mapping class="com.nan.ia.server.db.entities.AccountRecordDeleteTbl" />
 		<mapping class="com.nan.ia.server.db.entities.AccountRecordTbl" />
 		<mapping class="com.nan.ia.server.db.entities.AccountTargetTbl" />
-		<mapping class="com.nan.ia.server.db.entities.UserExtendTbl" />
 		<mapping class="com.nan.ia.server.db.entities.UserTbl" />
 		<mapping class="com.nan.ia.server.db.entities.AccountTbl" />
 		<mapping class="com.nan.ia.server.db.entities.AccountTblId" />

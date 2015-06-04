@@ -52,8 +52,10 @@ public class DBService {
 			Transaction trans = session.beginTransaction();
 			UserTbl userTbl = new UserTbl();
 			userTbl.setUserId(0);
+			// 默认信息
 			userTbl.setNickname("无名小辈");
-			userTbl.setDescription("很懒哦，什么都没有留下");
+			userTbl.setAvatar("http://p1.gexing.com/touxiang/2011-6/629344710201181462.jpg");
+			userTbl.setDescription("很懒哦，什么都没有留下~");
 			session.save(userTbl);
 			trans.commit();
 			
@@ -82,9 +84,9 @@ public class DBService {
 		try {
 			// 新账本
 			List<AccountBookTbl> newAccountBookTbls = new ArrayList<AccountBookTbl>();
-			if (null != requestData.getNewAccountBooks()) {
-				for (int i = 0; i < requestData.getNewAccountBooks().size(); i++) {
-					AccountBook item = requestData.getNewAccountBooks().get(i);
+			if (null != requestData.getNewBooks()) {
+				for (int i = 0; i < requestData.getNewBooks().size(); i++) {
+					AccountBook item = requestData.getNewBooks().get(i);
 					
 					AccountBookTbl tbl = new AccountBookTbl();
 					tbl.setAccountBookId(0);
@@ -98,9 +100,9 @@ public class DBService {
 			
 			// 修改账本
 			List<AccountBookTbl> updateAccountBookTbls = new ArrayList<AccountBookTbl>();
-			if (null != requestData.getUpdateAccountBooks()) {
-				for (int i = 0; i < requestData.getUpdateAccountBooks().size(); i++) {
-					AccountBook item = requestData.getUpdateAccountBooks().get(i);
+			if (null != requestData.getUpdateBooks()) {
+				for (int i = 0; i < requestData.getUpdateBooks().size(); i++) {
+					AccountBook item = requestData.getUpdateBooks().get(i);
 					
 					AccountBookTbl tbl = new AccountBookTbl();
 					tbl.setAccountBookId(item.getAccountBookId());
@@ -114,9 +116,9 @@ public class DBService {
 			
 			// 删除账本
 			List<AccountBookDeleteTbl> accountBookDeleteTbls = new ArrayList<AccountBookDeleteTbl>();
-			if (null != requestData.getAccountBookDeletes()) {
-				for (int i = 0; i < requestData.getAccountBookDeletes().size(); i++) {
-					AccountBookDelete item = requestData.getAccountBookDeletes().get(i);
+			if (null != requestData.getBookDeletes()) {
+				for (int i = 0; i < requestData.getBookDeletes().size(); i++) {
+					AccountBookDelete item = requestData.getBookDeletes().get(i);
 					
 					AccountBookDeleteTbl tbl = new AccountBookDeleteTbl();
 					tbl.setAccountBookId(item.getAccountBookId());
@@ -320,5 +322,26 @@ public class DBService {
 		}
 		
 		return false;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public BoolResult<UserTbl> getUser(int userId) {
+		try {
+			Session session = HibernateUtil.getSession();
+			// 检查是否已经存在用户名
+			Query query = session.createQuery("FROM UserTbl r WHERE r.user_id = ?");
+			query.setParameter(0, userId);
+			
+			List<UserTbl> tbls = query.list();
+			if (tbls.size() == 1) {
+				return BoolResult.True(tbls.get(0));
+			} else {
+				return BoolResult.True(null);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return BoolResult.False();
 	}
 }

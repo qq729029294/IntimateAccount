@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">亲密帐</string>
+    <string name="app_name">一起记账</string>
     <string name="start">立即开始</string>
     <string name="http_request_exception">网络请求出现异常</string>
     <string name="fmt_http_request_error">网络请求错误，错误代码：</string>
     <string name="fmt_server_error">请求服务器错误，错误代码：</string>
     <string name="server_not_responding">服务器没有响应</string>
     <string name="unable_parse_responding">无法解析服务器响应</string>
-    <string name="title_main">亲密账</string>
+    <string name="title_main">一起记账</string>
     <string name="title_login">登录</string>
     <string name="title_default_back">返回</string>
     <string name="btn_login">登录</string>

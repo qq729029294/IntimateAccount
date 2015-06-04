@@ -10,7 +10,9 @@ import com.nan.ia.app.ui.EditAccountBookActivity.EditAccountBookType;
 import com.nan.ia.app.ui.RecordActivity.RecordActivityType;
 import com.nan.ia.app.utils.Utils;
 import com.nan.ia.app.widget.CustomActionBar;
+import com.nan.ia.app.widget.CustomPopupMenu;
 import com.nan.ia.app.widget.CustomToast;
+import com.nan.ia.common.entities.AccountRecord;
 import com.ryg.expandable.ui.PinnedHeaderExpandableListView;
 import com.ryg.expandable.ui.StickyLayout;
 import com.ryg.expandable.ui.StickyLayout.OnGiveUpTouchEventListener;
@@ -18,11 +20,14 @@ import com.special.ResideMenu.ResideMenu;
 import com.special.ResideMenu.ResideMenuItem;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ExpandableListView.OnChildClickListener;
@@ -30,7 +35,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class MainActivity extends BaseActionBarActivity {
+public class MainActivity extends BaseActivity {
     private PinnedHeaderExpandableListView mListViewRecords;
     private RecordsExpandableListAdapter mAdapter;
     private StickyLayout mStickyLayout;
@@ -66,9 +71,31 @@ public class MainActivity extends BaseActionBarActivity {
 				MainActivity.this.startActivity(new Intent(MainActivity.this, RecordActivity.class));
 			}
 		});
-		
+        
+        mStickyLayout = (StickyLayout)findViewById(R.id.sticky_layout);
+        mStickyLayout.setOnGiveUpTouchEventListener(new OnGiveUpTouchEventListener() {
+			
+			@Override
+			public boolean giveUpTouchEvent(MotionEvent event) {
+		        if (mListViewRecords.getFirstVisiblePosition() == 0) {
+		            View view = mListViewRecords.getChildAt(0);
+		            if (view != null && view.getTop() >= 0) {
+		                return true;
+		            }
+		        }
+		        return false;
+			}
+		} );
+        
+        setupTop();
+        setupMenu();
+        setupListView();
+	}
+	
+	private void setupListView() {
 		mListViewRecords = (PinnedHeaderExpandableListView) findViewById(R.id.list_records);
-		mAdapter = new RecordsExpandableListAdapter(this);
+		mListViewRecords.setOnItemLongClickListener(null);
+		mAdapter = new RecordsExpandableListAdapter(this, mListViewRecords);
 		mAdapter.setData(BizFacade.getInstance().getMoreAccountRecords(AppData.getCurrentAccountBookId(),
 				System.currentTimeMillis()));
 		mListViewRecords.setAdapter(mAdapter);
@@ -86,34 +113,45 @@ public class MainActivity extends BaseActionBarActivity {
 			public boolean onChildClick(ExpandableListView parent, View v,
 					int groupPosition, int childPosition, long id) {
 				ListItemRecord item = (ListItemRecord) mAdapter.getChild(groupPosition, childPosition);
-				RecordActivity.TransData transData = new RecordActivity.TransData();
-				transData.setType(RecordActivityType.EDIT);
-				transData.setAccountRecord(item.getAccountRecord());
+				if (null != item) {
+					editRecord(item.getAccountRecord());
+				}
 				
-				Intent intent = new Intent(MainActivity.this, RecordActivity.class);
-				MainActivity.this.startActivity(createTransDataIntent(intent, transData));
 				return false;
 			}
 		});
         
-        mStickyLayout = (StickyLayout)findViewById(R.id.sticky_layout);
-        mStickyLayout.setOnGiveUpTouchEventListener(new OnGiveUpTouchEventListener() {
-			
+        mListViewRecords.setOnItemLongClickListener(new OnItemLongClickListener() {
+
 			@Override
-			public boolean giveUpTouchEvent(MotionEvent event) {
-		        if (mListViewRecords.getFirstVisiblePosition() == 0) {
-		            View view = mListViewRecords.getChildAt(0);
-		            if (view != null && view.getTop() >= 0) {
-		                return true;
-		            }
-		        }
-		        return false;
+			public boolean onItemLongClick(AdapterView<?> arg0, View v,
+					int position, long id) {
+				final ListItemRecord item = (ListItemRecord) mAdapter.getChild(position);
+				if (null == item) {
+					return false;
+				}
+				
+				CustomPopupMenu popupMenu = new CustomPopupMenu(MainActivity.this);
+				popupMenu.addMenuItem("编辑", new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						editRecord(item.getAccountRecord());
+					}
+				});
+				
+				popupMenu.addMenuItem("删除", new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						editRecord(item.getAccountRecord());
+					}
+				});
+				
+				popupMenu.showAtView(v);
+				return true;
 			}
-		} );
-        
-        setupMenu();
-        
-        setupActionBar();
+		});
 	}
 	
 	private void setupMenu() {
@@ -151,22 +189,16 @@ public class MainActivity extends BaseActionBarActivity {
         mResideMenu.addMenuItem(itemAbout, ResideMenu.DIRECTION_LEFT);
 	}
 	
-	private void setupActionBar() {
-		ImageView imageView = new ImageView(this);
-		imageView.setImageResource(R.drawable.selector_btn_setting);
-		imageView.setClickable(true);
-		imageView.setLayoutParams(new LayoutParams(Utils.dip2px(this, 32), Utils.dip2px(this, 32)));
-		imageView.setOnClickListener(new OnClickListener() {
+	private void setupTop() {
+		findViewById(R.id.btn_settings).setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				mResideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
 			}
 		});
-		mActionBar.customLeftView(this, imageView);
 		
-		View mainTitle = LayoutInflater.from(this).inflate(R.layout.view_main_title, null);
-		mainTitle.setOnClickListener(new OnClickListener() {
+		findViewById(R.id.btn_account_book_settings).setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -174,8 +206,35 @@ public class MainActivity extends BaseActionBarActivity {
 				startActivity(new Intent(MainActivity.this, AccountBookActivity.class));
 			}
 		});
-		TextView textTitle = (TextView) mainTitle.findViewById(R.id.text_account_book_name);
+		TextView textTitle = (TextView) findViewById(R.id.text_account_book_name);
 		textTitle.setText(BizFacade.getInstance().getAccountBookById(AppData.getCurrentAccountBookId()).getName());
-		mActionBar.customCenterView(this, mainTitle);
+		
+		findViewById(R.id.btn_sync).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				new AsyncTask<Integer, Integer, Integer>() {
+
+					@Override
+					protected Integer doInBackground(Integer... params) {
+						BizFacade.getInstance().syncDataToServer();
+						return null;
+					}
+				}.execute(0);
+			}
+		});
+	}
+	
+	private void refreshData() {
+		
+	}
+	
+	private void editRecord(AccountRecord accountRecord) {
+		RecordActivity.TransData transData = new RecordActivity.TransData();
+		transData.setType(RecordActivityType.EDIT);
+		transData.setAccountRecord(accountRecord);
+		
+		Intent intent = new Intent(MainActivity.this, RecordActivity.class);
+		MainActivity.this.startActivity(createTransDataIntent(intent, transData));
 	}
 }

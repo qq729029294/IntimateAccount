@@ -7,7 +7,6 @@
 
 package com.nan.ia.app.adapter;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.AbsListView.LayoutParams;
@@ -26,7 +26,6 @@ import com.nan.ia.app.biz.BizFacade;
 import com.nan.ia.app.constant.Constant;
 import com.nan.ia.app.data.AppData;
 import com.nan.ia.app.data.ResourceMapper;
-import com.nan.ia.app.ui.MainActivity;
 import com.nan.ia.app.utils.TimeUtils;
 import com.nan.ia.app.utils.Utils;
 import com.nan.ia.common.entities.AccountCategory;
@@ -42,13 +41,15 @@ import com.ryg.expandable.ui.PinnedHeaderExpandableListView.OnHeaderUpdateListen
 public class RecordsExpandableListAdapter extends BaseExpandableListAdapter implements OnHeaderUpdateListener {
     private Context mContext;
     private LayoutInflater mInflater;
+    private ExpandableListView mListView;
     
     private ArrayList<ListGroupRecord> mListGroupRecords = new ArrayList<ListGroupRecord>();
     private ArrayList<List<ListItemRecord>> mListItemRecordsList = new ArrayList<List<ListItemRecord>>();
 
-    public RecordsExpandableListAdapter(Context context) {
+    public RecordsExpandableListAdapter(Context context, ExpandableListView listView) {
         this.mContext = context;
         mInflater = LayoutInflater.from(context);
+        mListView = listView;
     }
     
     @SuppressWarnings("deprecation")
@@ -130,6 +131,30 @@ public class RecordsExpandableListAdapter extends BaseExpandableListAdapter impl
     @Override
     public Object getChild(int groupPosition, int childPosition) {
         return mListItemRecordsList.get(groupPosition).get(childPosition);
+    }
+    
+    public Object getChild(int position) {
+    	int sumPosition = -1;
+    	for (int i = 0; i < mListItemRecordsList.size(); i++) {
+			sumPosition ++;
+			if (sumPosition == position) {
+				// 指向的是group，返回空
+				return null;
+			}
+			
+			if (!mListView.isGroupExpanded(i)) {
+				continue;
+			}
+			
+			if (sumPosition + mListItemRecordsList.get(i).size() < position) {
+				sumPosition += mListItemRecordsList.get(i).size();
+				continue;
+			}
+			
+			return mListItemRecordsList.get(i).get(position - sumPosition - 1);
+		}
+    	
+    	return null;
     }
 
     @Override
@@ -226,6 +251,14 @@ public class RecordsExpandableListAdapter extends BaseExpandableListAdapter impl
         
         // 每天最后一项的线
         childHolder.imageLineLast.setVisibility(item.lastItemOfDay ? View.VISIBLE : View.INVISIBLE);
+//        convertView.setOnLongClickListener(new OnLongClickListener() {
+//			
+//			@Override
+//			public boolean onLongClick(View v) {
+//				CustomPopupMenu popupMenu = new CustomPopupMenu(mA)
+//				return false;
+//			}
+//		});
 
         return convertView;
     }

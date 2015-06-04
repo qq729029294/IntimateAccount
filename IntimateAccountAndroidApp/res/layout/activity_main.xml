@@ -12,11 +12,62 @@
         android:background="@color/app_main_color"
         android:orientation="vertical" >
 
+        <RelativeLayout
+            android:id="@+id/layout_top"
+            android:layout_width="match_parent"
+            android:layout_height="48dp" >
+
+            <ImageView
+                android:id="@+id/btn_settings"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/margin"
+                android:src="@drawable/selector_btn_setting" />
+
+            <LinearLayout
+                android:id="@+id/btn_account_book_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:clickable="true" >
+
+                <TextView
+                    android:id="@+id/text_account_book_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="生活账本（默认）"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:gravity="center"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/icon_round_arrow_right" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/btn_sync"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/margin"
+                android:src="@drawable/selector_btn_setting" />
+        </RelativeLayout>
+
         <LinearLayout
             android:id="@+id/sticky_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#78A524"
             android:gravity="center"
             android:orientation="vertical" >
 
@@ -30,8 +81,8 @@
             android:id="@+id/sticky_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:background="@color/ltlt_gray" >
+            android:background="@color/ltlt_gray"
+            android:orientation="vertical" >
 
             <com.ryg.expandable.ui.PinnedHeaderExpandableListView
                 android:id="@+id/list_records"
@@ -39,10 +90,10 @@
                 android:layout_height="match_parent"
                 android:cacheColorHint="@null"
                 android:childIndicatorLeft="0dp"
+                android:clipToPadding="false"
                 android:dividerHeight="0dp"
                 android:groupIndicator="@null"
                 android:paddingBottom="48dp"
-                android:clipToPadding="false"
                 android:scrollbarAlwaysDrawHorizontalTrack="false" >
             </com.ryg.expandable.ui.PinnedHeaderExpandableListView>
         </LinearLayout>
@@ -50,11 +101,11 @@
 
     <RelativeLayout
         android:id="@+id/btn_record"
-        android:clickable="true"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/selector_btn_white_lt_transparent"
+        android:clickable="true"
         android:orientation="vertical" >
 
         <ImageView

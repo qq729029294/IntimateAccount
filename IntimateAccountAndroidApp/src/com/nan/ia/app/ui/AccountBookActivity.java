@@ -54,6 +54,7 @@ public class AccountBookActivity extends BaseActionBarActivity {
 		mListView = (ListView) findViewById(R.id.list_account_book);
 		mAdapter = new AccountBookAdapter(this);
 		mListView.setAdapter(mAdapter);
+		mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -73,7 +74,7 @@ public class AccountBookActivity extends BaseActionBarActivity {
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				showPopupMenu(view, position);
-				// showPopWindows(view);
+				
 				return true;
 			}
 		});
@@ -109,7 +110,7 @@ public class AccountBookActivity extends BaseActionBarActivity {
 				EditAccountBookActivity.class);
 		startActivity(createTransDataIntent(intent, transData));
 	}
-
+	
 	private void showPopupMenu(View view, final int position) {
 		final CustomPopupMenu popupMenu = new CustomPopupMenu(this);
 		popupMenu.addMenuItem("编辑", new OnClickListener() {

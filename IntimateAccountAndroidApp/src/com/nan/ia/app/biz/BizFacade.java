@@ -14,17 +14,22 @@ import com.nan.ia.app.db.DBService;
 import com.nan.ia.app.entities.AccountInfo;
 import com.nan.ia.app.http.cmd.server.AccountLoginServerCmd;
 import com.nan.ia.app.http.cmd.server.RegisterServerCmd;
+import com.nan.ia.app.http.cmd.server.SyncDataServerCmd;
 import com.nan.ia.app.http.cmd.server.VerifyMailServerCmd;
 import com.nan.ia.app.http.cmd.server.VerifyVfCodeServerCmd;
+import com.nan.ia.common.constant.ServerErrorCode;
 import com.nan.ia.common.entities.AccountBook;
 import com.nan.ia.common.entities.AccountBookDelete;
 import com.nan.ia.common.entities.AccountCategory;
 import com.nan.ia.common.entities.AccountCategoryDelete;
 import com.nan.ia.common.entities.AccountRecord;
+import com.nan.ia.common.entities.AccountRecordDelete;
 import com.nan.ia.common.http.cmd.entities.AccountLoginRequestData;
 import com.nan.ia.common.http.cmd.entities.AccountLoginResponseData;
 import com.nan.ia.common.http.cmd.entities.RegisterRequestData;
 import com.nan.ia.common.http.cmd.entities.ServerResponse;
+import com.nan.ia.common.http.cmd.entities.SyncDataRequestData;
+import com.nan.ia.common.http.cmd.entities.SyncDataResponseData;
 import com.nan.ia.common.http.cmd.entities.VerifyMailRequestData;
 import com.nan.ia.common.http.cmd.entities.VerifyVfCodeRequestData;
 
@@ -403,7 +408,60 @@ public class BizFacade {
 	
 	// 同步服务器数据
 	public void syncDataToServer() {
-		// 获取本地新增的数据信息
+		DBService dbService = DBService.getInstance(App.getInstance());
+		long lastSyncTime = AppData.getLastSyncDataLocalTime();
+		
+		// 获得需要同步的账本
+		List<AccountBook> newBooks = new ArrayList<AccountBook>();					// 新建账本
+		List<AccountBook> updateBooks = new ArrayList<AccountBook>();				// 更新账本
+		List<AccountBookDelete> bookDeletes = AppData.getAccountBookDeletes();		// 删除账本
+		for (int i = 0; i < AppData.getAccountBooks().size(); i++) {
+			AccountBook accountBook = AppData.getAccountBooks().get(i);
+			if (accountBook.getCreateTime().getTime() > lastSyncTime) {
+				// 本地新建的账本
+				newBooks.add(accountBook);
+			} else if (accountBook.getUpdateTime().getTime() > lastSyncTime) {
+				// 更新的装备
+				updateBooks.add(accountBook);
+			}
+		}
+		
+		// 获得需要同步的类别数据
+		List<AccountCategory> newCategories = new ArrayList<AccountCategory>();      		// 新建类别
+		List<AccountCategory> updateCategories = new ArrayList<AccountCategory>();   		// 更新类别
+		List<AccountCategoryDelete> categoryDeletes = AppData.getAccountCategoryDeletes(); 	// 删除的类别
+		for (int i = 0; i < AppData.getAccountCategories().size(); i++) {
+			AccountCategory category = AppData.getAccountCategories().get(i);
+			if (category.getCreateTime().getTime() > lastSyncTime) {
+				// 本地新建类别
+				newCategories.add(category);
+			} else if (category.getUpdateTime().getTime() > lastSyncTime) {
+				// 本地更新类别
+				updateCategories.add(category);
+			}
+		}
+		
+		// 获得需要同步的账本记录
+		List<AccountRecord> newRecords = dbService.queryNewAccountRecords(lastSyncTime);	   	// 新建记录
+		List<AccountRecord> updateRecords = dbService.queryUpdateAccountRecords(lastSyncTime); 	// 更新记录
+		List<AccountRecordDelete> recordDeletes = AppData.getAccountRecordDeletes();			// 删除的记录
+		
+		SyncDataRequestData requestData = new SyncDataRequestData();
+		requestData.setLastSyncDataTime(AppData.getLastSyncDataTime());
+		requestData.setNewBooks(newBooks);
+		requestData.setUpdateBooks(updateBooks);
+		requestData.setBookDeletes(bookDeletes);
+		
+		requestData.setNewCategories(newCategories);
+		requestData.setUpdateCategories(updateCategories);
+		requestData.setCategoryDeletes(categoryDeletes);
+		
+		requestData.setNewRecords(newRecords);
+		requestData.setUpdateRecords(updateRecords);
+		requestData.setRecordDeletes(recordDeletes);
+		
+		SyncDataServerCmd cmd = new SyncDataServerCmd();
+		ServerResponse<SyncDataResponseData> response = cmd.send(App.getInstance(), requestData, false);
 	}
 	
 	// 用户相关接口
@@ -465,6 +523,28 @@ public class BizFacade {
 		requestData.setUsername(username);
 		requestData.setPassword(password);
 		requestData.setAccountType(Constant.ACCOUNT_TYPE_MAIL);
-		return new AccountLoginServerCmd().send(context, requestData, false);
+		
+		ServerResponse<AccountLoginResponseData> response = new AccountLoginServerCmd().send(context, requestData, false);
+		if (response.getRet() == ServerErrorCode.RET_SUCCESS) {
+			doAfterLoginSuccess(response.getData());
+		}
+		
+		return response;
+	}
+	
+	private void doAfterLoginSuccess(AccountLoginResponseData data) {
+		AccountInfo accountInfo = AppData.getAccountInfo();
+		accountInfo.setAccountType(data.getAccountType());
+		accountInfo.setUsername(data.getUsername());
+		accountInfo.setUserId(data.getUserId());
+		accountInfo.setToken(data.getToken());
+		
+		AppData.getUserInfoCache().put(data.getUserId(), data.getUserInfo());
+		
+		// 保存到文件中
+		AppData.beginStore();
+		AppData.setAccountInfo(accountInfo);
+		AppData.setUserInfoCache(AppData.getUserInfoCache());
+		AppData.endStore();
 	}
 }

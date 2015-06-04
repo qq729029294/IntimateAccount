@@ -54,7 +54,7 @@ public class SyncDataController {
 		int userId = RequestHelper.getUserIdFromToken(requestData.getToken());
 		// 是否需要重新更新账本数据
 		responseData.setUpdateAccountBooks(DBService.getInstance().checkNeedUpdateAccountBooks(userId,
-				requestData.getLastSyncDataServerTime()));
+				requestData.getLastSyncDataTime()));
 		if (responseData.isUpdateAccountBooks()) {
 			// 需要更新账本
 			BoolResult<List<AccountBookTbl>> resultAccountBookTbls = 

@@ -73,7 +73,7 @@ public class CompleteRegisterActivity extends BaseActionBarActivity {
 						toTransData.setPassword(editControlPassword.getEditText().getText().toString());
 						
 						Intent intent = new Intent(CompleteRegisterActivity.this, LoginActivity.class);
-						startActivity(createTransDataIntent(intent, transData));
+						startActivity(createTransDataIntent(intent, toTransData));
 						
 						super.onPostExecute(result);
 					}

@@ -10,7 +10,7 @@ package com.nan.ia.app.widget;
 import com.nan.ia.app.R;
 import com.nan.ia.app.utils.Utils;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
@@ -28,21 +28,22 @@ import android.widget.TextView;
 public class CustomPopupMenu extends PopupWindow {
 	private static int MARGIN_TOP = 60;
 	private static int INVASION_HEIGHT = 6;
-	Activity mActivity;
+	Context mContext;
+	View mView;
 	
 	View mPopView;
 	ImageView mImageArrowUp;
 	ImageView mImageArrowDown;
 	LinearLayout mLayoutMenu;
 	
-	public CustomPopupMenu(Activity activity) {
+	public CustomPopupMenu(Context context) {
 		super(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		
 	    setFocusable(true);
 	    setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 	    
-	    mActivity = activity;
-	    mPopView = (ViewGroup) LayoutInflater.from(activity).inflate(R.layout.view_popup_menu, null);
+	    mContext = context;
+	    mPopView = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.view_popup_menu, null);
 	    mLayoutMenu = (LinearLayout) mPopView.findViewById(R.id.layout_menu);
 	    mImageArrowUp = (ImageView) mPopView.findViewById(R.id.image_arrow_up);
 	    mImageArrowDown = (ImageView) mPopView.findViewById(R.id.image_arrow_down);
@@ -59,9 +60,9 @@ public class CustomPopupMenu extends PopupWindow {
 	}
 	
 	private TextView addDefaultTextView(String text, final OnClickListener listener) {
-		TextView textView = new TextView(mActivity);
+		TextView textView = new TextView(mContext);
 		textView.setText(text);
-		textView.setTextColor(mActivity.getResources().getColor(R.color.white));
+		textView.setTextColor(mContext.getResources().getColor(R.color.white));
 		textView.setTextSize(18.0f);
 		
 		textView.setClickable(true);
@@ -85,14 +86,20 @@ public class CustomPopupMenu extends PopupWindow {
 		return textView;
 	}
 	
+	@Override
+	public void dismiss() {
+		mView.setSelected(false);
+		super.dismiss();
+	}
+
 	private void addDivider() {
-		ImageView imageView = new ImageView(mActivity);
+		ImageView imageView = new ImageView(mContext);
 		imageView.setBackgroundResource(R.color.line_1dp_light_gray);
 		
 		LayoutParams layoutParamsImageView =
 				new LayoutParams(1, LayoutParams.MATCH_PARENT);
-		layoutParamsImageView.leftMargin = (int) mActivity.getResources().getDimension(R.dimen.margin);
-		layoutParamsImageView.rightMargin = (int) mActivity.getResources().getDimension(R.dimen.margin);
+		layoutParamsImageView.leftMargin = (int) mContext.getResources().getDimension(R.dimen.margin);
+		layoutParamsImageView.rightMargin = (int) mContext.getResources().getDimension(R.dimen.margin);
 		mLayoutMenu.addView(imageView, layoutParamsImageView);
 	}
 	
@@ -108,19 +115,23 @@ public class CustomPopupMenu extends PopupWindow {
 	    int posX = location[0] + v.getWidth() / 2 - popupWidth / 2;
 	    int posY = location[1];
 	    
-	    if (posY - popupHeight > Utils.dip2px(mActivity, MARGIN_TOP)) {
+	    if (posY - popupHeight > Utils.dip2px(mContext, MARGIN_TOP)) {
 	    	// 显示在上部
 	    	mImageArrowUp.setVisibility(View.GONE);
 	    	mImageArrowDown.setVisibility(View.VISIBLE);
 	    	
-	    	posY = posY - popupHeight + Utils.dip2px(mActivity, INVASION_HEIGHT);
+	    	posY = posY - popupHeight + Utils.dip2px(mContext, INVASION_HEIGHT);
 		} else {
 			// 显示在下
 	    	mImageArrowUp.setVisibility(View.VISIBLE);
 	    	mImageArrowDown.setVisibility(View.GONE);
 	    	
-	    	posY = posY + v.getHeight() - Utils.dip2px(mActivity, INVASION_HEIGHT);
+	    	posY = posY + v.getHeight() - Utils.dip2px(mContext, INVASION_HEIGHT);
 		}
+	    
+	    // 设置选择状态
+	    mView = v;
+	    mView.setSelected(true);
 	    
 	    /** 显示位置 */
 	    showAtLocation(v, Gravity.NO_GRAVITY, posX, posY);

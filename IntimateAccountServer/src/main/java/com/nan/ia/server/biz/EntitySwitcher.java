@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.nan.ia.common.entities.AccountBook;
+import com.nan.ia.common.entities.UserInfo;
 import com.nan.ia.server.db.entities.AccountBookTbl;
+import com.nan.ia.server.db.entities.UserTbl;
 
 public class EntitySwitcher {
 	public static AccountBook fromTbl(AccountBookTbl tbl) {
@@ -41,5 +43,18 @@ public class EntitySwitcher {
 		}
 		
 		return items;
+	}
+	
+	public static UserInfo fromTbl(UserTbl tbl) {
+		if (null == tbl) {
+			return null;
+		}
+		
+		UserInfo item = new UserInfo();
+		item.setUserId(tbl.getUserId());
+		item.setNickname(tbl.getNickname());
+		item.setAvatarUrl(tbl.getAvatar());
+		
+		return item;
 	}
 }

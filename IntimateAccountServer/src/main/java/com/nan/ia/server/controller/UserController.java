@@ -27,9 +27,11 @@ import com.nan.ia.common.http.cmd.entities.VerifyMailRequestData;
 import com.nan.ia.common.http.cmd.entities.VerifyVfCodeRequestData;
 import com.nan.ia.common.utils.BoolResult;
 import com.nan.ia.server.biz.BizFacade;
+import com.nan.ia.server.biz.EntitySwitcher;
 import com.nan.ia.server.constant.Constant;
 import com.nan.ia.server.db.DBService;
 import com.nan.ia.server.db.entities.AccountTbl;
+import com.nan.ia.server.db.entities.UserTbl;
 
 @Controller
 public class UserController {
@@ -130,31 +132,39 @@ public class UserController {
 		};
 		
 		AccountLoginRequestData requestData = result.result();
-		// 再次验证验证码
+		
+		// 检查登录信息
 		BoolResult<AccountTbl> resultGetLoginAccount =
 				DBService.getInstance().getAccount(requestData.getUsername(), requestData.getAccountType());
-		
 		if (resultGetLoginAccount.isFalse()) {
 			return RequestHelper.responseAccessDBError("");
 		}
-		
 		if (resultGetLoginAccount.result() == null) {
 			return RequestHelper.responseError(ServerErrorCode.RET_USERNAME_NOT_EXIST, "用户名不存在");
 		}
-		
 		if (!resultGetLoginAccount.result().getPassword().equals(requestData.getPassword())) {
 			return RequestHelper.responseError(ServerErrorCode.RET_PARAM_ERROR, "密码错误");
 		}
 		
+		// 更新登录态
 		String token = UUID.randomUUID().toString();
 		if (!DBService.getInstance().updateLoginState(resultGetLoginAccount.result().getUserId(), token)) {
 			return RequestHelper.responseAccessDBError("");
 		}
+		
+		// 获取登录用户信息
+		BoolResult<UserTbl> resultGetUser = DBService.getInstance().getUser(resultGetLoginAccount.result().getUserId());
+		if (resultGetUser.isFalse()) {
+			return RequestHelper.responseAccessDBError("");
+		}
 
 		AccountLoginResponseData responseData = new AccountLoginResponseData();
+		responseData.setAccountType(requestData.getAccountType());
 		responseData.setUsername(resultGetLoginAccount.result().getId().getUsername());
 		responseData.setUserId(resultGetLoginAccount.result().getUserId());
 		responseData.setToken(token);
+		
+		responseData.setUserInfo(EntitySwitcher.fromTbl(resultGetUser.result()));
 		
 		return RequestHelper.responseSuccess(responseData);
 	}

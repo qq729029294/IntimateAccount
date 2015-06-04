@@ -8,20 +8,20 @@
 package com.nan.ia.app.data;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
 import android.content.Context;
 
-import com.google.gson.reflect.TypeToken;
 import com.nan.ia.app.constant.Constant;
 import com.nan.ia.app.entities.AccountInfo;
 import com.nan.ia.common.entities.AccountBook;
 import com.nan.ia.common.entities.AccountBookDelete;
 import com.nan.ia.common.entities.AccountCategory;
 import com.nan.ia.common.entities.AccountCategoryDelete;
+import com.nan.ia.common.entities.AccountRecordDelete;
+import com.nan.ia.common.entities.UserInfo;
 
 public class AppData {
 	// getter and setter
@@ -34,8 +34,10 @@ public class AppData {
 	static ArrayList<AccountBookDelete> accountBookDeletes = new ArrayList<AccountBookDelete>();
 	static ArrayList<AccountCategory> accountCategories = new ArrayList<AccountCategory>();
 	static ArrayList<AccountCategoryDelete> accountCategoryDeletes = new ArrayList<AccountCategoryDelete>();
+	static ArrayList<AccountRecordDelete> accountRecordDeletes = new ArrayList<AccountRecordDelete>();
+	static HashMap<Integer, UserInfo> userInfoCache = new HashMap<Integer, UserInfo>();
 
-	static long lastSyncDataServerTime = 0;
+	static long lastSyncDataTime = 0;
 	static long lastSyncDataLocalTime = 0;
 
 	public static boolean isInit() {
@@ -121,14 +123,12 @@ public class AppData {
 		new Storage("accountCategoryDeletes").store();
 	}
 
-	public static long getLastSyncDataServerTime() {
-		return lastSyncDataServerTime;
+	public static long getLastSyncDataTime() {
+		return lastSyncDataTime;
 	}
 
-	public static void setLastSyncDataServerTime(long lastSyncDataServerTime) {
-		AppData.lastSyncDataServerTime = lastSyncDataServerTime;
-		
-		new Storage("lastSyncDataServerTime").store();
+	public static void setLastSyncDataTime(long lastSyncDataTime) {
+		AppData.lastSyncDataTime = lastSyncDataTime;
 	}
 
 	public static long getLastSyncDataLocalTime() {
@@ -140,21 +140,46 @@ public class AppData {
 		
 		new Storage("lastSyncDataLocalTime").store();
 	}
+	
+	public static ArrayList<AccountRecordDelete> getAccountRecordDeletes() {
+		return accountRecordDeletes;
+	}
+
+	public static void setAccountRecordDeletes(
+			ArrayList<AccountRecordDelete> accountRecordDeletes) {
+		AppData.accountRecordDeletes = accountRecordDeletes;
+		
+		new Storage("accountRecordDeletes").store();
+	}
+
+	public static HashMap<Integer, UserInfo> getUserInfoCache() {
+		return userInfoCache;
+	}
+	
+	public static void setUserInfoCache(HashMap<Integer, UserInfo> userInfoCache) {
+		AppData.userInfoCache = userInfoCache;
+		
+		new Storage("userInfoCache").store();
+	}
 
 	public static void initAppData(Context context) {
 		AppDataStoreHelper.init(context);
-
 		readStoreData();
-		
 		ResourceMapper.initMap();
+		
+		initDefaultData();
+	}
+	
+	private static void initDefaultData() {
+		if (null == accountInfo) {
+			accountInfo = new AccountInfo();
+			accountInfo.setAccountType(Constant.ACCOUNT_TYPE_UNLOGIN);
+		}
 	}
 
-	public static void readStoreData() {
+	private static void readStoreData() {
 		Class<?> x = AppData.class;
 		Field[] fields = x.getDeclaredFields();
-		
-		ParameterizedType a;
-
 		for (int i = 0; i < fields.length; i++) {
 			Field field = fields[i];
 			String name = field.getName();

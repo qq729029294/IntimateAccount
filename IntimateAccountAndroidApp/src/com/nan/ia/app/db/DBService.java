@@ -109,6 +109,78 @@ public class DBService {
 		return records;
 	}
 	
+	public List<AccountRecord> queryNewAccountRecords(long lastSyncTime) {
+		Cursor cursor = mDatabase
+				.rawQuery(
+						"SELECT * FROM account_record_tbl WHERE create_time > ?",
+						new String[] { String.valueOf(lastSyncTime) });
+		
+		List<AccountRecord> records = new ArrayList<AccountRecord>();
+		while (cursor.moveToNext()) {
+			AccountRecord record = new AccountRecord();
+			record.setAccountRecordId(cursor.getInt(cursor
+					.getColumnIndex("account_record_id")));
+			record.setAccountBookId(cursor.getInt(cursor
+					.getColumnIndex("account_book_id")));
+			record.setCategory(cursor.getString(cursor
+					.getColumnIndex("category")));
+			record.setWaterValue(cursor.getDouble(cursor
+					.getColumnIndex("water_value")));
+			record.setDescription(cursor.getString(cursor
+					.getColumnIndex("description")));
+			record.setRecordTime(new Date(cursor.getLong(cursor
+					.getColumnIndex("record_time"))));
+			record.setRecordUserId(cursor.getInt(cursor
+					.getColumnIndex("record_user_id")));
+			record.setCreateTime(new Date(cursor.getLong(cursor
+					.getColumnIndex("create_time"))));
+			record.setUpdateTime(new Date(cursor.getLong(cursor
+					.getColumnIndex("update_time"))));
+
+			records.add(record);
+		}
+		
+		cursor.close();
+		
+		return records;
+	}
+	
+	public List<AccountRecord> queryUpdateAccountRecords(long lastSyncTime) {
+		Cursor cursor = mDatabase
+				.rawQuery(
+						"SELECT * FROM account_record_tbl WHERE create_time < ? AND update_time > ?",
+						new String[] { String.valueOf(lastSyncTime), String.valueOf(lastSyncTime) });
+		
+		List<AccountRecord> records = new ArrayList<AccountRecord>();
+		while (cursor.moveToNext()) {
+			AccountRecord record = new AccountRecord();
+			record.setAccountRecordId(cursor.getInt(cursor
+					.getColumnIndex("account_record_id")));
+			record.setAccountBookId(cursor.getInt(cursor
+					.getColumnIndex("account_book_id")));
+			record.setCategory(cursor.getString(cursor
+					.getColumnIndex("category")));
+			record.setWaterValue(cursor.getDouble(cursor
+					.getColumnIndex("water_value")));
+			record.setDescription(cursor.getString(cursor
+					.getColumnIndex("description")));
+			record.setRecordTime(new Date(cursor.getLong(cursor
+					.getColumnIndex("record_time"))));
+			record.setRecordUserId(cursor.getInt(cursor
+					.getColumnIndex("record_user_id")));
+			record.setCreateTime(new Date(cursor.getLong(cursor
+					.getColumnIndex("create_time"))));
+			record.setUpdateTime(new Date(cursor.getLong(cursor
+					.getColumnIndex("update_time"))));
+
+			records.add(record);
+		}
+		
+		cursor.close();
+		
+		return records;
+	}
+	
 	private int execOperateSQL(String sql) {
 		return 0;
 	}
