@@ -164,7 +164,7 @@ public class UserController {
 		responseData.setUserId(resultGetLoginAccount.result().getUserId());
 		responseData.setToken(token);
 		
-		responseData.setUserInfo(EntitySwitcher.fromTbl(resultGetUser.result()));
+		responseData.setUserInfo(EntitySwitcher.toItem(resultGetUser.result()));
 		
 		return RequestHelper.responseSuccess(responseData);
 	}

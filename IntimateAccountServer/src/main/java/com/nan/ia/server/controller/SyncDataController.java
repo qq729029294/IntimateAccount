@@ -63,7 +63,7 @@ public class SyncDataController {
 				return RequestHelper.responseAccessDBError("");
 			}
 			
-			responseData.setAccountBooks(EntitySwitcher.fromTbls(resultAccountBookTbls.result()));
+			responseData.setAccountBooks(EntitySwitcher.toItems(resultAccountBookTbls.result()));
 		}
 		
 		return RequestHelper.responseSuccess(responseData);

@@ -1,5 +1,7 @@
 package com.nan.ia.server.db;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -38,5 +40,11 @@ public class HibernateUtil {
     	Session session = getSessionFactory().openSession();
     	
     	return session;
+    }
+    
+    public static <T> void saveOrUpdate(Session session, List<T> list) {
+    	for (int i = 0; i < list.size(); i++) {
+			session.saveOrUpdate(list.get(i));
+		}
     }
 }
