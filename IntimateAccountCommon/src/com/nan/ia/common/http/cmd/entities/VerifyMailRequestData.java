@@ -7,7 +7,7 @@
 
 package com.nan.ia.common.http.cmd.entities;
 
-public class VerifyMailRequestData extends BaseRequestData {
+public class VerifyMailRequestData extends CommonRequestData {
 	String mail;
 
 	public String getMail() {

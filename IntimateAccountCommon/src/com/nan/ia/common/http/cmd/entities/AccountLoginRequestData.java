@@ -7,7 +7,7 @@
 
 package com.nan.ia.common.http.cmd.entities;
 
-public class AccountLoginRequestData extends BaseRequestData {
+public class AccountLoginRequestData extends CommonRequestData {
 	String username;
 	String password;
 	int accountType;

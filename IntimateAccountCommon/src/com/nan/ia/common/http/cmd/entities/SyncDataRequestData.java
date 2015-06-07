@@ -10,26 +10,22 @@ package com.nan.ia.common.http.cmd.entities;
 import java.util.List;
 
 import com.nan.ia.common.entities.AccountBook;
-import com.nan.ia.common.entities.AccountBookDelete;
 import com.nan.ia.common.entities.AccountCategory;
-import com.nan.ia.common.entities.AccountCategoryDelete;
 import com.nan.ia.common.entities.AccountRecord;
-import com.nan.ia.common.entities.AccountRecordDelete;
 
-public class SyncDataRequestData extends BaseRequestData {
+public class SyncDataRequestData extends CommonRequestData {
 	long lastSyncDataTime;
 	
 	List<AccountBook> newBooks;
 	List<AccountBook> updateBooks;
-	List<AccountBookDelete> bookDeletes;
+	List<AccountBook> deleteBooks;
 	
 	List<AccountCategory> newCategories;
-	List<AccountCategory> updateCategories;
-	List<AccountCategoryDelete> categoryDeletes;
+	List<AccountCategory> deleteCategories;
 	
 	List<AccountRecord> newRecords;
 	List<AccountRecord> updateRecords;
-	List<AccountRecordDelete> recordDeletes;
+	List<AccountRecord> deleteRecords;
 	public long getLastSyncDataTime() {
 		return lastSyncDataTime;
 	}
@@ -48,29 +44,11 @@ public class SyncDataRequestData extends BaseRequestData {
 	public void setUpdateBooks(List<AccountBook> updateBooks) {
 		this.updateBooks = updateBooks;
 	}
-	public List<AccountBookDelete> getBookDeletes() {
-		return bookDeletes;
-	}
-	public void setBookDeletes(List<AccountBookDelete> bookDeletes) {
-		this.bookDeletes = bookDeletes;
-	}
 	public List<AccountCategory> getNewCategories() {
 		return newCategories;
 	}
 	public void setNewCategories(List<AccountCategory> newCategories) {
 		this.newCategories = newCategories;
-	}
-	public List<AccountCategory> getUpdateCategories() {
-		return updateCategories;
-	}
-	public void setUpdateCategories(List<AccountCategory> updateCategories) {
-		this.updateCategories = updateCategories;
-	}
-	public List<AccountCategoryDelete> getCategoryDeletes() {
-		return categoryDeletes;
-	}
-	public void setCategoryDeletes(List<AccountCategoryDelete> categoryDeletes) {
-		this.categoryDeletes = categoryDeletes;
 	}
 	public List<AccountRecord> getNewRecords() {
 		return newRecords;
@@ -84,10 +62,22 @@ public class SyncDataRequestData extends BaseRequestData {
 	public void setUpdateRecords(List<AccountRecord> updateRecords) {
 		this.updateRecords = updateRecords;
 	}
-	public List<AccountRecordDelete> getRecordDeletes() {
-		return recordDeletes;
+	public List<AccountBook> getDeleteBooks() {
+		return deleteBooks;
 	}
-	public void setRecordDeletes(List<AccountRecordDelete> recordDeletes) {
-		this.recordDeletes = recordDeletes;
+	public void setDeleteBooks(List<AccountBook> deleteBooks) {
+		this.deleteBooks = deleteBooks;
+	}
+	public List<AccountCategory> getDeleteCategories() {
+		return deleteCategories;
+	}
+	public void setDeleteCategories(List<AccountCategory> deleteCategories) {
+		this.deleteCategories = deleteCategories;
+	}
+	public List<AccountRecord> getDeleteRecords() {
+		return deleteRecords;
+	}
+	public void setDeleteRecords(List<AccountRecord> deleteRecords) {
+		this.deleteRecords = deleteRecords;
 	}
 }

@@ -7,6 +7,6 @@
 
 package com.nan.ia.common.http.cmd.entities;
 
-public class EmptyRequestData {
+public class EmptyRequestData extends CommonRequestData {
 
 }

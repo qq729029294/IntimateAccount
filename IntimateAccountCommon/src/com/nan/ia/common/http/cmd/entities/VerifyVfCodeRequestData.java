@@ -7,7 +7,7 @@
 
 package com.nan.ia.common.http.cmd.entities;
 
-public class VerifyVfCodeRequestData {
+public class VerifyVfCodeRequestData extends CommonRequestData {
 	String username;
 	int accountType;
 	int vfCode;

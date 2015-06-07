@@ -6,10 +6,7 @@ import com.nan.ia.app.adapter.RecordsExpandableListAdapter;
 import com.nan.ia.app.adapter.RecordsExpandableListAdapter.ListItemRecord;
 import com.nan.ia.app.biz.BizFacade;
 import com.nan.ia.app.data.AppData;
-import com.nan.ia.app.ui.EditAccountBookActivity.EditAccountBookType;
 import com.nan.ia.app.ui.RecordActivity.RecordActivityType;
-import com.nan.ia.app.utils.Utils;
-import com.nan.ia.app.widget.CustomActionBar;
 import com.nan.ia.app.widget.CustomPopupMenu;
 import com.nan.ia.app.widget.CustomToast;
 import com.nan.ia.common.entities.AccountRecord;
@@ -29,17 +26,14 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.RelativeLayout.LayoutParams;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MainActivity extends BaseActivity {
     private PinnedHeaderExpandableListView mListViewRecords;
     private RecordsExpandableListAdapter mAdapter;
     private StickyLayout mStickyLayout;
-    
+    private TextView mTextTitle;
     private ResideMenu mResideMenu;
 
 	@Override
@@ -53,10 +47,7 @@ public class MainActivity extends BaseActivity {
 	
 	@Override
 	protected void onStart() {
-		// 刷新数据
-		mAdapter.setData(BizFacade.getInstance().getMoreAccountRecords(AppData.getCurrentAccountBookId(),
-				System.currentTimeMillis()));
-		mAdapter.notifyDataSetChanged();
+		refreshData();
 		
 		super.onStart();
 	}
@@ -206,8 +197,8 @@ public class MainActivity extends BaseActivity {
 				startActivity(new Intent(MainActivity.this, AccountBookActivity.class));
 			}
 		});
-		TextView textTitle = (TextView) findViewById(R.id.text_account_book_name);
-		textTitle.setText(BizFacade.getInstance().getAccountBookById(AppData.getCurrentAccountBookId()).getName());
+		mTextTitle = (TextView) findViewById(R.id.text_account_book_name);
+		mTextTitle.setText(BizFacade.getInstance().getAccountBookById(AppData.getCurrentAccountBookId()).getName());
 		
 		findViewById(R.id.btn_sync).setOnClickListener(new OnClickListener() {
 			
@@ -226,7 +217,12 @@ public class MainActivity extends BaseActivity {
 	}
 	
 	private void refreshData() {
-		
+		// 刷新数据
+		mAdapter.setData(BizFacade.getInstance().getMoreAccountRecords(AppData.getCurrentAccountBookId(),
+				System.currentTimeMillis()));
+		mAdapter.notifyDataSetChanged();
+		// 刷新title
+		mTextTitle.setText(BizFacade.getInstance().getAccountBookById(AppData.getCurrentAccountBookId()).getName());
 	}
 	
 	private void editRecord(AccountRecord accountRecord) {

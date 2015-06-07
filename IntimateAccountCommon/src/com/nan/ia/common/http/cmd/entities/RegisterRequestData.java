@@ -7,7 +7,7 @@
 
 package com.nan.ia.common.http.cmd.entities;
 
-public class RegisterRequestData {
+public class RegisterRequestData extends CommonRequestData {
 	String username;
 	String password;
 	

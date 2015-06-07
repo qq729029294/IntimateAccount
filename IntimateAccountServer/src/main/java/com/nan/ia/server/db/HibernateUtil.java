@@ -47,4 +47,22 @@ public class HibernateUtil {
 			session.saveOrUpdate(list.get(i));
 		}
     }
+    
+    public static <T> void save(Session session, List<T> list) {
+    	for (int i = 0; i < list.size(); i++) {
+			session.save(list.get(i));
+		}
+    }
+    
+    public static <T> void update(Session session, List<T> list) {
+    	for (int i = 0; i < list.size(); i++) {
+			session.update(list.get(i));
+		}
+    }
+    
+    public static <T> void delete(Session session, List<T> list) {
+    	for (int i = 0; i < list.size(); i++) {
+			session.delete(list.get(i));
+		}
+    }
 }

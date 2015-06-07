@@ -8,30 +8,76 @@
 package com.nan.ia.common.http.cmd.entities;
 
 import java.util.List;
+import java.util.Map;
 
 import com.nan.ia.common.entities.AccountBook;
+import com.nan.ia.common.entities.AccountCategory;
+import com.nan.ia.common.entities.AccountRecord;
 
 public class SyncDataResponseData {
-	long lastSyncDataServerTime;
-	boolean updateAccountBooks;
-	List<AccountBook> accountBooks;
+	long lastSyncDataTime;
+	boolean updateBooks;
+	List<AccountBook> books;
+	Map<Integer, Integer> newBookIdMap;
 	
-	public long getLastSyncDataServerTime() {
-		return lastSyncDataServerTime;
+	boolean updateCategories;
+	List<AccountCategory> categories;
+	
+	List<AccountRecord> newRecords;
+	List<AccountRecord> updateRecords;
+	List<Integer> deleteRecordIds;
+	public long getLastSyncDataTime() {
+		return lastSyncDataTime;
 	}
-	public void setLastSyncDataServerTime(long lastSyncDataServerTime) {
-		this.lastSyncDataServerTime = lastSyncDataServerTime;
+	public void setLastSyncDataTime(long lastSyncDataTime) {
+		this.lastSyncDataTime = lastSyncDataTime;
 	}
-	public boolean isUpdateAccountBooks() {
-		return updateAccountBooks;
+	public boolean isUpdateBooks() {
+		return updateBooks;
 	}
-	public void setUpdateAccountBooks(boolean updateAccountBooks) {
-		this.updateAccountBooks = updateAccountBooks;
+	public void setUpdateBooks(boolean updateBooks) {
+		this.updateBooks = updateBooks;
 	}
-	public List<AccountBook> getAccountBooks() {
-		return accountBooks;
+	public List<AccountBook> getBooks() {
+		return books;
 	}
-	public void setAccountBooks(List<AccountBook> accountBooks) {
-		this.accountBooks = accountBooks;
+	public void setBooks(List<AccountBook> books) {
+		this.books = books;
+	}
+	public Map<Integer, Integer> getNewBookIdMap() {
+		return newBookIdMap;
+	}
+	public void setNewBookIdMap(Map<Integer, Integer> newBookIdMap) {
+		this.newBookIdMap = newBookIdMap;
+	}
+	public boolean isUpdateCategories() {
+		return updateCategories;
+	}
+	public void setUpdateCategories(boolean updateCategories) {
+		this.updateCategories = updateCategories;
+	}
+	public List<AccountCategory> getCategories() {
+		return categories;
+	}
+	public void setCategories(List<AccountCategory> categories) {
+		this.categories = categories;
+	}
+	public List<AccountRecord> getNewRecords() {
+		return newRecords;
+	}
+	public void setNewRecords(List<AccountRecord> newRecords) {
+		this.newRecords = newRecords;
+	}
+	public List<AccountRecord> getUpdateRecords() {
+		return updateRecords;
+	}
+	public void setUpdateRecords(List<AccountRecord> updateRecords) {
+		this.updateRecords = updateRecords;
+	}
+	public List<Integer> getDeleteRecordIds() {
+		return deleteRecordIds;
+	}
+	public void setDeleteRecordIds(List<Integer> deleteRecordIds) {
+		this.deleteRecordIds = deleteRecordIds;
 	}
 }

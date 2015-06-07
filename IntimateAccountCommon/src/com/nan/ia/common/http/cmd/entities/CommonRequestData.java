@@ -7,8 +7,17 @@
 
 package com.nan.ia.common.http.cmd.entities;
 
-public class BaseRequestData {
+public class CommonRequestData {
+	int userId;
 	String token;
+	
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 
 	public String getToken() {
 		return token;

@@ -33,7 +33,7 @@ public class DBService {
 		return null;
 	}
 	
-	public void createAccountBooks(int userId, String name, String description) {
+	public void createAccountBook(int userId, String name, String description) {
 		long currentTimeMillis = System.currentTimeMillis();
 		mDatabase.execSQL("INSERT INTO `account_book_tbl` (`name`, `description`, `create_user_id`, `update_time`, `create_time`) VALUES (?, ?, ?, ?, ?);",
 				new Object[] { name, description, userId, currentTimeMillis, currentTimeMillis });
@@ -65,11 +65,57 @@ public class DBService {
 		});
 	}
 	
+	public void updateAccountRecordsUserId(int oldUserId, int newUserId) {
+		mDatabase.execSQL("UPDATE `account_record_tbl` SET `record_user_id`=? WHERE `record_user_id`=?",
+				new Object[] { newUserId, oldUserId });
+	}
+	
 	public void deleteAccountRecord(int accountRecordId) {
 		mDatabase.execSQL("DELETE FROM `account_record_tbl` WHERE `account_record_id`=?",
 				new Object[] {
 				accountRecordId
 		});
+	}
+	
+	public void deleteAccountRecords(List<Integer> accountRecordIds) {
+		mDatabase.beginTransaction();
+		
+		for (int i = 0; i < accountRecordIds.size(); i++) {
+			deleteAccountRecord(accountRecordIds.get(i));
+		}
+		
+		mDatabase.setTransactionSuccessful();
+		mDatabase.endTransaction();
+	}
+	
+	public void deleteAccountRecordsByLastUpdateTime(long lastUpdateTime) {
+		mDatabase.execSQL("DELETE FROM `account_record_tbl` WHERE `update_time`>?",
+				new Object[] { lastUpdateTime });
+	}
+	
+	public void insertAccountRecord(AccountRecord record) {
+		mDatabase
+				.execSQL(
+						"INSERT INTO `account_record_tbl` (`account_record_id`, `account_book_id`, `category`, `water_value`, `description`, `record_time`, `record_user_id`, `create_time`, `update_time`) VALUES"
+								+ "(?, ?, ?, ?, ?, ?, ?, ?, ?);",
+						new Object[] { record.getAccountRecordId(),
+								record.getAccountBookId(),
+								record.getCategory(), record.getWaterValue(),
+								record.getDescription(),
+								record.getRecordTime().getTime(),
+								record.getRecordUserId(),
+								record.getCreateTime().getTime(), record.getUpdateTime().getTime() });
+	}
+	
+	public void insertAccountRecords(List<AccountRecord> records) {
+		mDatabase.beginTransaction();
+		
+		for (int i = 0; i < records.size(); i++) {
+			insertAccountRecord(records.get(i));
+		}
+		
+		mDatabase.setTransactionSuccessful();
+		mDatabase.endTransaction();
 	}
 	
 	public List<AccountRecord> queryMoreAccountRecords(int accountBookId, long beginTime) {

@@ -22,6 +22,7 @@ import android.os.Looper;
 
 import com.google.gson.Gson;
 import com.nan.ia.app.R;
+import com.nan.ia.app.data.AppData;
 import com.nan.ia.app.http.CustomHttpResponse;
 import com.nan.ia.app.http.cmd.BaseHttpCmd.HttpCmdInfo;
 import com.nan.ia.app.http.cmd.ServerHttpCmd;
@@ -30,6 +31,7 @@ import com.nan.ia.app.utils.LogUtils;
 import com.nan.ia.app.utils.MainThreadExecutor;
 import com.nan.ia.app.widget.CustomToast;
 import com.nan.ia.common.constant.ServerErrorCode;
+import com.nan.ia.common.http.cmd.entities.CommonRequestData;
 import com.nan.ia.common.http.cmd.entities.ServerResponse;
 
 public abstract class BaseServerCmd<REQUEST_DATA, RESPONSE_DATA> {
@@ -81,6 +83,10 @@ public abstract class BaseServerCmd<REQUEST_DATA, RESPONSE_DATA> {
 		if (mHttpCmd == null) {
 			mHttpCmd = new ServerHttpCmd(this.createHttpCmdInfo());
 		}
+		
+		// 插入通用数据
+		((CommonRequestData) requestData).setUserId(AppData.getAccountInfo().getUserId());
+		((CommonRequestData) requestData).setToken(AppData.getAccountInfo().getToken());
 		
 		ServerHttpInput input = new ServerHttpInput();
 		String dataJson = mGson.toJson(requestData);
