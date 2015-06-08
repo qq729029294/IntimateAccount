@@ -10,6 +10,10 @@ package com.nan.ia.app.widget;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nan.ia.app.utils.LogUtils;
+
+import android.animation.TimeAnimator;
+import android.animation.TimeAnimator.TimeListener;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -19,8 +23,9 @@ import android.graphics.RectF;
 import android.graphics.Paint.Cap;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 
-public class RatioCircleView extends View {
+public class RatioCircleView extends ImageView {
     private static final float DEFAULT_STROKE_WIDTH = 16;
     private static final float DEFAULT_MARGIN_WIDTH = 12;
     
@@ -37,7 +42,7 @@ public class RatioCircleView extends View {
 	List<Float> mItemSweepAngle = new ArrayList<Float>();
 	boolean mNeedBuildDrawParams = true;
 	
-	float mAnimationDegree;
+	float mAnimationDegree = 1.0f;
 
 	public RatioCircleView(Context context) {
 		super(context);
@@ -55,6 +60,29 @@ public class RatioCircleView extends View {
 		super(context, attrs, defStyle);
 		
 		initialize(context);
+	}
+	
+	public void beginAnimation(final long duration) {
+		final TimeAnimator timeAnimator = new TimeAnimator();
+		timeAnimator.setTimeListener(new TimeListener() {
+			
+			@Override
+			public void onTimeUpdate(TimeAnimator animation, long totalTime,
+					long deltaTime) {
+				mAnimationDegree = totalTime / (float) duration;
+				
+				if (mAnimationDegree >= 1.0f) {
+					mAnimationDegree = 1.0f;
+					timeAnimator.end();
+				}
+				
+				RatioCircleView.this.invalidateWithoutBuildDrawParams();
+				
+				LogUtils.e("totalTime:" + totalTime);
+			}
+		});
+		
+		timeAnimator.start();
 	}
 
 	private void initialize(Context context) {
@@ -124,6 +152,10 @@ public class RatioCircleView extends View {
 		mNeedBuildDrawParams = true;
 		super.invalidate();
 	}
+	
+	private void invalidateWithoutBuildDrawParams() {
+		super.invalidate();
+	}
 
 	@Override
     protected void onDraw(Canvas canvas) {
@@ -137,7 +169,7 @@ public class RatioCircleView extends View {
         canvas.drawArc(mCircleBgRect, 0, 360, false, mCircleBgPaint);
         // 绘制比例项圆圈
         for (int i = 0; i < mItems.size(); i++) {
-        	canvas.drawArc(mItemRects.get(i), -90, mItemSweepAngle.get(i), false, mItemPaints.get(i));
+        	canvas.drawArc(mItemRects.get(i), -90, mItemSweepAngle.get(i) * mAnimationDegree, false, mItemPaints.get(i));
 		}
     }
 	

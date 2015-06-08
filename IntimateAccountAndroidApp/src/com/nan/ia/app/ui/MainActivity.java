@@ -17,6 +17,7 @@ import com.special.ResideMenu.ResideMenu;
 import com.special.ResideMenu.ResideMenuItem;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -50,6 +51,14 @@ public class MainActivity extends BaseActivity {
 	protected void onStart() {
 		refreshData();
 		
+		mRatioCircleMain.postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				mRatioCircleMain.beginAnimation(2000);
+			}
+		}, 500);
+		
 		super.onStart();
 	}
 
@@ -82,6 +91,9 @@ public class MainActivity extends BaseActivity {
         mRatioCircleMain = (RatioCircleView) findViewById(R.id.ratio_circle_main);
         mRatioCircleMain.addItem(1.0f, getResources().getColor(R.color.expend));
         mRatioCircleMain.addItem(0.7f, getResources().getColor(R.color.income));
+        
+//        mRatioCircleMain.addItem(1.0f, Color.GREEN);
+//        mRatioCircleMain.addItem(0.7f, Color.RED);
         
         setupTop();
         setupMenu();
