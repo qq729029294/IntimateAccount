@@ -38,7 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="生活账本（默认）"
+                    android:text="生活账本"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
@@ -71,10 +71,12 @@
             android:gravity="center"
             android:orientation="vertical" >
 
-            <include
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                layout="@layout/view_account_book_main" />
+            <com.nan.ia.app.widget.RatioCircleView
+                android:id="@+id/ratio_circle_main"
+                android:layout_margin="@dimen/margin_large"
+                android:layout_width="200dp"
+                android:layout_height="200dp" />
+
         </LinearLayout>
 
         <LinearLayout

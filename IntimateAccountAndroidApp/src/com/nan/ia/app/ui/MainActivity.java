@@ -1,6 +1,5 @@
 package com.nan.ia.app.ui;
 
-
 import com.nan.ia.app.R;
 import com.nan.ia.app.adapter.RecordsExpandableListAdapter;
 import com.nan.ia.app.adapter.RecordsExpandableListAdapter.ListItemRecord;
@@ -9,6 +8,7 @@ import com.nan.ia.app.data.AppData;
 import com.nan.ia.app.ui.RecordActivity.RecordActivityType;
 import com.nan.ia.app.widget.CustomPopupMenu;
 import com.nan.ia.app.widget.CustomToast;
+import com.nan.ia.app.widget.RatioCircleView;
 import com.nan.ia.common.entities.AccountRecord;
 import com.ryg.expandable.ui.PinnedHeaderExpandableListView;
 import com.ryg.expandable.ui.StickyLayout;
@@ -33,6 +33,7 @@ public class MainActivity extends BaseActivity {
     private PinnedHeaderExpandableListView mListViewRecords;
     private RecordsExpandableListAdapter mAdapter;
     private StickyLayout mStickyLayout;
+    private RatioCircleView mRatioCircleMain;
     private TextView mTextTitle;
     private ResideMenu mResideMenu;
 
@@ -77,6 +78,10 @@ public class MainActivity extends BaseActivity {
 		        return false;
 			}
 		} );
+        
+        mRatioCircleMain = (RatioCircleView) findViewById(R.id.ratio_circle_main);
+        mRatioCircleMain.addItem(1.0f, getResources().getColor(R.color.expend));
+        mRatioCircleMain.addItem(0.7f, getResources().getColor(R.color.income));
         
         setupTop();
         setupMenu();
