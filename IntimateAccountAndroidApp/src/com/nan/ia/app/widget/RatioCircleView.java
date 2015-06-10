@@ -22,19 +22,18 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Paint.Cap;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
 
 public class RatioCircleView extends ImageView {
-    private static final float DEFAULT_STROKE_WIDTH = 16;
-    private static final float DEFAULT_MARGIN_WIDTH = 12;
+    private static final float DEFAULT_STROKE_WIDTH = 22;
+    private static final float DEFAULT_MARGIN_WIDTH = 8;
     
 	List<RatioCircleItem> mItems = new ArrayList<RatioCircleView.RatioCircleItem>();
 	float mStroKeWidth = DEFAULT_STROKE_WIDTH;
 	float mMarginWidth = DEFAULT_MARGIN_WIDTH;
 	
 	Paint mCircleBgPaint;
-	int mCircleBgColor = Color.WHITE;
+	int mCircleBgColor = Color.TRANSPARENT;
 	RectF mCircleBgRect;
 	
 	List<Paint> mItemPaints = new ArrayList<Paint>();
@@ -86,6 +85,18 @@ public class RatioCircleView extends ImageView {
 	}
 
 	private void initialize(Context context) {
+	}
+	
+	public void setStrokeWidth(float strokeWidth) {
+		mStroKeWidth = strokeWidth;
+	}
+	
+	public void setMarginWidth(float marginWidth) {
+		mMarginWidth = marginWidth;
+	}
+	
+	public void setCircleBgColor(int circleBgColor) {
+		mCircleBgColor = circleBgColor;
 	}
 	
 	private void buildDrawParams(Canvas canvas) {

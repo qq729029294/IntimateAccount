@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:background="@color/app_main_color"
+        android:background="@color/app_main_color_lt"
         android:orientation="vertical" >
 
         <RelativeLayout
@@ -30,7 +30,9 @@
                 android:id="@+id/btn_account_book_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/margin"
                 android:clickable="true" >
 
                 <TextView
@@ -39,29 +41,16 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="生活账本"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textColor="@color/font_white_lt"
+                    android:textSize="20sp" />
 
                 <ImageView
-                    android:id="@+id/imageView1"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/margin_small"
-                    android:gravity="center"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/icon_round_arrow_right" />
-
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_account_book_settings" />
             </LinearLayout>
-
-            <ImageView
-                android:id="@+id/btn_sync"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/margin"
-                android:src="@drawable/selector_btn_setting" />
         </RelativeLayout>
 
         <LinearLayout
@@ -71,12 +60,11 @@
             android:gravity="center"
             android:orientation="vertical" >
 
-            <com.nan.ia.app.widget.RatioCircleView
-                android:id="@+id/ratio_circle_main"
+            <include
+                android:layout_width="240dp"
+                android:layout_height="240dp"
                 android:layout_margin="@dimen/margin_large"
-                android:layout_width="200dp"
-                android:layout_height="200dp" />
-
+                layout="@layout/view_account_book_content" />
         </LinearLayout>
 
         <LinearLayout

@@ -6,6 +6,8 @@ import com.nan.ia.app.adapter.RecordsExpandableListAdapter.ListItemRecord;
 import com.nan.ia.app.biz.BizFacade;
 import com.nan.ia.app.data.AppData;
 import com.nan.ia.app.ui.RecordActivity.RecordActivityType;
+import com.nan.ia.app.utils.LogUtils;
+import com.nan.ia.app.utils.Utils;
 import com.nan.ia.app.widget.CustomPopupMenu;
 import com.nan.ia.app.widget.CustomToast;
 import com.nan.ia.app.widget.RatioCircleView;
@@ -16,10 +18,16 @@ import com.ryg.expandable.ui.StickyLayout.OnGiveUpTouchEventListener;
 import com.special.ResideMenu.ResideMenu;
 import com.special.ResideMenu.ResideMenuItem;
 
+import android.animation.TimeAnimator;
+import android.animation.TimeAnimator.TimeListener;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -56,6 +64,34 @@ public class MainActivity extends BaseActivity {
 			@Override
 			public void run() {
 				mRatioCircleMain.beginAnimation(2000);
+				
+				final TextView textView = (TextView) findViewById(R.id.text_balance);
+				
+				final TimeAnimator timeAnimator = new TimeAnimator();
+				timeAnimator.setTimeListener(new TimeListener() {
+					
+					@Override
+					public void onTimeUpdate(TimeAnimator animation, long totalTime,
+							long deltaTime) {
+						int text = (int) ((totalTime / 2000.0f) * 500);
+						
+						if (totalTime >= 2000) {
+							text = 500;
+							timeAnimator.end();
+						}
+						
+						String str = text + "元";
+						SpannableStringBuilder style = new SpannableStringBuilder(str);
+//						style.setSpan(new AbsoluteSizeSpan(Utils.sp2px(MainActivity.this, 14)), 0, 3, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+//						style.setSpan(new ForegroundColorSpan(MainActivity.this.getResources().getColor(R.color.white_transparent)), 0, 3, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+						style.setSpan(new AbsoluteSizeSpan(Utils.sp2px(MainActivity.this, 14)), str.indexOf("元"), str.indexOf("元") + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+						style.setSpan(new ForegroundColorSpan(MainActivity.this.getResources().getColor(R.color.font_white_ltlt)), str.indexOf("元"), str.indexOf("元") + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+						textView.setText(style);
+						
+						LogUtils.e("totalTime:" + totalTime);
+					}
+				});
+				timeAnimator.start();
 			}
 		}, 500);
 		
@@ -89,11 +125,8 @@ public class MainActivity extends BaseActivity {
 		} );
         
         mRatioCircleMain = (RatioCircleView) findViewById(R.id.ratio_circle_main);
-        mRatioCircleMain.addItem(1.0f, getResources().getColor(R.color.expend));
-        mRatioCircleMain.addItem(0.7f, getResources().getColor(R.color.income));
-        
-//        mRatioCircleMain.addItem(1.0f, Color.GREEN);
-//        mRatioCircleMain.addItem(0.7f, Color.RED);
+        mRatioCircleMain.addItem(1.0f, Color.rgb(255, 176, 176));
+        mRatioCircleMain.addItem(0.7f, Color.rgb(176, 255, 176));
         
         setupTop();
         setupMenu();
