@@ -9,6 +9,7 @@
     <dimen name="margin_horizontal_large">18dp</dimen>
     <dimen name="margin_horizontal">12dp</dimen>
     <dimen name="margin_large">18dp</dimen>
+    <dimen name="margin_large_large">24dp</dimen>
     <dimen name="margin">12dp</dimen>
     <dimen name="margin_small">6dp</dimen>
     <dimen name="margin_small_small">3dp</dimen>

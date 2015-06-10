@@ -20,37 +20,29 @@
             <ImageView
                 android:id="@+id/btn_settings"
                 android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_height="40dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/margin"
                 android:src="@drawable/selector_btn_setting" />
 
-            <LinearLayout
+            <Button
                 android:id="@+id/btn_account_book_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/margin"
-                android:clickable="true" >
+                android:background="@drawable/selector_btn_title"
+                android:text="生活账本"
+                android:textColor="@drawable/selector_color_white_clickable"
+                android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/text_account_book_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="生活账本"
-                    android:textColor="@color/font_white_lt"
-                    android:textSize="20sp" />
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/icon_account_book_settings" />
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/app_main_color" />
         </RelativeLayout>
 
         <LinearLayout
@@ -63,8 +55,27 @@
             <include
                 android:layout_width="240dp"
                 android:layout_height="240dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/margin_large"
                 layout="@layout/view_account_book_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <Button
+                    android:id="@+id/btn_record"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/margin_large"
+                    android:background="@drawable/selector_btn_white_transparent"
+                    android:text="记一笔"
+                    android:textColor="@drawable/selector_color_white_clickable"
+                    android:textSize="18sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -89,6 +100,7 @@
         </LinearLayout>
     </com.ryg.expandable.ui.StickyLayout>
 
+    <!--
     <RelativeLayout
         android:id="@+id/btn_record"
         android:layout_width="wrap_content"
@@ -96,7 +108,8 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/selector_btn_white_lt_transparent"
         android:clickable="true"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:visibility="gone" >
 
         <ImageView
             android:id="@+id/image_line0"
@@ -111,7 +124,8 @@
             android:layout_centerInParent="true"
             android:text="记一笔"
             android:textColor="@color/app_main_color"
-            android:textSize="18dp" />
-    </RelativeLayout>
+            android:textSize="18sp" />
+    </RelativeLayout>
+    -->
 
 </RelativeLayout>

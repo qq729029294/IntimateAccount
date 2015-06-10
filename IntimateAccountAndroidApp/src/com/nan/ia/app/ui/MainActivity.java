@@ -34,6 +34,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
@@ -43,7 +44,7 @@ public class MainActivity extends BaseActivity {
     private RecordsExpandableListAdapter mAdapter;
     private StickyLayout mStickyLayout;
     private RatioCircleView mRatioCircleMain;
-    private TextView mTextTitle;
+    private Button mBtnAccountBookSettings;
     private ResideMenu mResideMenu;
 
 	@Override
@@ -239,7 +240,8 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 		
-		findViewById(R.id.btn_account_book_settings).setOnClickListener(new OnClickListener() {
+		mBtnAccountBookSettings = (Button) findViewById(R.id.btn_account_book_settings);
+		mBtnAccountBookSettings.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -247,8 +249,8 @@ public class MainActivity extends BaseActivity {
 				startActivity(new Intent(MainActivity.this, AccountBookActivity.class));
 			}
 		});
-		mTextTitle = (TextView) findViewById(R.id.text_account_book_name);
-		mTextTitle.setText(BizFacade.getInstance().getAccountBookById(AppData.getCurrentAccountBookId()).getName());
+		
+		mBtnAccountBookSettings.setText(BizFacade.getInstance().getAccountBookById(AppData.getCurrentAccountBookId()).getName());
 		
 		findViewById(R.id.btn_sync).setOnClickListener(new OnClickListener() {
 			
@@ -272,7 +274,7 @@ public class MainActivity extends BaseActivity {
 				System.currentTimeMillis()));
 		mAdapter.notifyDataSetChanged();
 		// 刷新title
-		mTextTitle.setText(BizFacade.getInstance().getAccountBookById(AppData.getCurrentAccountBookId()).getName());
+		mBtnAccountBookSettings.setText(BizFacade.getInstance().getAccountBookById(AppData.getCurrentAccountBookId()).getName());
 	}
 	
 	private void editRecord(AccountRecord accountRecord) {
