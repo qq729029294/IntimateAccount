@@ -13,25 +13,26 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.nan.ia.app.R;
 import com.nan.ia.app.biz.BizFacade;
-import com.nan.ia.app.utils.Utils;
-import com.nan.ia.app.widget.CustomToast;
 import com.nan.ia.app.widget.FullLineEditControl;
 import com.nan.ia.common.entities.AccountBook;
 
 public class AccountBookEditActivity extends BaseActionBarActivity {
-	public enum EditAccountBookType {
+	public enum Type {
 		NEW,
 		EDIT
 	}
 	
-	FullLineEditControl mEditControlName = null;
-	FullLineEditControl mEditControlDescription = null;
-	Button mBtnOk;
+	EditText mEditName;
+	EditText mEditDescription;
+	TransData mTransData;
+	Button mBtnOK;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,46 +43,38 @@ public class AccountBookEditActivity extends BaseActionBarActivity {
 	}
 	
 	private void initUI() {
-		mEditControlName = (FullLineEditControl) findViewById(R.id.full_line_edit_control_name);
-		mEditControlDescription = (FullLineEditControl) findViewById(R.id.full_line_edit_control_description);
+		// 默认弹出软键盘
+		getWindow().setSoftInputMode(
+				WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+						| WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 		
-		final TransData transData = readTransData();
-		if (null == transData) {
+		mEditName = ((FullLineEditControl) findViewById(R.id.full_line_edit_control_name)).getEditText();
+		mEditDescription = ((FullLineEditControl) findViewById(R.id.full_line_edit_control_description)).getEditText();
+		
+		mTransData = readTransData();
+		if (null == mTransData) {
 			return;
 		}
 		
-		if (transData.getEditAccountBookType() == EditAccountBookType.NEW) {
+		if (mTransData.getType() == Type.NEW) {
 			setTitle(R.string.title_new_account_book);
 		} else {
 			setTitle(R.string.title_account_book_edit);
-			mEditControlName.getEditText().setText(transData.getAccountBook().getName());
-			mEditControlDescription.getEditText().setText(transData.getAccountBook().getDescription());
+			mEditName.setText(mTransData.getAccountBook().getName());
+			mEditDescription.setText(mTransData.getAccountBook().getDescription());
 		}
 		
-		mBtnOk = (Button) findViewById(R.id.btn_ok);
-		mBtnOk.setEnabled(false);
-		mBtnOk.setOnClickListener(new OnClickListener() {
+		mBtnOK = (Button) findViewById(R.id.btn_ok);
+		mBtnOK.setEnabled(mTransData.getType() == Type.EDIT);
+		mBtnOK.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				if (!checkInput()) {
-					return;
-				}
-				
-				String name = mEditControlName.getEditText().getText().toString();
-				String description = mEditControlDescription.getEditText().getText().toString();
-				
-				if (transData.getEditAccountBookType() == EditAccountBookType.NEW) {
-					BizFacade.getInstance().createAccountBook(name, description);
-				} else {
-					BizFacade.getInstance().editAccountBooksDetail(transData.getAccountBook().getAccountBookId(), name, description);
-				}
-				
-				finish();
+				doOK();
 			}
 		});
 		
-		mEditControlName.getEditText().addTextChangedListener(new TextWatcher() {
+		mEditName.addTextChangedListener(new TextWatcher() {
 			
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -94,22 +87,41 @@ public class AccountBookEditActivity extends BaseActionBarActivity {
 			
 			@Override
 			public void afterTextChanged(Editable s) {
-				mBtnOk.setEnabled(checkInput());
+				mBtnOK.setEnabled(checkInput());
 			}
 		});
 	}
 	
-	private boolean checkInput() {
-		if (mEditControlName.getEditText().getText().toString().isEmpty()) {
-//			CustomToast.showToast("账本名不能为空");
-//			mEditControlName.requestFocus();
-			return false;
+	private void doOK() {
+		if (!checkInput()) {
+			return;
 		}
 		
-		if (BizFacade.getInstance().checkDuplicationAccountBookName(
-				mEditControlName.getEditText().getText().toString())) {
-//			CustomToast.showToast("账本名已存在");
-//			mEditControlName.requestFocus();
+		String name = mEditName.getText().toString();
+		String description = mEditDescription.getText().toString();
+		
+		if (mTransData.getType() == Type.NEW) {
+			BizFacade.getInstance().createAccountBook(name, description);
+		} else {
+			BizFacade.getInstance().editAccountBooksDetail(mTransData.getAccountBook().getAccountBookId(), name, description);
+		}
+		
+		finish();
+	}
+	
+	private boolean checkInput() {
+		String name = mEditName.getText().toString();
+		if (name.isEmpty()) {
+			return false;
+		}
+
+		if (mTransData.getType() == Type.EDIT
+				&& name.equals(mTransData.getAccountBook().getName())) {
+			// 编辑状态，与原名相同
+			return true;
+		}
+
+		if (BizFacade.getInstance().checkDuplicationAccountBookName(name)) {
 			return false;
 		}
 		
@@ -119,13 +131,14 @@ public class AccountBookEditActivity extends BaseActionBarActivity {
 	public static class TransData implements Serializable {
 		private static final long serialVersionUID = 1L;
 		
-		EditAccountBookType editAccountBookType;
+		Type type;
 		AccountBook accountBook;
-		public EditAccountBookType getEditAccountBookType() {
-			return editAccountBookType;
+		
+		public Type getType() {
+			return type;
 		}
-		public void setEditAccountBookType(EditAccountBookType editAccountBookType) {
-			this.editAccountBookType = editAccountBookType;
+		public void setType(Type type) {
+			this.type = type;
 		}
 		public AccountBook getAccountBook() {
 			return accountBook;

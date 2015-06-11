@@ -104,7 +104,7 @@ public class FullLineEditControl extends RelativeLayout {
 		} else {
 			textLeft.setText(text);
 			textLeft.setVisibility(View.VISIBLE);
-			imageDividerLeft.setVisibility(View.VISIBLE);
+			//imageDividerLeft.setVisibility(View.VISIBLE);
 		}
 	}
 	
@@ -120,7 +120,7 @@ public class FullLineEditControl extends RelativeLayout {
 		} else {
 			textRight.setText(text);
 			textRight.setVisibility(View.VISIBLE);
-			imageDividerRight.setVisibility(View.VISIBLE);
+			//imageDividerRight.setVisibility(View.VISIBLE);
 		}
 	}
 	

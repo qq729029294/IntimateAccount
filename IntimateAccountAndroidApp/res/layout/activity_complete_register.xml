@@ -30,6 +30,6 @@
         android:layout_marginLeft="@dimen/margin_horizontal"
         android:layout_marginRight="@dimen/margin_horizontal"
         android:layout_marginTop="@dimen/margin_vertical_large"
-        android:text="@string/btn_register" />
+        android:text="@string/btn_complete_register" />
 
 </RelativeLayout>

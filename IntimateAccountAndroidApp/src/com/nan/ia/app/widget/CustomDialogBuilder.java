@@ -41,9 +41,9 @@ public class CustomDialogBuilder extends NiftyDialogBuilder {
 	public void toDefault(Context context) {
 		withDialogColor(Color.WHITE);
 		withTitle(null);
-		withTitleColor(context.getResources().getColor(R.color.app_main_color));
-		withMessageColor(context.getResources().getColor(R.color.app_main_color));
-		withDividerColor(context.getResources().getColor(R.color.app_main_color));
+		withTitleColor(context.getResources().getColor(R.color.main_color));
+		withMessageColor(context.getResources().getColor(R.color.main_color));
+		withDividerColor(context.getResources().getColor(R.color.main_color));
 		isCancelable(true);
 		isCancelableOnTouchOutside(false);
 		withDuration(300);

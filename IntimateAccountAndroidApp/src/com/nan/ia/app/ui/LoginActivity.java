@@ -18,14 +18,19 @@ import com.nan.ia.common.http.cmd.entities.ServerResponse;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.InputFilter;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class LoginActivity extends BaseActionBarActivity {
-	FullLineEditControl editControlUsername = null;
-	FullLineEditControl editControlPassword = null;
+	EditText mEditUsername = null;
+	EditText mEditPassword = null;
+	Button mBtnOK;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,53 +41,87 @@ public class LoginActivity extends BaseActionBarActivity {
 	}
 	
 	private void initUI() {
+		// 默认弹出软键盘
+		getWindow().setSoftInputMode(
+				WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+						| WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+				
 		enableActionBarGo(getString(R.string.title_register), new Intent(LoginActivity.this, RegisterActivity.class));
+		mEditUsername = ((FullLineEditControl) findViewById(R.id.full_line_edit_control_username))
+				.getEditText();
+		mEditUsername.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+
+		mEditPassword = ((FullLineEditControl) findViewById(R.id.full_line_edit_control_password))
+				.getEditText();
+		mEditPassword.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
 		
-		editControlUsername = (FullLineEditControl) findViewById(R.id.full_line_edit_control_username);
-		editControlUsername.getEditText().setHint(R.string.hint_username);
-		editControlUsername.getEditText().setFilters(new InputFilter[] {new InputFilter.LengthFilter(45)});
-		
-		editControlPassword = (FullLineEditControl) findViewById(R.id.full_line_edit_control_password);
-		editControlPassword.getEditText().setHint(R.string.hint_password);
-		editControlPassword.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-		editControlPassword.getEditText().setFilters(new InputFilter[] {new InputFilter.LengthFilter(45)});
-		
-		TransData transData = readTransData();
-		if (null != transData) {
-			editControlUsername.getEditText().setText(transData.getUsername());
-			editControlPassword.getEditText().setText(transData.getPassword());
-		}
-		
-		findViewById(R.id.btn_login).setOnClickListener(new OnClickListener() {
+		mBtnOK = (Button) findViewById(R.id.btn_login);
+		mBtnOK.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				new AsyncTask<Integer, Integer, ServerResponse<AccountLoginResponseData>>() {
-
-					@Override
-					protected ServerResponse<AccountLoginResponseData> doInBackground(
-							Integer... params) {
-						return BizFacade.getInstance().accountLogin(LoginActivity.this,
-								editControlUsername.getEditText().getText().toString(),
-								editControlPassword.getEditText().getText().toString());
-					}
-
-					@Override
-					protected void onPostExecute(
-							ServerResponse<AccountLoginResponseData> result) {
-
-						startActivity(new Intent(LoginActivity.this, MainActivity.class));
-						super.onPostExecute(result);
-					}
-					
-				}.execute(0);
-				
-
+				doOK();
 			}
 		});
+		
+		// 监听变更更改OK按钮状态
+		TextWatcher textWatcher = new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				mBtnOK.setEnabled(checkInput());
+			}
+		};
+		
+		mEditUsername.addTextChangedListener(textWatcher);
+		mEditPassword.addTextChangedListener(textWatcher);
+		mBtnOK.setEnabled(false);
+		
+		TransData transData = readTransData();
+		if (null != transData) {
+			mEditUsername.setText(transData.getUsername());
+			mEditPassword.setText(transData.getPassword());
+			mBtnOK.setEnabled(true);
+		}
+	}
+	
+	private void doOK() {
+		new AsyncTask<Integer, Integer, ServerResponse<AccountLoginResponseData>>() {
+
+			@Override
+			protected ServerResponse<AccountLoginResponseData> doInBackground(
+					Integer... params) {
+				return BizFacade.getInstance().accountLogin(LoginActivity.this,
+						mEditUsername.getText().toString(),
+						mEditPassword.getText().toString());
+			}
+
+			@Override
+			protected void onPostExecute(
+					ServerResponse<AccountLoginResponseData> result) {
+
+				startActivity(new Intent(LoginActivity.this, MainActivity.class));
+				super.onPostExecute(result);
+			}
+			
+		}.execute(0);
 	}
 	
 	private boolean checkInput() {
+		if (!BizFacade.getInstance().checkUsername(mEditUsername.getText().toString()) ||
+				!BizFacade.getInstance().checkPassword(mEditPassword.getText().toString())) {
+			return false;
+		}
+		
 		return true;
 	}
 	

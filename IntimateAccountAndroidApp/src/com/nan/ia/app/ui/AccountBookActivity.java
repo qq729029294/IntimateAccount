@@ -23,7 +23,7 @@ import com.nan.ia.app.R;
 import com.nan.ia.app.adapter.AccountBookAdapter;
 import com.nan.ia.app.biz.BizFacade;
 import com.nan.ia.app.data.AppData;
-import com.nan.ia.app.ui.AccountBookEditActivity.EditAccountBookType;
+import com.nan.ia.app.ui.AccountBookEditActivity.Type;
 import com.nan.ia.app.utils.Utils;
 import com.nan.ia.app.widget.CustomDialogBuilder;
 import com.nan.ia.app.widget.CustomPopupMenu;
@@ -45,9 +45,10 @@ public class AccountBookActivity extends BaseActionBarActivity {
 	}
 
 	@Override
-	protected void onStop() {
-		// mListView.closeOpenedItems();
-		super.onStop();
+	protected void onStart() {
+		refreshUI();
+		
+		super.onStart();
 	}
 
 	private void initUI() {
@@ -102,10 +103,14 @@ public class AccountBookActivity extends BaseActionBarActivity {
 			}
 		});
 	}
+	
+	private void refreshUI() {
+		mAdapter.notifyDataSetChanged();
+	}
 
 	private void newAccountBook() {
 		AccountBookEditActivity.TransData transData = new AccountBookEditActivity.TransData();
-		transData.editAccountBookType = EditAccountBookType.NEW;
+		transData.setType(Type.NEW);
 		Intent intent = new Intent(AccountBookActivity.this,
 				AccountBookEditActivity.class);
 		startActivity(createTransDataIntent(intent, transData));
@@ -138,7 +143,7 @@ public class AccountBookActivity extends BaseActionBarActivity {
 		}
 
 		AccountBookEditActivity.TransData transData = new AccountBookEditActivity.TransData();
-		transData.setEditAccountBookType(EditAccountBookType.EDIT);
+		transData.setType(Type.EDIT);
 		transData.setAccountBook(AppData.getAccountBooks().get(position));
 
 		Intent intent = new Intent(this, AccountBookEditActivity.class);
@@ -166,7 +171,7 @@ public class AccountBookActivity extends BaseActionBarActivity {
 				.withButton2Drawable(R.drawable.selector_btn_inverse)
 				.withMessage(msg)
 				.withButton2TextColor(
-						getResources().getColor(R.color.app_main_color))
+						getResources().getColor(R.color.main_color))
 				.withButton1Drawable(R.drawable.selector_btn_red)
 				.withButton1Text(getString(R.string.btn_delete))
 				.withButton2Text(getString(R.string.btn_cancel))

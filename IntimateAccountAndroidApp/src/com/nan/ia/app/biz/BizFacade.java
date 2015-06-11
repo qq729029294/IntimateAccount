@@ -18,6 +18,7 @@ import com.nan.ia.app.http.cmd.server.RegisterServerCmd;
 import com.nan.ia.app.http.cmd.server.SyncDataServerCmd;
 import com.nan.ia.app.http.cmd.server.VerifyMailServerCmd;
 import com.nan.ia.app.http.cmd.server.VerifyVfCodeServerCmd;
+import com.nan.ia.app.utils.Utils;
 import com.nan.ia.common.constant.ServerErrorCode;
 import com.nan.ia.common.entities.AccountBook;
 import com.nan.ia.common.entities.AccountBookDelete;
@@ -538,6 +539,26 @@ public class BizFacade {
 		requestData.setAccountType(accountType);
 		requestData.setVfCode(vfCode);
 		return new RegisterServerCmd().send(context, requestData, false);
+	}
+	
+	public boolean checkUsername(String username) {
+		if (null == username || username.length() < 6) {
+			return false;
+		}
+		
+		if (!Utils.isEmail(username)) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean checkPassword(String password) {
+		if (null == password || password.length() < 6 || password.length() > 16) {
+			return false;
+		}
+		
+		return true;
 	}
 	
 	/**

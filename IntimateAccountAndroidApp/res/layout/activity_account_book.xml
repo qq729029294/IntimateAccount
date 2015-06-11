@@ -9,7 +9,7 @@
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/app_main_color"
+        android:background="@color/main_color"
         android:padding="@dimen/padding"
         android:text="温馨提示：点击账本进行账本切换，长按账本可编辑喔~"
         android:textColor="@color/font_white_ltlt"
@@ -37,7 +37,7 @@
             android:id="@+id/image_line0"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/app_main_color_dark" />
+            android:background="@color/main_color_dark" />
 
         <TextView
             android:id="@+id/textView2"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/btn_new"
-            android:textColor="@color/app_main_color_dark"
+            android:textColor="@color/main_color_dark"
             android:textSize="20dp" />
     </RelativeLayout>
 

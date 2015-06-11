@@ -18,7 +18,6 @@ import com.nan.ia.common.http.cmd.entities.ServerResponse;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.SyncStateContract.Constants;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;

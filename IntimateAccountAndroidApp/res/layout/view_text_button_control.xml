@@ -10,6 +10,6 @@
         android:id="@+id/image_line0"
         android:layout_width="match_parent"
         android:layout_height="0.8dp"
-        android:background="@color/app_main_color" />
+        android:background="@color/main_color" />
 
 </RelativeLayout>

@@ -44,7 +44,16 @@ public class Utils {
         return (int) (spValue * fontScale + 0.5f);  
     }
     
-	static public void KeyBoardCancle(Activity activity) {
+    public static void keyboardShow(Activity activity) {
+		View view = activity.getWindow().peekDecorView();
+		if (view != null) {
+			InputMethodManager inputmanger = (InputMethodManager) activity
+					.getSystemService(Context.INPUT_METHOD_SERVICE);
+			inputmanger.showSoftInput(view, 0);
+		}
+    }
+    
+    public static void keyboardHide(Activity activity) {
 		View view = activity.getWindow().peekDecorView();
 		if (view != null) {
 			InputMethodManager inputmanger = (InputMethodManager) activity
