@@ -229,7 +229,11 @@ public class RecordsExpandableListAdapter extends BaseExpandableListAdapter impl
 						|| record.getDescription().isEmpty() ? View.GONE
 						: View.VISIBLE);
         
-    	childHolder.textWaterValue.setText(Utils.formatCNY(record.getWaterValue()));
+		String strWaterValue = Utils.formatCNY(record.getWaterValue());
+		if (record.getWaterValue() > 0.0f) {
+			strWaterValue = "+" + strWaterValue;
+		}
+    	childHolder.textWaterValue.setText(strWaterValue);
         if (BizFacade.getInstance().getRootCategory(record.getAccountBookId(),
         		record.getCategory()).getCategory().equals(Constant.CATEGORY_EXPEND)) {
         	// 支出
@@ -251,14 +255,6 @@ public class RecordsExpandableListAdapter extends BaseExpandableListAdapter impl
         
         // 每天最后一项的线
         childHolder.imageLineLast.setVisibility(item.lastItemOfDay ? View.VISIBLE : View.INVISIBLE);
-//        convertView.setOnLongClickListener(new OnLongClickListener() {
-//			
-//			@Override
-//			public boolean onLongClick(View v) {
-//				CustomPopupMenu popupMenu = new CustomPopupMenu(mA)
-//				return false;
-//			}
-//		});
 
         return convertView;
     }
@@ -290,10 +286,7 @@ public class RecordsExpandableListAdapter extends BaseExpandableListAdapter impl
 		View convertView = mInflater.inflate(R.layout.list_group_record, null);
 		GroupHolder groupHolder = new GroupHolder();
 		groupHolder.textMonth = (TextView) convertView.findViewById(R.id.text_month);
-		groupHolder.dateRange = (TextView) convertView.findViewById(R.id.text_date_range);
-//		groupHolder.income = (TextView) convertView.findViewById(R.id.text_income);
-//		groupHolder.expend = (TextView) convertView.findViewById(R.id.text_expend);
-		groupHolder.surplus = (TextView) convertView.findViewById(R.id.text_surplus);
+		groupHolder.textDesc = (TextView) convertView.findViewById(R.id.text_desc);
 
 		convertView.setTag(groupHolder);
 		return convertView;
@@ -303,18 +296,31 @@ public class RecordsExpandableListAdapter extends BaseExpandableListAdapter impl
 		GroupHolder groupHolder = (GroupHolder) convertView.getTag();
         ListGroupRecord group = (ListGroupRecord) getGroup(groupPosition);
         groupHolder.textMonth.setText(TimeUtils.dateFormatMM(group.getDate()));
-        groupHolder.dateRange.setText(TimeUtils.dateFormatMonthRangeyyMMdd_MMdd(group.getDate()));
-//        groupHolder.income.setText("收 " + Utils.formatCNY(group.getIncome()));
-//        groupHolder.expend.setText("支 " + Utils.formatCNY(group.getExpend()));
-        groupHolder.surplus.setText(Utils.formatCNY(group.getIncome() + group.getExpend()));
+        
+        StringBuilder builder = new StringBuilder();
+        builder.append("月");
+        if (group.getDate().getYear() != new Date().getYear()) {
+        	builder.append(group.getDate().getYear() + "年");
+		}
+        
+        if (group.getIncome() != 0.0f) {
+        	builder.append("，收" + Utils.formatCNY(group.getIncome()));
+		}
+        
+        if (group.getExpend() != 0.0f) {
+        	builder.append("，支" + Utils.formatCNY(group.getExpend()));
+		}
+        
+        if (group.getIncome() != 0.0f || group.getExpend() != 0.0f) {
+        	builder.append("，结余" + Utils.formatCNY(group.getIncome() + group.getExpend()));
+		}
+        
+        groupHolder.textDesc.setText(builder.toString());
 	}
     
     public class GroupHolder {
     	TextView textMonth;
-    	TextView dateRange;
-    	TextView income;
-    	TextView expend;
-    	TextView surplus;
+    	TextView textDesc;
     }
     
     public class ChildHolder {

@@ -106,6 +106,6 @@ public class Utils {
 	public static String formatCNY(double value) {
 		DecimalFormat df = new DecimalFormat("0.##");
 		String ret = df.format(value);
-		return ret + " ¥";
+		return ret + "元";
 	}
 }

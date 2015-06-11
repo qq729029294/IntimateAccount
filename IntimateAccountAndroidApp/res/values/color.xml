@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="white">#FFFFFFFF</color>
     <color name="white_transparent_press">#88FFFFFF</color>
     <color name="white_press">#33187CEB</color>
@@ -21,8 +22,10 @@
     <color name="click_marks">#33000000</color>
     <color name="transparent">#00000000</color>
     <color name="transparent_dark">#33000000</color>
-    <color name="expend">#FF278D67</color>
-    <color name="income">#FFD73939</color>
+    <color name="expend_lt">#FFB0FFB0</color>
+    <color name="income_lt">#FFFFB0B0</color>
+    <color name="expend">#FF55B055</color>
+    <color name="income">#FFB05555</color>
     <color name="font_lt">#FF7E7E7E</color>
     <color name="font_ltlt">#FFAAAAAA</color>
     <color name="font_white_ltlt">#99ffffff</color>
@@ -30,4 +33,5 @@
     <color name="white_lt_transparent">#f5ffffff</color>
     <color name="white_lt_transparent_press">#f59DC8F7</color>
     <color name="list_item_selected">#FFE9E9E9</color>
+
 </resources>

@@ -83,8 +83,6 @@ public class MainActivity extends BaseActivity {
 						
 						String str = text + "元";
 						SpannableStringBuilder style = new SpannableStringBuilder(str);
-//						style.setSpan(new AbsoluteSizeSpan(Utils.sp2px(MainActivity.this, 14)), 0, 3, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-//						style.setSpan(new ForegroundColorSpan(MainActivity.this.getResources().getColor(R.color.white_transparent)), 0, 3, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 						style.setSpan(new AbsoluteSizeSpan(Utils.sp2px(MainActivity.this, 14)), str.indexOf("元"), str.indexOf("元") + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 						style.setSpan(new ForegroundColorSpan(MainActivity.this.getResources().getColor(R.color.font_white_ltlt)), str.indexOf("元"), str.indexOf("元") + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 						textView.setText(style);
@@ -126,8 +124,8 @@ public class MainActivity extends BaseActivity {
 		} );
         
         mRatioCircleMain = (RatioCircleView) findViewById(R.id.ratio_circle_main);
-        mRatioCircleMain.addItem(1.0f, Color.rgb(255, 176, 176));
-        mRatioCircleMain.addItem(0.7f, Color.rgb(176, 255, 176));
+        mRatioCircleMain.addItem(1.0f, getResources().getColor(R.color.expend_lt));
+        mRatioCircleMain.addItem(0.7f, getResources().getColor(R.color.income_lt));
         
         setupTop();
         setupMenu();

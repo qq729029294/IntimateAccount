@@ -82,6 +82,7 @@
             android:id="@+id/sticky_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="-1dp"
             android:background="@color/ltlt_gray"
             android:orientation="vertical" >
 
@@ -99,33 +100,5 @@
             </com.ryg.expandable.ui.PinnedHeaderExpandableListView>
         </LinearLayout>
     </com.ryg.expandable.ui.StickyLayout>
-
-    <!--
-    <RelativeLayout
-        android:id="@+id/btn_record"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/selector_btn_white_lt_transparent"
-        android:clickable="true"
-        android:orientation="vertical"
-        android:visibility="gone" >
-
-        <ImageView
-            android:id="@+id/image_line0"
-            android:layout_width="match_parent"
-            android:layout_height="0.8dp"
-            android:background="@color/app_main_color" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="记一笔"
-            android:textColor="@color/app_main_color"
-            android:textSize="18sp" />
-    </RelativeLayout>
-    -->
 
 </RelativeLayout>
