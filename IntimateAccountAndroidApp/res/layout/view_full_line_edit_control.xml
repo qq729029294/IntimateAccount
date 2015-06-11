@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:background="@drawable/ic_full_line_text_bg"
+    android:background="@color/white"
     android:orientation="horizontal" >
-    
+
     <RelativeLayout
         android:id="@+id/left_container"
         android:layout_width="wrap_content"
@@ -21,59 +21,71 @@
             android:paddingLeft="@dimen/padding_large"
             android:paddingRight="@dimen/padding_large"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/app_main_color"
+            android:textColor="@color/font_lt"
             android:visibility="gone" />
     </RelativeLayout>
-    
+
     <ImageView
         android:id="@+id/image_divider_left"
-        android:layout_width="1dp"
+        android:layout_width="0.5dp"
         android:layout_height="match_parent"
         android:layout_toRightOf="@id/left_container"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_full_line_text_divider"
+        android:background="@color/gray_ltltlt"
         android:visibility="gone" />
 
     <com.nan.ia.app.widget.CustomEditText
         android:id="@+id/edit_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/image_divider_left"
         android:singleLine="true" >
 
         <requestFocus />
     </com.nan.ia.app.widget.CustomEditText>
-    
-	<ImageView
+
+    <ImageView
         android:id="@+id/image_divider_right"
-        android:layout_width="1dp"
+        android:layout_width="0.5dp"
         android:layout_height="match_parent"
         android:layout_toRightOf="@id/edit_text"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_full_line_text_divider"
+        android:background="@color/gray_ltltlt"
         android:visibility="gone" />
-    
+
     <RelativeLayout
         android:id="@+id/right_container"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@id/image_divider_right"
-        android:layout_alignParentRight="true" >
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/image_divider_right" >
 
         <TextView
             android:id="@+id/text_right"
-            android:paddingLeft="@dimen/padding_large"
-            android:paddingRight="@dimen/padding_large"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:background="@drawable/selector_btn_white"
             android:gravity="center"
+            android:paddingLeft="@dimen/padding_large"
+            android:paddingRight="@dimen/padding_large"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/app_main_color"
+            android:textColor="@color/font_lt"
             android:visibility="gone" >
         </TextView>
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/gray_ltlt" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray_ltlt" />
 
 </RelativeLayout>

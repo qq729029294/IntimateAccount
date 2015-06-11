@@ -97,7 +97,7 @@ public class BizFacade {
 	 * 创建默认账本
 	 */
 	private AccountBook createDefaultAccountBook() {
-		return createAccountBook("生活账本（默认）", "记录生活中的点滴");
+		return createAccountBook("生活账本", "记录生活中的点滴");
 	}
 	
 	/**

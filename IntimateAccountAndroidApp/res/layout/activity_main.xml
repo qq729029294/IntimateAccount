@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:background="@color/app_main_color_lt"
+        android:background="@drawable/bg_main"
         android:orientation="vertical" >
 
         <RelativeLayout
@@ -42,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_alignParentBottom="true"
-                android:background="@color/app_main_color" />
+                android:background="@color/app_main_color_dark" />
         </RelativeLayout>
 
         <LinearLayout
@@ -83,7 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="-1dp"
-            android:background="@color/ltlt_gray"
+            android:background="@color/gray_ltltlt"
             android:orientation="vertical" >
 
             <com.ryg.expandable.ui.PinnedHeaderExpandableListView

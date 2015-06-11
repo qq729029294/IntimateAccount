@@ -62,8 +62,8 @@
         </activity>
         
         <activity
-            android:name=".ui.EditAccountBookActivity"
-            android:label="@string/title_edit_account_book" >
+            android:name=".ui.AccountBookEditActivity"
+            android:label="@string/title_account_book_edit" >
         </activity>
         <activity
             android:name=".ui.RecordActivity"

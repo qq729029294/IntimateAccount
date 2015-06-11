@@ -14,7 +14,7 @@
     <string name="title_verify_vf_code">填写验证码</string>
     <string name="title_complete_register">填写密码</string>
     <string name="title_account_book">账本管理</string>
-    <string name="title_edit_account_book">编辑账本</string>
+    <string name="title_account_book_edit">编辑账本</string>
     <string name="title_record">记一笔</string>
     <string name="title_new_account_book">新建账本</string>
     <string name="hint_username">邮箱/手机</string>

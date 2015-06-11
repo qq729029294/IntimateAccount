@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="52dp"
-    android:background="@drawable/ic_action_bar_bg" >
+    android:layout_height="48dp"
+    android:background="@drawable/bg_actionbar" >
 
     <RelativeLayout
         android:id="@+id/left_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="12dp"
+        android:background="@drawable/selector_color_transparent_clickable"
         android:clickable="true" >
 
         <ImageView
             android:id="@+id/image_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:adjustViewBounds="true"
-            android:maxHeight="30dp"
-            android:maxWidth="24dp"
+            android:padding="12dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:scaleType="fitXY"
-            android:src="@drawable/selector_btn_back"
-            android:visibility="gone" />
+            android:src="@drawable/selector_btn_back" />
 
-		<TextView
+        <TextView
             android:id="@+id/text_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="18sp"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/image_back"
+            android:text=""
             android:textColor="@drawable/selector_color_white_text"
+            android:textSize="18sp"
             android:visibility="gone" />
     </RelativeLayout>
 
@@ -46,8 +46,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="A"
-            android:textSize="20sp"
-            android:textColor="@color/white" />
+            android:textColor="@color/font_white_lt"
+            android:textSize="20sp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -57,18 +57,23 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="12dp" >
-        
+
         <TextView
             android:id="@+id/text_go"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="18sp"
             android:layout_centerVertical="true"
+            android:clickable="true"
+            android:text=""
             android:textColor="@drawable/selector_color_white_text"
-            android:visibility="gone"
-            android:clickable="true" />
-
+            android:textSize="18sp"
+            android:visibility="gone" />
     </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/app_main_color_dark" />
 
 </RelativeLayout>

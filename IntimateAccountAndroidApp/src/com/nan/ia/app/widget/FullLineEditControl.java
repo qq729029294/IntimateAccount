@@ -11,6 +11,7 @@ import com.nan.ia.app.R;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.text.InputFilter;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,11 +69,13 @@ public class FullLineEditControl extends RelativeLayout {
         String hint = styled.getString(R.styleable.FullLineEditControl_fulllineedit_hint);
         String leftText = styled.getString(R.styleable.FullLineEditControl_fulllineedit_left_text);
         String rightText = styled.getString(R.styleable.FullLineEditControl_fulllineedit_right_text);
+        int maxLength = styled.getInteger(R.styleable.FullLineEditControl_fulllineedit_max_length, 255);
         
         editText.setText(text);
         editText.setHint(hint);
         showLeftText(leftText);
         showRightText(rightText);
+        editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
 	}
 	
 	public void customLeftView(Context context, View view) {

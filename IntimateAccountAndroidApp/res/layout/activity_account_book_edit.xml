@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
-    
+
     <com.nan.ia.app.widget.FullLineEditControl
         android:id="@+id/full_line_edit_control_description"
         android:layout_width="match_parent"
@@ -12,15 +12,20 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/full_line_edit_control_name"
         android:layout_marginTop="-1dp"
-        app:fulllineedit_left_text="@string/lbl_description" >
+        app:fulllineedit_left_text="@string/lbl_description"
+        app:fulllineedit_max_length="32" >
+
     </com.nan.ia.app.widget.FullLineEditControl>
-    
+
     <com.nan.ia.app.widget.FullLineEditControl
         android:id="@+id/full_line_edit_control_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_vertical"
-        app:fulllineedit_left_text="@string/lbl_name" >
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="@dimen/margin"
+        app:fulllineedit_left_text="@string/lbl_name"
+        app:fulllineedit_max_length="16" >
+
     </com.nan.ia.app.widget.FullLineEditControl>
 
     <com.nan.ia.app.widget.CustomButton
@@ -28,10 +33,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="@dimen/margin_vertical_large"
+        android:layout_below="@+id/full_line_edit_control_description"
         android:layout_marginLeft="@dimen/margin_horizontal"
         android:layout_marginRight="@dimen/margin_horizontal"
-        android:layout_below="@+id/full_line_edit_control_description"
+        android:layout_marginTop="@dimen/margin_vertical_large"
         android:text="@string/btn_ok" />
 
 </RelativeLayout>

@@ -5,18 +5,29 @@
     android:layout_height="match_parent"
     tools:context=".AccountBookActivity" >
 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_main_color"
+        android:padding="@dimen/padding"
+        android:text="温馨提示：点击账本进行账本切换，长按账本可编辑喔~"
+        android:textColor="@color/font_white_ltlt"
+        android:textSize="12sp" />
+
     <ListView
         android:id="@+id/list_account_book"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="48dp"
-        android:clipToPadding="false" >
+        android:layout_below="@+id/textView1"
+        android:clipToPadding="false"
+        android:paddingBottom="50dp" >
     </ListView>
 
     <RelativeLayout
         android:id="@+id/btn_new"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/selector_btn_white_lt_transparent"
         android:clickable="true"
@@ -25,32 +36,17 @@
         <ImageView
             android:id="@+id/image_line0"
             android:layout_width="match_parent"
-            android:layout_height="0.8dp"
-            android:background="@color/app_main_color" />
+            android:layout_height="0.5dp"
+            android:background="@color/app_main_color_dark" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" >
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="@string/btn_new"
-                android:textColor="@color/app_main_color"
-                android:textSize="18dp" />
-
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_gravity="center_vertical"
-                android:layout_toRightOf="@+id/textView2"
-                android:src="@drawable/btn_add_blue" />
-
-        </LinearLayout>
+            android:layout_centerInParent="true"
+            android:text="@string/btn_new"
+            android:textColor="@color/app_main_color_dark"
+            android:textSize="20dp" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -64,7 +64,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/keyboard_number"
         android:layout_below="@id/image_line0"
-        android:background="@color/ltlt_gray"
+        android:background="@color/gray_ltltlt"
         android:columnWidth="70dp"
         android:gravity="center_horizontal"
         android:numColumns="auto_fit"

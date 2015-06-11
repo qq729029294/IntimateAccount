@@ -23,7 +23,7 @@ import com.nan.ia.app.R;
 import com.nan.ia.app.adapter.AccountBookAdapter;
 import com.nan.ia.app.biz.BizFacade;
 import com.nan.ia.app.data.AppData;
-import com.nan.ia.app.ui.EditAccountBookActivity.EditAccountBookType;
+import com.nan.ia.app.ui.AccountBookEditActivity.EditAccountBookType;
 import com.nan.ia.app.utils.Utils;
 import com.nan.ia.app.widget.CustomDialogBuilder;
 import com.nan.ia.app.widget.CustomPopupMenu;
@@ -104,10 +104,10 @@ public class AccountBookActivity extends BaseActionBarActivity {
 	}
 
 	private void newAccountBook() {
-		EditAccountBookActivity.TransData transData = new EditAccountBookActivity.TransData();
+		AccountBookEditActivity.TransData transData = new AccountBookEditActivity.TransData();
 		transData.editAccountBookType = EditAccountBookType.NEW;
 		Intent intent = new Intent(AccountBookActivity.this,
-				EditAccountBookActivity.class);
+				AccountBookEditActivity.class);
 		startActivity(createTransDataIntent(intent, transData));
 	}
 	
@@ -137,11 +137,11 @@ public class AccountBookActivity extends BaseActionBarActivity {
 			return;
 		}
 
-		EditAccountBookActivity.TransData transData = new EditAccountBookActivity.TransData();
+		AccountBookEditActivity.TransData transData = new AccountBookEditActivity.TransData();
 		transData.setEditAccountBookType(EditAccountBookType.EDIT);
 		transData.setAccountBook(AppData.getAccountBooks().get(position));
 
-		Intent intent = new Intent(this, EditAccountBookActivity.class);
+		Intent intent = new Intent(this, AccountBookEditActivity.class);
 		startActivity(createTransDataIntent(intent, transData));
 	}
 

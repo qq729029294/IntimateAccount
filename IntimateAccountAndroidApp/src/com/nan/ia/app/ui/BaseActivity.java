@@ -2,6 +2,7 @@ package com.nan.ia.app.ui;
 
 import java.io.Serializable;
 
+import com.nan.ia.app.R;
 import com.nan.ia.app.utils.LogUtils;
 
 import android.content.Intent;
@@ -73,5 +74,37 @@ public class BaseActivity extends FragmentActivity {
 	@SuppressWarnings("unchecked")
 	protected <T> T readTransData() {
 		return (T) getIntent().getSerializableExtra(EXTRA_KEY_TRANS_DATA);
+	}
+	
+	// 重新startActivity/finish部分，加入动画
+	@Override
+	public void startActivityForResult(Intent intent, int requestCode) {
+		super.startActivityForResult(intent, requestCode);
+		overridePendingTransition(R.anim.activity_open_enter, R.anim.activity_open_exit);
+	}
+
+	@Override
+	public void startActivityForResult(Intent intent, int requestCode,
+			Bundle options) {
+		super.startActivityForResult(intent, requestCode, options);
+		overridePendingTransition(R.anim.activity_open_enter, R.anim.activity_open_exit);
+	}
+
+	@Override
+	public void startActivity(Intent intent) {
+		super.startActivity(intent);
+		overridePendingTransition(R.anim.activity_open_enter, R.anim.activity_open_exit);
+	}
+
+	@Override
+	public void startActivity(Intent intent, Bundle options) {
+		super.startActivity(intent, options);
+		overridePendingTransition(R.anim.activity_open_enter, R.anim.activity_open_exit);
+	}
+
+	@Override
+	public void finish() {
+		super.finish();
+		overridePendingTransition(R.anim.activity_close_enter, R.anim.activity_close_exit);
 	}
 }

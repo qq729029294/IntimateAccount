@@ -20,6 +20,7 @@
         <attr name="fulllineedit_left_text" format="reference|string" />
         <attr name="fulllineedit_right_text" format="reference|string" />
         <attr name="fulllineedit_text" format="reference|string" />
+        <attr name="fulllineedit_max_length" format="integer" />
         <attr name="fulllineedit_hint" format="reference|string" />
     </declare-styleable>
 </resources>

@@ -55,7 +55,7 @@ public class CustomEditText extends EditText implements OnFocusChangeListener,
 					.getDrawable(R.drawable.ic_edt_clear);
 		}
 
-		mClearDrawable.setBounds(0, 0, 96, 96);
+		mClearDrawable.setBounds(0, 0, Utils.dip2px(getContext(), 32), Utils.dip2px(getContext(), 32));
 		setClearIconVisible(false);
 		setOnFocusChangeListener(this);
 		addTextChangedListener(this);
