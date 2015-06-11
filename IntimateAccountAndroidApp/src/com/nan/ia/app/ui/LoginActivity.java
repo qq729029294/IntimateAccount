@@ -11,7 +11,9 @@ import java.io.Serializable;
 
 import com.nan.ia.app.R;
 import com.nan.ia.app.biz.BizFacade;
+import com.nan.ia.app.widget.CustomToast;
 import com.nan.ia.app.widget.FullLineEditControl;
+import com.nan.ia.common.constant.ServerErrorCode;
 import com.nan.ia.common.http.cmd.entities.AccountLoginResponseData;
 import com.nan.ia.common.http.cmd.entities.ServerResponse;
 
@@ -21,32 +23,39 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 
 public class LoginActivity extends BaseActionBarActivity {
 	EditText mEditUsername = null;
 	EditText mEditPassword = null;
 	Button mBtnOK;
+	CheckBox mCkbShowPassword;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		
+
 		initUI();
 	}
-	
+
 	private void initUI() {
 		// 默认弹出软键盘
 		getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
 						| WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-				
-		enableActionBarGo(getString(R.string.title_register), new Intent(LoginActivity.this, RegisterActivity.class));
+
+		enableActionBarGo(getString(R.string.title_register), new Intent(
+				LoginActivity.this, RegisterActivity.class));
 		mEditUsername = ((FullLineEditControl) findViewById(R.id.full_line_edit_control_username))
 				.getEditText();
 		mEditUsername.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
@@ -54,38 +63,78 @@ public class LoginActivity extends BaseActionBarActivity {
 		mEditPassword = ((FullLineEditControl) findViewById(R.id.full_line_edit_control_password))
 				.getEditText();
 		mEditPassword.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-		
+
 		mBtnOK = (Button) findViewById(R.id.btn_login);
 		mBtnOK.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				doOK();
 			}
 		});
-		
+
+		// 显示密码
+		mCkbShowPassword = (CheckBox) findViewById(R.id.ckb_show_password);
+		mCkbShowPassword.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (isChecked) {
+					// 隐藏密码
+					mEditPassword.setTransformationMethod(PasswordTransformationMethod
+									.getInstance());
+				} else {
+					// 如果不选中，显示密码
+					mEditPassword.setTransformationMethod(HideReturnsTransformationMethod
+									.getInstance());
+				}
+			}
+		});
+
+		findViewById(R.id.btn_show_password).setOnClickListener(
+				new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						mCkbShowPassword.setChecked(!mCkbShowPassword
+								.isChecked());
+					}
+				});
+
+		// 忘记密码？
+		findViewById(R.id.btn_retrieve_password).setOnClickListener(
+				new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						CustomToast.showToast("施工地段，闲人免进");
+					}
+				});
+
 		// 监听变更更改OK按钮状态
 		TextWatcher textWatcher = new TextWatcher() {
-			
+
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
 			}
-			
+
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
 			}
-			
+
 			@Override
 			public void afterTextChanged(Editable s) {
 				mBtnOK.setEnabled(checkInput());
 			}
 		};
-		
+
 		mEditUsername.addTextChangedListener(textWatcher);
 		mEditPassword.addTextChangedListener(textWatcher);
 		mBtnOK.setEnabled(false);
-		
+
 		TransData transData = readTransData();
 		if (null != transData) {
 			mEditUsername.setText(transData.getUsername());
@@ -93,7 +142,7 @@ public class LoginActivity extends BaseActionBarActivity {
 			mBtnOK.setEnabled(true);
 		}
 	}
-	
+
 	private void doOK() {
 		new AsyncTask<Integer, Integer, ServerResponse<AccountLoginResponseData>>() {
 
@@ -108,38 +157,45 @@ public class LoginActivity extends BaseActionBarActivity {
 			@Override
 			protected void onPostExecute(
 					ServerResponse<AccountLoginResponseData> result) {
-
-				startActivity(new Intent(LoginActivity.this, MainActivity.class));
+				if (result.getRet() == ServerErrorCode.RET_SUCCESS) {
+					startActivity(new Intent(LoginActivity.this, MainActivity.class));
+				}
+				
 				super.onPostExecute(result);
 			}
-			
+
 		}.execute(0);
 	}
-	
+
 	private boolean checkInput() {
-		if (!BizFacade.getInstance().checkUsername(mEditUsername.getText().toString()) ||
-				!BizFacade.getInstance().checkPassword(mEditPassword.getText().toString())) {
+		if (!BizFacade.getInstance().checkUsername(
+				mEditUsername.getText().toString())
+				|| !BizFacade.getInstance().checkPassword(
+						mEditPassword.getText().toString())) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	public static class TransData implements Serializable {
 		private static final long serialVersionUID = 1L;
-		
+
 		String username;
 		String password;
-		
+
 		public String getUsername() {
 			return username;
 		}
+
 		public void setUsername(String username) {
 			this.username = username;
 		}
+
 		public String getPassword() {
 			return password;
 		}
+
 		public void setPassword(String password) {
 			this.password = password;
 		}

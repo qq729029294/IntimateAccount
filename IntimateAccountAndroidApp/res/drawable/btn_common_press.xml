@@ -8,5 +8,5 @@
         android:top="@dimen/padding" />
 
     <solid android:color="#FF00AE76" />
-
+    
 </shape>

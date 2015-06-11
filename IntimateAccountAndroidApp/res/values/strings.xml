@@ -27,7 +27,7 @@
     <string name="btn_next">下一步</string>
     <string name="btn_complete_register">完成注册</string>
     <string name="btn_register">注册</string>
-    <string name="btn_retrieve_password">找回密码</string>
+    <string name="btn_retrieve_password">忘记密码？</string>
     <string name="fmt_lbl_send_mail">我们已给你的邮箱 %s 发送了一封验证邮件。</string>
     <string name="fmt_msg_makesure_delete_account_book">请确认是否删除账本\"%s\"，删除后将无法恢复。</string>
     <string name="msg_can_not_delete_account_book">不能删除当前账本，如要删除，请更换当前账本后再执行。</string>

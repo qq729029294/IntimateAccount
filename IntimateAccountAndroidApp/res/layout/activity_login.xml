@@ -13,7 +13,6 @@
         android:layout_marginTop="-1dp"
         app:fulllineedit_hint="@string/hint_password"
         app:fulllineedit_max_length="16" >
-
     </com.nan.ia.app.widget.FullLineEditControl>
 
     <com.nan.ia.app.widget.FullLineEditControl
@@ -23,7 +22,6 @@
         android:layout_marginTop="@dimen/margin_vertical"
         app:fulllineedit_hint="@string/hint_username"
         app:fulllineedit_max_length="18" >
-
     </com.nan.ia.app.widget.FullLineEditControl>
 
     <com.nan.ia.app.widget.CustomButton
@@ -38,37 +36,49 @@
         android:text="@string/btn_login" />
 
     <TextView
-        android:id="@+id/btn_register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_login"
-        android:layout_marginTop="@dimen/margin"
-        android:layout_marginLeft="@dimen/margin_large"
-        android:text="@string/btn_complete_register"
-        android:textSize="18sp"
-        android:textColor="@drawable/selector_color_main_color_clickable"
-        android:clickable="true" />
-
-    <TextView
         android:id="@+id/btn_retrieve_password"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin"
+        android:layout_height="32dp"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/btn_login"
-        android:layout_marginRight="@dimen/margin_large"
-        android:text="@string/btn_complete_register"
-        android:textSize="18sp"
+        android:layout_marginRight="@dimen/margin_large_large"
+        android:layout_marginTop="@dimen/margin_large"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:text="@string/btn_retrieve_password"
         android:textColor="@drawable/selector_color_main_color_clickable"
-        android:clickable="true" />
+        android:textSize="16sp" />
 
-    <CheckBox
-        android:id="@+id/ckb_show_password"
+    <LinearLayout
+        android:id="@+id/btn_show_password"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="32dp"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/btn_register"
-        android:layout_marginTop="30dp"
-        android:button="@drawable/selector_ckb_common"
-        android:text="显示密码" />
+        android:layout_below="@+id/btn_login"
+        android:layout_marginLeft="@dimen/margin_large_large"
+        android:layout_marginTop="@dimen/margin_large"
+        android:orientation="horizontal"
+        android:clickable="true" >
+
+        <CheckBox
+            android:id="@+id/ckb_show_password"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/selector_ckb_common"
+            android:button="@null"
+            android:checked="true"
+            android:clickable="false" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:text="隐藏密码"
+            android:textColor="@drawable/selector_color_main_color_clickable"
+            android:textSize="16sp" />
+    </LinearLayout>
 
 </RelativeLayout>
