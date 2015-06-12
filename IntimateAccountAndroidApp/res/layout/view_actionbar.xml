@@ -30,7 +30,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/image_back"
             android:text=""
-            android:textColor="@drawable/selector_color_white_text"
+            android:textColor="@drawable/selector_color_white_transparent_clickable"
             android:textSize="18sp"
             android:visibility="gone" />
     </RelativeLayout>
@@ -65,7 +65,7 @@
             android:layout_centerVertical="true"
             android:clickable="true"
             android:text=""
-            android:textColor="@drawable/selector_color_white_text"
+            android:textColor="@drawable/selector_color_white_transparent_clickable"
             android:textSize="18sp"
             android:visibility="gone" />
     </RelativeLayout>

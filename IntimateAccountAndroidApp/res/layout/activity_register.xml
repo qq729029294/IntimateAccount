@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity" xmlns:app="http://schemas.android.com/apk/res/com.nan.ia.app">
 
     <com.nan.ia.app.widget.FullLineEditControl
         android:id="@+id/full_line_edit_control_email"
@@ -10,7 +10,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/margin_vertical" >
+        android:layout_marginTop="@dimen/margin_vertical"
+        app:fulllineedit_hint="@string/hint_email_register"
+        app:fulllineedit_max_length="18" >
 
     </com.nan.ia.app.widget.FullLineEditControl>
 

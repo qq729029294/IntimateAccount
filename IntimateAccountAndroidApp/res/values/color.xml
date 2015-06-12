@@ -18,6 +18,7 @@
     <color name="line_1dp_gray">#ffbababa</color>
     <color name="line_1dp_light_gray">#ffe4e4e4</color>
     <color name="black">#ff000000</color>
+    <color name="black_transparent">#AA000000</color>
     <color name="blue_light_qn">#ffe6f1f5</color>
     <color name="blue_qn">#ff009cfe</color>
     <color name="click_marks">#33000000</color>

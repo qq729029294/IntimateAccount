@@ -13,6 +13,7 @@ import com.nan.ia.app.R;
 import com.nan.ia.app.biz.BizFacade;
 import com.nan.ia.app.widget.CustomToast;
 import com.nan.ia.app.widget.FullLineEditControl;
+import com.nan.ia.app.widget.LoadingDialog;
 import com.nan.ia.common.constant.ServerErrorCode;
 import com.nan.ia.common.http.cmd.entities.AccountLoginResponseData;
 import com.nan.ia.common.http.cmd.entities.ServerResponse;
@@ -49,20 +50,17 @@ public class LoginActivity extends BaseActionBarActivity {
 	}
 
 	private void initUI() {
-		// 默认弹出软键盘
-		getWindow().setSoftInputMode(
-				WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
-						| WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
 		enableActionBarGo(getString(R.string.title_register), new Intent(
 				LoginActivity.this, RegisterActivity.class));
 		mEditUsername = ((FullLineEditControl) findViewById(R.id.full_line_edit_control_username))
 				.getEditText();
-		mEditUsername.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-
+		mEditUsername.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS | InputType.TYPE_CLASS_TEXT);
 		mEditPassword = ((FullLineEditControl) findViewById(R.id.full_line_edit_control_password))
 				.getEditText();
 		mEditPassword.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+		// 隐藏密码
+		mEditPassword.setTransformationMethod(PasswordTransformationMethod
+						.getInstance());
 
 		mBtnOK = (Button) findViewById(R.id.btn_login);
 		mBtnOK.setOnClickListener(new OnClickListener() {
@@ -79,7 +77,6 @@ public class LoginActivity extends BaseActionBarActivity {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
-				// TODO Auto-generated method stub
 				if (isChecked) {
 					// 隐藏密码
 					mEditPassword.setTransformationMethod(PasswordTransformationMethod
@@ -89,6 +86,9 @@ public class LoginActivity extends BaseActionBarActivity {
 					mEditPassword.setTransformationMethod(HideReturnsTransformationMethod
 									.getInstance());
 				}
+				
+				// 选择末尾的
+				mEditPassword.setSelection(mEditPassword.getText().length() - 1);
 			}
 		});
 
@@ -144,6 +144,7 @@ public class LoginActivity extends BaseActionBarActivity {
 	}
 
 	private void doOK() {
+		LoadingDialog.showLoading(LoginActivity.this);
 		new AsyncTask<Integer, Integer, ServerResponse<AccountLoginResponseData>>() {
 
 			@Override
@@ -157,6 +158,8 @@ public class LoginActivity extends BaseActionBarActivity {
 			@Override
 			protected void onPostExecute(
 					ServerResponse<AccountLoginResponseData> result) {
+				LoadingDialog.hideLoading();
+				
 				if (result.getRet() == ServerErrorCode.RET_SUCCESS) {
 					startActivity(new Intent(LoginActivity.this, MainActivity.class));
 				}

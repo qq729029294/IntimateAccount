@@ -124,6 +124,14 @@ public class FullLineEditControl extends RelativeLayout {
 		}
 	}
 	
+	public void setLeftDividerVisibility(int visibility) {
+		imageDividerLeft.setVisibility(visibility);
+	}
+	
+	public void setRightDividerVisibility(int visibility) {
+		imageDividerRight.setVisibility(visibility);
+	}
+	
 	public TextView getLeftTextView() {
 		return textLeft;
 	}

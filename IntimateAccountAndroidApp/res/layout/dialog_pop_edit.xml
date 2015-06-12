@@ -21,7 +21,5 @@
         android:gravity="top|left"
         android:padding="@dimen/padding_small"
         android:textSize="20sp" >
-
-    </EditText>
-
+    </EditText>
 </RelativeLayout>

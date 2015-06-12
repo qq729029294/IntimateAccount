@@ -34,7 +34,7 @@
                 android:layout_centerVertical="true"
                 android:background="@drawable/selector_btn_title"
                 android:text="生活账本"
-                android:textColor="@drawable/selector_color_white_clickable"
+                android:textColor="@drawable/selector_color_white_transparent_clickable"
                 android:textSize="18sp" />
 
             <ImageView
@@ -73,7 +73,7 @@
                     android:layout_margin="@dimen/margin_large"
                     android:background="@drawable/selector_btn_white_transparent"
                     android:text="记一笔"
-                    android:textColor="@drawable/selector_color_white_clickable"
+                    android:textColor="@drawable/selector_color_white_transparent_clickable"
                     android:textSize="18sp" />
             </LinearLayout>
         </LinearLayout>

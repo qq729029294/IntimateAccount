@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity" xmlns:app="http://schemas.android.com/apk/res/com.nan.ia.app">
 
     <TextView
         android:id="@+id/text_lbl_send"
@@ -16,7 +16,10 @@
         android:id="@+id/full_line_edit_control_vf_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/text_lbl_send" >
+        android:layout_below="@+id/text_lbl_send"
+        app:fulllineedit_max_length="4"
+        app:fulllineedit_hint="请输入4位验证码" >
+
     </com.nan.ia.app.widget.FullLineEditControl>
 
     <com.nan.ia.app.widget.CustomButton

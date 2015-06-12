@@ -39,6 +39,7 @@
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/image_divider_left"
+        android:layout_toLeftOf="@+id/image_divider_right"
         android:singleLine="true" >
 
         <requestFocus />
@@ -48,7 +49,7 @@
         android:id="@+id/image_divider_right"
         android:layout_width="0.5dp"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@id/edit_text"
+        android:layout_toLeftOf="@id/right_container"
         android:background="@color/gray_ltltlt"
         android:visibility="gone" />
 
@@ -56,8 +57,7 @@
         android:id="@+id/right_container"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@id/image_divider_right" >
+        android:layout_alignParentRight="true" >
 
         <TextView
             android:id="@+id/text_right"

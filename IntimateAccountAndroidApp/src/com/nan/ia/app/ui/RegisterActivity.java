@@ -12,6 +12,7 @@ import com.nan.ia.app.biz.BizFacade;
 import com.nan.ia.app.constant.Constant;
 import com.nan.ia.app.utils.Utils;
 import com.nan.ia.app.widget.FullLineEditControl;
+import com.nan.ia.app.widget.LoadingDialog;
 import com.nan.ia.common.constant.ServerErrorCode;
 import com.nan.ia.common.http.cmd.entities.ServerResponse;
 
@@ -19,15 +20,16 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class RegisterActivity extends BaseActionBarActivity {
-	FullLineEditControl editControlEmail = null;
+	EditText editEmail = null;
 	Button btnNext = null;
 
 	@Override
@@ -40,11 +42,14 @@ public class RegisterActivity extends BaseActionBarActivity {
 	}
 	
 	private void initUI() {
-		editControlEmail = (FullLineEditControl) findViewById(R.id.full_line_edit_control_email);
-		editControlEmail.getEditText().setHint(R.string.hint_email_register);
-		editControlEmail.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-		editControlEmail.getEditText().setFilters(new InputFilter[] {new InputFilter.LengthFilter(45)});
-		editControlEmail.getEditText().addTextChangedListener(new TextWatcher() {
+		// 默认弹出软键盘
+		getWindow().setSoftInputMode(
+				WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
+						| WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+		
+		editEmail = ((FullLineEditControl) findViewById(R.id.full_line_edit_control_email)).getEditText();
+		editEmail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+		editEmail.addTextChangedListener(new TextWatcher() {
 			
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -67,32 +72,38 @@ public class RegisterActivity extends BaseActionBarActivity {
 			
 			@Override
 			public void onClick(View v) {
-				// 发送验证码
-				new AsyncTask<Integer, Integer, ServerResponse<Object>>() {
-
-					@Override
-					protected ServerResponse<Object> doInBackground(Integer... params) {
-						return BizFacade.getInstance().verifyMail(RegisterActivity.this,
-								editControlEmail.getEditText().getText().toString());
-					}
-
-					@Override
-					protected void onPostExecute(ServerResponse<Object> result) {
-						super.onPostExecute(result);
-						
-						if (result.getRet() != ServerErrorCode.RET_SUCCESS) {
-							return;
-						}
-						
-						VerifyVfCodeActivity.TransData transData = new VerifyVfCodeActivity.TransData();
-						transData.setUsername(editControlEmail.getEditText().getText().toString());
-						transData.setAccountType(Constant.ACCOUNT_TYPE_MAIL);
-						
-						Intent intent = new Intent(RegisterActivity.this, VerifyVfCodeActivity.class);
-						startActivity(createTransDataIntent(intent, transData));
-					}
-				}.execute(0);
+				doNext();
 			}
 		});
+	}
+	
+	private void doNext() {
+		// 发送验证码
+		LoadingDialog.showLoading(this);
+		new AsyncTask<Integer, Integer, ServerResponse<Object>>() {
+
+			@Override
+			protected ServerResponse<Object> doInBackground(Integer... params) {
+				return BizFacade.getInstance().verifyMail(RegisterActivity.this,
+						editEmail.getText().toString());
+			}
+
+			@Override
+			protected void onPostExecute(ServerResponse<Object> result) {
+				super.onPostExecute(result);
+				LoadingDialog.hideLoading();
+				
+				if (result.getRet() != ServerErrorCode.RET_SUCCESS) {
+					return;
+				}
+				
+				VerifyVfCodeActivity.TransData transData = new VerifyVfCodeActivity.TransData();
+				transData.setUsername(editEmail.getText().toString());
+				transData.setAccountType(Constant.ACCOUNT_TYPE_MAIL);
+				
+				Intent intent = new Intent(RegisterActivity.this, VerifyVfCodeActivity.class);
+				startActivity(createTransDataIntent(intent, transData));
+			}
+		}.execute(0);
 	}
 }

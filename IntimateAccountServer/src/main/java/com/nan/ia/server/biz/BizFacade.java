@@ -46,7 +46,7 @@ public class BizFacade {
 	 */
 	public boolean sendVfCodeByMail(String mail) {
 		Random random = new Random();
-        int vfCode = random.nextInt(9999);
+        int vfCode = random.nextInt(8999) + 1000; // 范围是四位数
         
         SendMail sendMail = new SendMail();
         sendMail.setSmtpServer(ServerConfigs.MAIL_SMTP_SERVER);
