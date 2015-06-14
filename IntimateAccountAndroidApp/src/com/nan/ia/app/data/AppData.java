@@ -16,6 +16,7 @@ import java.util.HashSet;
 import android.content.Context;
 
 import com.nan.ia.app.constant.Constant;
+import com.nan.ia.app.entities.AccountBookInfo;
 import com.nan.ia.app.entities.AccountInfo;
 import com.nan.ia.common.entities.AccountBook;
 import com.nan.ia.common.entities.AccountCategory;
@@ -23,7 +24,7 @@ import com.nan.ia.common.entities.AccountRecord;
 import com.nan.ia.common.entities.UserInfo;
 
 public class AppData {
-	// getter and setter
+	// 应用数据
 	static boolean init = false;
 	static AccountInfo accountInfo = null;
 	static int createAccountBookId = Constant.DEFAULT_CREATE_ACCOUNT_BOOK_ID;
@@ -35,9 +36,12 @@ public class AppData {
 	static List<AccountCategory> deleteCategories = new ArrayList<AccountCategory>();
 	static List<AccountRecord> deleteRecords = new ArrayList<AccountRecord>();
 	static HashMap<Integer, UserInfo> userInfoCache = new HashMap<Integer, UserInfo>();
-
+	
 	static long lastSyncDataTime = 0;
 	static long lastSyncDataLocalTime = 0;
+	
+	// 内存数据
+	static HashMap<Integer, AccountBookInfo> bookInfoCache = new HashMap<Integer, AccountBookInfo>();
 
 	public static boolean isInit() {
 		return init;
@@ -156,6 +160,15 @@ public class AppData {
 		AppData.userInfoCache = userInfoCache;
 
 		new Storage("userInfoCache").store();
+	}
+	
+	public static HashMap<Integer, AccountBookInfo> getBookInfoCache() {
+		return bookInfoCache;
+	}
+
+	public static void setBookInfoCache(
+			HashMap<Integer, AccountBookInfo> bookInfoCache) {
+		AppData.bookInfoCache = bookInfoCache;
 	}
 
 	public static void initAppData(Context context) {

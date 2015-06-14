@@ -1,27 +1,13 @@
 package com.nan.ia.app.ui;
 
-import com.nan.ia.app.R;
-import com.nan.ia.app.adapter.RecordsExpandableListAdapter;
-import com.nan.ia.app.adapter.RecordsExpandableListAdapter.ListItemRecord;
-import com.nan.ia.app.biz.BizFacade;
-import com.nan.ia.app.data.AppData;
-import com.nan.ia.app.ui.RecordActivity.RecordActivityType;
-import com.nan.ia.app.utils.LogUtils;
-import com.nan.ia.app.utils.Utils;
-import com.nan.ia.app.widget.CustomPopupMenu;
-import com.nan.ia.app.widget.CustomToast;
-import com.nan.ia.app.widget.RatioCircleView;
-import com.nan.ia.common.entities.AccountRecord;
-import com.ryg.expandable.ui.PinnedHeaderExpandableListView;
-import com.ryg.expandable.ui.StickyLayout;
-import com.ryg.expandable.ui.StickyLayout.OnGiveUpTouchEventListener;
-import com.special.ResideMenu.ResideMenu;
-import com.special.ResideMenu.ResideMenuItem;
-
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.animation.TimeAnimator;
+import android.animation.ValueAnimator;
 import android.animation.TimeAnimator.TimeListener;
 import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Spannable;
@@ -36,23 +22,60 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.nan.ia.app.R;
+import com.nan.ia.app.adapter.RecordsExpandableListAdapter;
+import com.nan.ia.app.adapter.RecordsExpandableListAdapter.ListItemRecord;
+import com.nan.ia.app.biz.BizFacade;
+import com.nan.ia.app.biz.UpdateMarkHelper;
+import com.nan.ia.app.constant.Constant;
+import com.nan.ia.app.data.AppData;
+import com.nan.ia.app.dialog.CustomToast;
+import com.nan.ia.app.dialog.MaskOperationDialog;
+import com.nan.ia.app.entities.AccountBookInfo;
+import com.nan.ia.app.entities.AccountBookStatisticalInfo;
+import com.nan.ia.app.ui.RecordActivity.RecordActivityType;
+import com.nan.ia.app.utils.Utils;
+import com.nan.ia.app.widget.CustomPopupMenu;
+import com.nan.ia.app.widget.RatioCircleView;
+import com.nan.ia.common.entities.AccountRecord;
+import com.ryg.expandable.ui.PinnedHeaderExpandableListView;
+import com.ryg.expandable.ui.StickyLayout;
+import com.ryg.expandable.ui.StickyLayout.OnGiveUpTouchEventListener;
+import com.special.ResideMenu.ResideMenu;
+import com.special.ResideMenu.ResideMenuItem;
+
 public class MainActivity extends BaseActivity {
-    private PinnedHeaderExpandableListView mListViewRecords;
-    private RecordsExpandableListAdapter mAdapter;
-    private StickyLayout mStickyLayout;
-    private RatioCircleView mRatioCircleMain;
-    private Button mBtnAccountBookSettings;
-    private ResideMenu mResideMenu;
+	private static final long DISPLAY_ANIMATION_DURATION = 1500;
+	private static final long DISPLAY_ANIMATION_DELAY = 500;
+	private static final long MIN_LOADING_DURATION = 1250;
+	
+    PinnedHeaderExpandableListView mListViewRecords;
+    RecordsExpandableListAdapter mAdapter;
+    FrameLayout mLayoutColor;
+    StickyLayout mStickyLayout;
+    RatioCircleView mRatioCircleMain;
+    LinearLayout mLayoutDetails;
+    LinearLayout mLayoutLoading;
+	TextView mTextBalance;
+	TextView mTextIncome;
+	TextView mTextExpend;
+	TextView mTextLoading;
+	
+    Button mBtnAccountBookSettings;
+    ResideMenu mResideMenu;
+    
+    BizFacade mBizFacade = BizFacade.getInstance();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		setContentView(R.layout.activity_main);
-		
 		initUI();
 	}
 	
@@ -60,44 +83,19 @@ public class MainActivity extends BaseActivity {
 	protected void onStart() {
 		refreshData();
 		
-		mRatioCircleMain.postDelayed(new Runnable() {
-			
-			@Override
-			public void run() {
-				mRatioCircleMain.beginAnimation(2000);
-				
-				final TextView textView = (TextView) findViewById(R.id.text_balance);
-				
-				final TimeAnimator timeAnimator = new TimeAnimator();
-				timeAnimator.setTimeListener(new TimeListener() {
-					
-					@Override
-					public void onTimeUpdate(TimeAnimator animation, long totalTime,
-							long deltaTime) {
-						int text = (int) ((totalTime / 2000.0f) * 500);
-						
-						if (totalTime >= 2000) {
-							text = 500;
-							timeAnimator.end();
-						}
-						
-						String str = text + "元";
-						SpannableStringBuilder style = new SpannableStringBuilder(str);
-						style.setSpan(new AbsoluteSizeSpan(Utils.sp2px(MainActivity.this, 14)), str.indexOf("元"), str.indexOf("元") + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-						style.setSpan(new ForegroundColorSpan(MainActivity.this.getResources().getColor(R.color.font_white_ltlt)), str.indexOf("元"), str.indexOf("元") + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-						textView.setText(style);
-						
-						LogUtils.e("totalTime:" + totalTime);
-					}
-				});
-				timeAnimator.start();
-			}
-		}, 500);
+		beginStartAnimation();
 		
 		super.onStart();
 	}
 
 	private void initUI() {
+		setupMainContent();
+        setupTop();
+        setupMenu();
+        setupListView();
+	}
+	
+	private void setupMainContent() {
 		// 记一笔
 		findViewById(R.id.btn_record).setOnClickListener(new OnClickListener() {
 			
@@ -123,28 +121,26 @@ public class MainActivity extends BaseActivity {
 			}
 		} );
         
+        mLayoutColor = (FrameLayout) findViewById(R.id.layout_color);
         mRatioCircleMain = (RatioCircleView) findViewById(R.id.ratio_circle_main);
-        mRatioCircleMain.addItem(1.0f, getResources().getColor(R.color.expend_lt));
-        mRatioCircleMain.addItem(0.7f, getResources().getColor(R.color.income_lt));
-        
-        setupTop();
-        setupMenu();
-        setupListView();
+        mLayoutDetails = (LinearLayout) findViewById(R.id.layout_details);
+        mLayoutLoading = (LinearLayout) findViewById(R.id.layout_loading);
+		mTextBalance = (TextView) findViewById(R.id.text_balance);
+		mTextIncome = (TextView) findViewById(R.id.text_income);
+		mTextExpend = (TextView) findViewById(R.id.text_expend);
+		mTextLoading = (TextView) findViewById(R.id.text_loading);
+		
+		// 运行加载动画
+		ImageView imageView = (ImageView) findViewById(R.id.image_loading);
+		((AnimationDrawable) imageView.getBackground()).start();
 	}
 	
 	private void setupListView() {
 		mListViewRecords = (PinnedHeaderExpandableListView) findViewById(R.id.list_records);
 		mListViewRecords.setOnItemLongClickListener(null);
 		mAdapter = new RecordsExpandableListAdapter(this, mListViewRecords);
-		mAdapter.setData(BizFacade.getInstance().getMoreAccountRecords(AppData.getCurrentAccountBookId(),
-				System.currentTimeMillis()));
 		mListViewRecords.setAdapter(mAdapter);
 		mListViewRecords.setDividerHeight(0);
-		
-        // 展开所有group
-        for (int i = 0, count = mListViewRecords.getCount(); i < count; i++) {
-        	mListViewRecords.expandGroup(i);
-        }
 
         mListViewRecords.setOnHeaderUpdateListener(mAdapter);
         mListViewRecords.setOnChildClickListener(new OnChildClickListener() {
@@ -203,7 +199,6 @@ public class MainActivity extends BaseActivity {
 		mResideMenu.setScaleValue(0.6f);
 
         // create menu items;
-		
 		View view = LayoutInflater.from(this).inflate(R.layout.slide_menu_account, null);
 		mResideMenu.addCustomMenuItem(view, ResideMenu.DIRECTION_LEFT);
 		
@@ -248,31 +243,240 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 		
-		mBtnAccountBookSettings.setText(BizFacade.getInstance().getAccountBookById(AppData.getCurrentAccountBookId()).getName());
-		
 		findViewById(R.id.btn_sync).setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				new AsyncTask<Integer, Integer, Integer>() {
-
-					@Override
-					protected Integer doInBackground(Integer... params) {
-						BizFacade.getInstance().syncDataToServer();
-						return null;
-					}
-				}.execute(0);
+				doSync();
 			}
 		});
 	}
 	
+	private void doSync() {
+		// 检查登录
+		if (!mBizFacade.checkLogin(this)) {
+			return;
+		}
+		
+		final long beginLoadTime = System.currentTimeMillis();
+		beginSyncLoadingAnimation();
+		MaskOperationDialog.showMask(this);	// 防止操作
+		new AsyncTask<Integer, Integer, Integer>() {
+
+			@Override
+			protected Integer doInBackground(Integer... params) {
+				mBizFacade.syncDataToServer();
+				long loadingDisplayTime = (MIN_LOADING_DURATION + beginLoadTime)
+						- System.currentTimeMillis();
+				if (loadingDisplayTime > 0) {
+					// 等待最小时间
+					try {
+						Thread.sleep(loadingDisplayTime);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				return null;
+			}
+
+			@Override
+			protected void onPostExecute(Integer result) {
+				MaskOperationDialog.hideMask();
+				
+				endLoadingAnimation();
+				beginDisplayAnimation();
+				super.onPostExecute(result);
+			}
+		}.execute(0);
+	}
+	
 	private void refreshData() {
-		// 刷新数据
-		mAdapter.setData(BizFacade.getInstance().getMoreAccountRecords(AppData.getCurrentAccountBookId(),
-				System.currentTimeMillis()));
-		mAdapter.notifyDataSetChanged();
-		// 刷新title
-		mBtnAccountBookSettings.setText(BizFacade.getInstance().getAccountBookById(AppData.getCurrentAccountBookId()).getName());
+		AccountBookInfo accountBookInfo = mBizFacade.getAccountBookInfo(AppData.getCurrentAccountBookId());
+		
+		if (mBizFacade.checkNeedUpdate(UpdateMarkHelper.UPDATE_TYE_RECORD, this.toString())) {
+			mRatioCircleMain.clearItems();
+			
+			double income = accountBookInfo.getStatisticalInfo().getIncome();
+			double expend = accountBookInfo.getStatisticalInfo().getExpend();
+			double denominator = Math.max(Math.abs(income), Math.abs(expend));
+			
+			mTextIncome.setVisibility((income == 0) ? View.GONE : View.VISIBLE);
+			mTextExpend.setVisibility((expend == 0) ? View.GONE : View.VISIBLE);
+			
+			if (denominator == 0) {
+				// 为空，给一个相等值
+				income = 1.0f;
+				expend = -1.0f;
+				denominator = 1.0f;
+			}
+			
+//			mRatioCircleMain.addItem((float) (income / denominator), getResources().getColor(R.color.income_lt));
+//	        mRatioCircleMain.addItem((float) (-expend / denominator), getResources().getColor(R.color.expend_lt));
+			mRatioCircleMain.addItem((float) (income / denominator), getResources().getColor(R.color.white));
+	        mRatioCircleMain.addItem((float) (-expend / denominator), getResources().getColor(R.color.white));
+	        
+			// 刷新记录ListView数据
+			mAdapter.setData(mBizFacade.getMoreAccountRecords(AppData.getCurrentAccountBookId(),
+					System.currentTimeMillis()));
+			mAdapter.notifyDataSetChanged();
+			
+	        // 展开所有group
+			mListViewRecords.post(new Runnable() {
+				
+				@Override
+				public void run() {
+			        for (int i = 0, count = mAdapter.getGroupCount(); i < count; i++) {
+			        	mListViewRecords.expandGroup(i);
+			        }
+				}
+			});
+		}
+        
+		if (mBizFacade.checkNeedUpdate(UpdateMarkHelper.UPDATE_TYE_ACCOUNT_BOOK, this.toString())) {
+			// 刷新title
+			mBtnAccountBookSettings.setText(mBizFacade.getAccountBookById(AppData.getCurrentAccountBookId()).getName());
+		}
+	}
+	
+	private void beginStartAnimation() {
+		if (mBizFacade.checkNeedUpdate(UpdateMarkHelper.UPDATE_TYE_RECORD,
+				"beginDisplayAnimation")) {
+			// 开始加载动画
+			mRatioCircleMain.postDelayed(new Runnable() {
+
+				@Override
+				public void run() {
+					beginLoadingAnimation();
+
+					mRatioCircleMain.postDelayed(new Runnable() {
+
+						@Override
+						public void run() {
+							endLoadingAnimation();
+
+							// 开始展示动画
+							beginDisplayAnimation();
+						}
+					}, MIN_LOADING_DURATION);
+				}
+			}, DISPLAY_ANIMATION_DELAY);
+		}
+	}
+	
+	private void beginLoadingAnimation() {
+		mRatioCircleMain.startLoadingAnimation();
+		mLayoutDetails.setVisibility(View.GONE);
+		mLayoutLoading.setVisibility(View.VISIBLE);
+		
+		mTextLoading.setText("拼命加载中~");
+		
+		beginColorAnimation(((ColorDrawable) mLayoutColor.getBackground()).getColor(),
+				getResources().getColor(R.color.main_color_dkdk), MIN_LOADING_DURATION);
+	}
+	
+	private void beginSyncLoadingAnimation() {
+		beginLoadingAnimation();
+		
+		mTextLoading.setText("同步数据中~");
+	}
+	
+	private void endLoadingAnimation() {
+		mRatioCircleMain.stopLoadingAnimation();
+		mLayoutDetails.setVisibility(View.VISIBLE);
+		mLayoutLoading.setVisibility(View.GONE);
+	}
+	
+	private void beginColorAnimation(int baseColor, int newColor, long duration) {
+        ValueAnimator colorAnim = ObjectAnimator.ofInt(mLayoutColor, "backgroundColor", baseColor, newColor);
+        colorAnim.setDuration(DISPLAY_ANIMATION_DURATION);
+        colorAnim.setEvaluator(new ArgbEvaluator());
+        colorAnim.start();
+        
+//        mAdapter.setGroupBackColor(newColor);
+	}
+	
+	private void beginDisplayAnimation() {
+		final AccountBookStatisticalInfo statisticalInfo = mBizFacade
+				.getAccountBookInfo(AppData.getCurrentAccountBookId())
+				.getStatisticalInfo();
+		final double balance = statisticalInfo.getBalance();
+		final double income = statisticalInfo.getIncome();
+		final double expend = statisticalInfo.getExpend();
+
+		// 背景色动画
+		int baseColor = getResources().getColor(R.color.main_color_dkdk);
+		int targetColor = baseColor;
+		double colorRatio = 0.0f;
+		if (Math.abs(income) > Math.abs(expend)) {
+			if (expend == 0) {
+				colorRatio = 1.0f;
+			} else {
+				colorRatio = Math.abs(income) / Math.abs(expend) - 1.0f;
+			}
+			
+			targetColor = getResources().getColor(R.color.income_dk);
+
+		} else if (Math.abs(income) < Math.abs(expend)) {
+			if (income == 0) {
+				colorRatio = 1.0f;
+			} else {
+				colorRatio = Math.abs(expend) / Math.abs(income) - 1.0f;
+			}
+			
+			targetColor = getResources().getColor(R.color.expend_dk);
+		}
+		
+		colorRatio = Math.min(1.0f, colorRatio);
+		int newColor = Utils.getRatioColor(baseColor, targetColor, (float) colorRatio);
+		beginColorAnimation(baseColor, newColor, DISPLAY_ANIMATION_DURATION);
+        
+        // 旋转动画
+		mRatioCircleMain.beginAnimation(DISPLAY_ANIMATION_DURATION);
+
+		// 数值动画
+		final TimeAnimator timeAnimator = new TimeAnimator();
+		timeAnimator.setTimeListener(new TimeListener() {
+
+			@Override
+			public void onTimeUpdate(TimeAnimator animation, long totalTime,
+					long deltaTime) {
+				float ratio = (totalTime / (float) DISPLAY_ANIMATION_DURATION);
+				double curBalance = (double) (int) (ratio * balance);
+				double curIncome = (double) (int) (ratio * income);
+				double curExpend = (double) (int) (ratio * expend);
+
+				if (totalTime >= DISPLAY_ANIMATION_DURATION) {
+					curBalance = balance;
+					curIncome = income;
+					curExpend = expend;
+					timeAnimator.end();
+				}
+
+				// 结余
+				String str = Utils.formatCNY(curBalance);
+				SpannableStringBuilder style = new SpannableStringBuilder(str);
+				style.setSpan(
+						new AbsoluteSizeSpan(Utils.sp2px(MainActivity.this, 14)),
+						str.indexOf("元"), str.indexOf("元") + 1,
+						Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+				style.setSpan(new ForegroundColorSpan(MainActivity.this
+						.getResources().getColor(R.color.font_white_ltlt)), str
+						.indexOf("元"), str.indexOf("元") + 1,
+						Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+				mTextBalance.setText(style);
+
+				// 收入
+				str = "+" + Utils.formatCNY(curIncome);
+				mTextIncome.setText(str);
+
+				// 支出
+				str = Utils.formatCNY(curExpend);
+				mTextExpend.setText(str);
+			}
+		});
+
+		timeAnimator.start();
 	}
 	
 	private void editRecord(AccountRecord accountRecord) {

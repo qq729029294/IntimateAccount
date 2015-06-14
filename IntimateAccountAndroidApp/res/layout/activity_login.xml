@@ -49,36 +49,17 @@
         android:textColor="@drawable/selector_color_main_color_clickable"
         android:textSize="16sp" />
 
-    <LinearLayout
-        android:id="@+id/btn_show_password"
+    <com.nan.ia.app.widget.CustomCheckBox
+        android:id="@+id/ckb_show_password"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/btn_login"
         android:layout_marginLeft="@dimen/margin_large_large"
         android:layout_marginTop="@dimen/margin_large"
-        android:orientation="horizontal"
-        android:clickable="true" >
+        app:customcheckbok_checked="true"
+        app:customcheckbok_text="隐藏密码" >
 
-        <CheckBox
-            android:id="@+id/ckb_show_password"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/selector_ckb_common"
-            android:button="@null"
-            android:checked="true"
-            android:clickable="false" />
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/margin_small"
-            android:text="隐藏密码"
-            android:textColor="@drawable/selector_color_main_color_clickable"
-            android:textSize="16sp" />
-    </LinearLayout>
+    </com.nan.ia.app.widget.CustomCheckBox>
 
 </RelativeLayout>

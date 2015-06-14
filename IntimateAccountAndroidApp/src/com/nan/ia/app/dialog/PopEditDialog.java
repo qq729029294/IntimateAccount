@@ -5,7 +5,7 @@
  * @author         weijiangnan create on 2015年5月31日 
  */
 
-package com.nan.ia.app.widget;
+package com.nan.ia.app.dialog;
 
 import com.nan.ia.app.R;
 

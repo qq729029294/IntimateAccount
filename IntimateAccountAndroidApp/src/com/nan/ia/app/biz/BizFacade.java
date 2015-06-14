@@ -3,29 +3,34 @@ package com.nan.ia.app.biz;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
-import android.R.integer;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.view.View;
 
 import com.nan.ia.app.App;
+import com.nan.ia.app.R;
 import com.nan.ia.app.constant.Constant;
 import com.nan.ia.app.data.AppData;
 import com.nan.ia.app.data.ResourceMapper;
 import com.nan.ia.app.db.DBService;
+import com.nan.ia.app.entities.AccountBookStatisticalInfo;
+import com.nan.ia.app.entities.AccountBookInfo;
 import com.nan.ia.app.entities.AccountInfo;
 import com.nan.ia.app.http.cmd.server.AccountLoginServerCmd;
 import com.nan.ia.app.http.cmd.server.RegisterServerCmd;
 import com.nan.ia.app.http.cmd.server.SyncDataServerCmd;
 import com.nan.ia.app.http.cmd.server.VerifyMailServerCmd;
 import com.nan.ia.app.http.cmd.server.VerifyVfCodeServerCmd;
+import com.nan.ia.app.ui.LoginActivity;
 import com.nan.ia.app.utils.Utils;
+import com.nan.ia.app.widget.CustomDialogBuilder;
 import com.nan.ia.common.constant.ServerErrorCode;
 import com.nan.ia.common.entities.AccountBook;
-import com.nan.ia.common.entities.AccountBookDelete;
 import com.nan.ia.common.entities.AccountCategory;
-import com.nan.ia.common.entities.AccountCategoryDelete;
 import com.nan.ia.common.entities.AccountRecord;
-import com.nan.ia.common.entities.AccountRecordDelete;
 import com.nan.ia.common.http.cmd.entities.AccountLoginRequestData;
 import com.nan.ia.common.http.cmd.entities.AccountLoginResponseData;
 import com.nan.ia.common.http.cmd.entities.RegisterRequestData;
@@ -84,6 +89,11 @@ public class BizFacade {
 		if (!hasCurrentAccountBook) {
 			// 没有当前账本，则设置第一个账本
 			AppData.setCurrentAccountBookId(AppData.getAccountBooks().get(0).getAccountBookId());
+		}
+		
+		// 统计账本信息
+		for (int i = 0; i < AppData.getAccountBooks().size(); i++) {
+			reloadAccountBookInfo(AppData.getAccountBooks().get(i).getAccountBookId());
 		}
 	}
 	
@@ -251,6 +261,38 @@ public class BizFacade {
 		}
 	}
 	
+	public AccountBookInfo getAccountBookInfo(int accountBookId) {
+		if (!AppData.getBookInfoCache().containsKey(accountBookId)) {
+			reloadAccountBookInfo(accountBookId);
+		}
+		
+		return AppData.getBookInfoCache().get(accountBookId);
+	}
+	
+	public void reloadAccountBookInfo(int accountBookId) {
+		AccountBookInfo info = new AccountBookInfo();
+		info.setAccountBook(getAccountBookById(accountBookId));
+		info.setCategories(AppData.getCategories());
+		
+		info.setExpendCategories(getSubCategories(accountBookId, Constant.CATEGORY_EXPEND));
+		info.getExpendCategories().add(getCategory(accountBookId, Constant.CATEGORY_EXPEND));
+		
+		info.setIncomeCategories(getSubCategories(accountBookId, Constant.CATEGORY_INCOME));
+		info.getIncomeCategories().add(getCategory(accountBookId, Constant.CATEGORY_INCOME));
+		
+		AccountBookStatisticalInfo statisticalInfo = new AccountBookStatisticalInfo();
+		statisticalInfo.setExpend(DBService.getInstance(App.getInstance())
+				.sumWaterValueByIdAndCategories(accountBookId, info.getExpendCategories()));
+		statisticalInfo.setIncome(DBService.getInstance(App.getInstance())
+				.sumWaterValueByIdAndCategories(accountBookId, info.getIncomeCategories()));
+		statisticalInfo.setBalance(statisticalInfo.getExpend() + statisticalInfo.getIncome());
+		
+		info.setStatisticalInfo(statisticalInfo);
+		
+		// 加入到缓存中
+		AppData.getBookInfoCache().put(accountBookId, info);
+	}
+	
 	// 类别相关接口
 	public List<AccountCategory> getCategories() {
 		return null;
@@ -366,14 +408,22 @@ public class BizFacade {
 
 	public void createAccountRecord(AccountRecord record) {
 		DBService.getInstance(App.getInstance()).createAccountRecord(record);
+		
+		markUpdate(UpdateMarkHelper.UPDATE_TYE_RECORD);
+		reloadAccountBookInfo(record.getAccountBookId());
 	}
 
 	public void editAccountRecord(AccountRecord record) {
 		DBService.getInstance(App.getInstance()).updateAccountRecord(record);
+		
+		markUpdate(UpdateMarkHelper.UPDATE_TYE_RECORD);
+		reloadAccountBookInfo(record.getAccountBookId());
 	}
 	
 	public void deleteAccountRecord(int accountRecordId) {
 		DBService.getInstance(App.getInstance()).deleteAccountRecord(accountRecordId);
+		
+		markUpdate(UpdateMarkHelper.UPDATE_TYE_RECORD);
 	}
 	
 	// 重新加载数据
@@ -554,11 +604,12 @@ public class BizFacade {
 	}
 	
 	public boolean checkPassword(String password) {
-		if (null == password || password.length() < 6 || password.length() > 16) {
+		if (null == password) {
 			return false;
 		}
 		
-		return true;
+		String passwordPattern = "[a-zA-Z0-9_]{6,16}";  
+        return Pattern.matches(passwordPattern, password);  
 	}
 	
 	/**
@@ -629,5 +680,43 @@ public class BizFacade {
 	 */
 	private void changeRecordsUserId(int oldUserId, int newUserId) {
 		DBService.getInstance(App.getInstance()).updateAccountRecordsUserId(oldUserId, newUserId);
+	}
+	
+	public void markUpdate(String updateType) {
+		UpdateMarkHelper.markUpdate(updateType);
+	}
+	
+	public boolean checkNeedUpdate(String updateType, String updater) {
+		return UpdateMarkHelper.checkNeedUpdate(updateType, updater);
+	}
+	
+	public boolean checkLogin(final Activity activity) {
+		if (AppData.getAccountInfo().getAccountType() == Constant.ACCOUNT_TYPE_UNLOGIN) {
+			// 未登录，先登录
+			final CustomDialogBuilder dialogBuilder = CustomDialogBuilder.getInstance(activity);
+			String msg = "必须先登录才能同步数据";
+			dialogBuilder
+					.withButton2Drawable(R.drawable.selector_btn_inverse)
+					.withMessage(msg)
+					.withButton2TextColor(activity.getResources().getColor(R.color.main_color))
+					.withButton1Text("马上登录")
+					.withButton2Text(activity.getString(R.string.btn_cancel))
+					.setButton1Click(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							activity.startActivity(new Intent(activity, LoginActivity.class));
+							dialogBuilder.dismiss();
+						}
+					}).setButton2Click(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							dialogBuilder.dismiss();
+						}
+					}).show();
+			
+			return false;
+		}
+		
+		return true;
 	}
 }

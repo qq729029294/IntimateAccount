@@ -5,7 +5,7 @@
         android:bottomLeftRadius="16dp"
         android:topLeftRadius="16dp" />
     
-    <solid android:color="@color/transparent" />
+    <solid android:color="@color/trans" />
 
     <!-- 描边 -->
     <stroke

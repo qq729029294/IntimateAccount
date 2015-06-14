@@ -29,13 +29,14 @@ import com.nan.ia.app.biz.BizFacade;
 import com.nan.ia.app.constant.Constant;
 import com.nan.ia.app.data.AppData;
 import com.nan.ia.app.data.ResourceMapper;
+import com.nan.ia.app.dialog.CustomToast;
+import com.nan.ia.app.dialog.PopEditDialog;
+import com.nan.ia.app.dialog.PopEditDialog.PopEditDialogListener;
 import com.nan.ia.app.utils.TimeUtils;
 import com.nan.ia.app.widget.DoubleSelectButton;
 import com.nan.ia.app.widget.DoubleSelectButton.DoubleSelectBtnListener;
 import com.nan.ia.app.widget.KeyboardNumber;
 import com.nan.ia.app.widget.KeyboardNumber.KeyboardNumberListener;
-import com.nan.ia.app.widget.PopEditDialog;
-import com.nan.ia.app.widget.PopEditDialog.PopEditDialogListener;
 import com.nan.ia.common.entities.AccountCategory;
 import com.nan.ia.common.entities.AccountRecord;
 
@@ -170,27 +171,11 @@ public class RecordActivity extends BaseActionBarActivity {
 			@Override
 			public void onValueChanged(String enterValue, double value) {
 				mTextAmount.setText(enterValue);
-				
-				// 支出为负数，收入为正数
-				if (rootCategory.equals(Constant.CATEGORY_EXPEND)) {
-					mCurrentRecord.setWaterValue(-value);
-				} else {
-					mCurrentRecord.setWaterValue(value);
-				}
 			}
 
 			@Override
 			public void onOKClicked(String enterValue, double value) {
-				// 完成编辑
-				if (mTransData.getType() == RecordActivityType.NEW) {
-					// 新建
-					BizFacade.getInstance().createAccountRecord(mCurrentRecord);
-				} else {
-					// 编辑
-					BizFacade.getInstance().editAccountRecord(mCurrentRecord);
-				}
-				
-				finish();
+				doOK();
 			}
 		});
 		mKeyboardNumber.initKeyboardNumber(Math.abs(mCurrentRecord.getWaterValue()), 8, 2);
@@ -217,6 +202,44 @@ public class RecordActivity extends BaseActionBarActivity {
 		mCurrentRecord.setCategory(accountCategory.getCategory());
 		mImageCategory.setImageResource(ResourceMapper.mappingResouce(accountCategory.getIcon()));
 		mTextCategory.setText(accountCategory.getCategory());
+	}
+	
+	private void doOK() {
+		if (!checkInput()) {
+			return;
+		}
+		
+		// 支出为负数，收入为正数
+		if (rootCategory.equals(Constant.CATEGORY_EXPEND)) {
+			mCurrentRecord.setWaterValue(-mKeyboardNumber.getValue());
+		} else {
+			mCurrentRecord.setWaterValue(mKeyboardNumber.getValue());
+		}
+		
+		// 完成编辑
+		if (mTransData.getType() == RecordActivityType.NEW) {
+			// 新建
+			BizFacade.getInstance().createAccountRecord(mCurrentRecord);
+		} else {
+			// 编辑
+			BizFacade.getInstance().editAccountRecord(mCurrentRecord);
+		}
+		
+		finish();
+	}
+	
+	private boolean checkInput() {
+		if (mKeyboardNumber.getValue() == 0) {
+			CustomToast.showToast("请填写金额");
+			return false;
+		}
+		
+		if (mKeyboardNumber.getValue() < 0) {
+			CustomToast.showToast("填写金额必须大于零");
+			return false;
+		}
+		
+		return true;
 	}
 	
 	public static enum RecordActivityType {

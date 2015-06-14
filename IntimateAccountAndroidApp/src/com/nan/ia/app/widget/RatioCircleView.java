@@ -33,7 +33,7 @@ public class RatioCircleView extends ImageView {
 	float mMarginWidth = DEFAULT_MARGIN_WIDTH;
 	
 	Paint mCircleBgPaint;
-	int mCircleBgColor = Color.TRANSPARENT;
+	int mCircleBgColor = Color.argb(33, 255, 255, 255);
 	RectF mCircleBgRect;
 	
 	List<Paint> mItemPaints = new ArrayList<Paint>();
@@ -42,6 +42,10 @@ public class RatioCircleView extends ImageView {
 	boolean mNeedBuildDrawParams = true;
 	
 	float mAnimationDegree = 1.0f;
+	
+	long mStartTime;
+	Paint mLoadingPaint;
+	boolean mStartLoading = false;
 
 	public RatioCircleView(Context context) {
 		super(context);
@@ -76,8 +80,6 @@ public class RatioCircleView extends ImageView {
 				}
 				
 				RatioCircleView.this.invalidateWithoutBuildDrawParams();
-				
-				LogUtils.e("totalTime:" + totalTime);
 			}
 		});
 		
@@ -99,12 +101,31 @@ public class RatioCircleView extends ImageView {
 		mCircleBgColor = circleBgColor;
 	}
 	
+	public void startLoadingAnimation() {
+		mStartTime = System.currentTimeMillis();
+		mStartLoading = true;
+		
+		invalidate();
+	}
+	
+	public void stopLoadingAnimation() {
+		mStartLoading = false;
+		invalidate();
+	}
+	
 	private void buildDrawParams(Canvas canvas) {
 		mCircleBgPaint = new Paint();
 		mCircleBgPaint.setAntiAlias(true);
 		mCircleBgPaint.setStyle(Paint.Style.STROKE);
-		mCircleBgPaint.setStrokeWidth(mItems.size() * (mStroKeWidth + mMarginWidth) + mMarginWidth);
+//		mCircleBgPaint.setStrokeWidth(mItems.size() * (mStroKeWidth + mMarginWidth) + mMarginWidth);
+		mCircleBgPaint.setStrokeWidth(mStroKeWidth);
 		mCircleBgPaint.setColor(mCircleBgColor);
+		
+		mLoadingPaint = new Paint();
+		mLoadingPaint.setAntiAlias(true);
+		mLoadingPaint.setStyle(Paint.Style.STROKE);
+		mLoadingPaint.setStrokeWidth(mStroKeWidth);
+		mLoadingPaint.setColor(Color.WHITE);
 		
 		Rect clipBounds = canvas.getClipBounds();
 		
@@ -117,6 +138,7 @@ public class RatioCircleView extends ImageView {
 		
 		mItemPaints.clear();
 		mItemRects.clear();
+		mItemSweepAngle.clear();
 		for (int i = 0; i < mItems.size(); i++) {
 			// Paint
 			Paint paint = new Paint();
@@ -156,6 +178,14 @@ public class RatioCircleView extends ImageView {
     	item.color = color;
     	
     	mItems.add(item);
+    	
+    	invalidate();
+    }
+    
+    public void clearItems() {
+    	mItems.clear();
+    	
+    	invalidate();
     }
     
 	@Override
@@ -176,11 +206,28 @@ public class RatioCircleView extends ImageView {
 		}
 		
         canvas.drawColor(Color.TRANSPARENT);
-        // 绘制背景圆
-        canvas.drawArc(mCircleBgRect, 0, 360, false, mCircleBgPaint);
+        
+        if (mStartLoading) {
+            for (int i = 0; i < mItems.size(); i++) {
+            	long totalTime = System.currentTimeMillis() - mStartTime;
+            	float ratio = totalTime % 1000 / 1000.0f;
+            	
+                // 绘制背景圆
+                canvas.drawArc(mItemRects.get(i), 0, 360, false, mCircleBgPaint);
+            	canvas.drawArc(mItemRects.get(i), - (ratio * 360 ), 100, false, mLoadingPaint);
+    		}
+            
+            postInvalidate();
+            return;
+		}
+        
+//        // 绘制背景圆
+//        canvas.drawArc(mCircleBgRect, 0, 360, false, mCircleBgPaint);
         // 绘制比例项圆圈
         for (int i = 0; i < mItems.size(); i++) {
         	canvas.drawArc(mItemRects.get(i), -90, mItemSweepAngle.get(i) * mAnimationDegree, false, mItemPaints.get(i));
+            // 绘制背景圆
+            canvas.drawArc(mItemRects.get(i), 0, 360, false, mCircleBgPaint);
 		}
     }
 	

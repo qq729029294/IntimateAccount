@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -112,9 +113,53 @@ public class Utils {
 		return isValid;
 	}
 	
+	public static String formatHundredMillionCNY(double value) {
+		if (value == 0) {
+			return "0.00亿元";
+		}
+		
+		DecimalFormat df = new DecimalFormat("0.##");
+		String ret = df.format(value / 100000000.0f);
+		return ret + "亿元";
+	}
+
+	
+	public static String formatTenThousandCNY(double value) {
+		if (value == 0) {
+			return "0.00万元";
+		}
+		
+		if (Math.abs(value) >= 100000000.0f) {
+			return formatHundredMillionCNY(value);
+		}
+		
+		DecimalFormat df = new DecimalFormat("0.##");
+		String ret = df.format(value / 10000.0f);
+		return ret + "万元";
+	}
+	
 	public static String formatCNY(double value) {
+		if (value == 0) {
+			return "0.00元";
+		}
+		
+		if (Math.abs(value) >= 1000000.0f) {
+			return formatTenThousandCNY(value);
+		}
+		
 		DecimalFormat df = new DecimalFormat("0.##");
 		String ret = df.format(value);
 		return ret + "元";
 	}
+	
+	public static int getRatioColor(int baseColor, int targetColor, float ratio) {
+		int alpha = (int) (Color.alpha(baseColor) + (Color.alpha(targetColor) - Color.alpha(baseColor)) * ratio);
+		int red = (int) (Color.red(baseColor) + (Color.red(targetColor) - Color.red(baseColor)) * ratio);
+		int green = (int) (Color.green(baseColor) + (Color.green(targetColor) - Color.green(baseColor)) * ratio);
+		int blue = (int) (Color.blue(baseColor) + (Color.blue(targetColor) - Color.blue(baseColor)) * ratio);
+		
+		return Color.argb(alpha, red, green, blue);
+	}
+
+
 }

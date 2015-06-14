@@ -10,9 +10,9 @@ package com.nan.ia.app.ui;
 import com.nan.ia.app.R;
 import com.nan.ia.app.biz.BizFacade;
 import com.nan.ia.app.constant.Constant;
+import com.nan.ia.app.dialog.LoadingDialog;
 import com.nan.ia.app.utils.Utils;
 import com.nan.ia.app.widget.FullLineEditControl;
-import com.nan.ia.app.widget.LoadingDialog;
 import com.nan.ia.common.constant.ServerErrorCode;
 import com.nan.ia.common.http.cmd.entities.ServerResponse;
 

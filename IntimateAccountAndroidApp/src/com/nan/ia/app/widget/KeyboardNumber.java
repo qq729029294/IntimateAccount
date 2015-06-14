@@ -101,6 +101,10 @@ public class KeyboardNumber extends RelativeLayout {
 		mListener = listener;
 	}
 	
+	public float getValue() {
+		return mCalculator.getCurrentValue();
+	}
+	
 	public static interface KeyboardNumberListener {
 		public void onValueChanged(String enterValue, double value);
 		public void onOKClicked(String enterValue, double value);

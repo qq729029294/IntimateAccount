@@ -11,9 +11,11 @@ import java.io.Serializable;
 
 import com.nan.ia.app.R;
 import com.nan.ia.app.biz.BizFacade;
-import com.nan.ia.app.widget.CustomToast;
+import com.nan.ia.app.dialog.CustomToast;
+import com.nan.ia.app.dialog.LoadingDialog;
+import com.nan.ia.app.widget.CustomCheckBox;
+import com.nan.ia.app.widget.CustomCheckBox.CustomCheckBoxListener;
 import com.nan.ia.app.widget.FullLineEditControl;
-import com.nan.ia.app.widget.LoadingDialog;
 import com.nan.ia.common.constant.ServerErrorCode;
 import com.nan.ia.common.http.cmd.entities.AccountLoginResponseData;
 import com.nan.ia.common.http.cmd.entities.ServerResponse;
@@ -27,19 +29,16 @@ import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 
 public class LoginActivity extends BaseActionBarActivity {
 	EditText mEditUsername = null;
 	EditText mEditPassword = null;
 	Button mBtnOK;
-	CheckBox mCkbShowPassword;
+	CustomCheckBox mCkbShowPassword;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +71,9 @@ public class LoginActivity extends BaseActionBarActivity {
 		});
 
 		// 显示密码
-		mCkbShowPassword = (CheckBox) findViewById(R.id.ckb_show_password);
-		mCkbShowPassword.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		mCkbShowPassword = (CustomCheckBox) findViewById(R.id.ckb_show_password);
+		mCkbShowPassword.setListener(new CustomCheckBoxListener() {
+			
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
@@ -88,18 +88,9 @@ public class LoginActivity extends BaseActionBarActivity {
 				}
 				
 				// 选择末尾的
-				mEditPassword.setSelection(mEditPassword.getText().length() - 1);
+				mEditPassword.setSelection(mEditPassword.getText().length());
 			}
 		});
-
-		findViewById(R.id.btn_show_password).setOnClickListener(
-				new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						mCkbShowPassword.setChecked(!mCkbShowPassword
-								.isChecked());
-					}
-				});
 
 		// 忘记密码？
 		findViewById(R.id.btn_retrieve_password).setOnClickListener(

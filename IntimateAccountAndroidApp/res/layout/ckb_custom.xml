@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/btn_check"
+    android:layout_width="wrap_content"
+    android:layout_height="32dp"
+    android:clickable="true"
+    android:orientation="horizontal" >
+
+    <CheckBox
+        android:id="@+id/ckb"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/selector_ckb_common"
+        android:button="@null"
+        android:checked="true"
+        android:clickable="false" />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:text="隐藏密码"
+        android:textColor="@drawable/selector_color_main_color_clickable"
+        android:textSize="16sp" />
+
+</LinearLayout>

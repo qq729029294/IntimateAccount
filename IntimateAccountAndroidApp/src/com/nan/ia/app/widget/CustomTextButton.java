@@ -11,6 +11,7 @@ import com.nan.ia.app.R;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.widget.TextView;
 
 public class CustomTextButton extends TextView {
@@ -38,5 +39,8 @@ public class CustomTextButton extends TextView {
 		this.setBackground(context.getResources().getDrawable(R.drawable.selector_drawable_white_clickable));
 		this.setTextSize(18);
 		this.setClickable(true);
+		this.setGravity(Gravity.CENTER);
+		int padding = (int) context.getResources().getDimension(R.dimen.padding);
+		this.setPadding(padding, 0, padding, 0);
 	};
 }

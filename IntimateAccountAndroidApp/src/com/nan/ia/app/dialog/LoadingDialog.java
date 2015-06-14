@@ -1,11 +1,11 @@
 /**
- * @ClassName:     CustomProgressBarDialog.java
+ * @ClassName:     LoadingDialog.java
  * @Description:   TODO(用一句话描述该文件做什么) 
  * 
  * @author         weijiangnan create on 2015年6月12日 
  */
 
-package com.nan.ia.app.widget;
+package com.nan.ia.app.dialog;
 
 import com.nan.ia.app.R;
 
@@ -13,6 +13,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.view.Gravity;
+import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,6 +25,9 @@ public class LoadingDialog extends Dialog {
 		super(context, R.style.FullScreenDialogTheme);
 
 		setContentView(R.layout.dialog_loading);
+		
+		// 弹出软键盘，布局不变
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 		
 		// 设置window属性，去掉背景
 		LayoutParams lp = getWindow().getAttributes();

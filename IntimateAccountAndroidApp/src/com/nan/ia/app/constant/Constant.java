@@ -6,9 +6,10 @@ public class Constant {
 	// 分类-收入
 	public static final String CATEGORY_INCOME = "收入";
 	
+	// 验证码长度
+	public static final int VF_CODE_LENGTH = 4;
 	// 默认创建账本的初始ID
 	public static final int DEFAULT_CREATE_ACCOUNT_BOOK_ID = -1;
-	
 	// 本地未登录账户ID
 	public static final int UNLOGIN_USER_ID = -1;
 	// 未登录账户

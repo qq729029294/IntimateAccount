@@ -20,6 +20,8 @@ import android.widget.EditText;
 
 import com.nan.ia.app.R;
 import com.nan.ia.app.biz.BizFacade;
+import com.nan.ia.app.biz.UpdateMarkHelper;
+import com.nan.ia.app.data.AppData;
 import com.nan.ia.app.widget.FullLineEditControl;
 import com.nan.ia.common.entities.AccountBook;
 
@@ -105,6 +107,10 @@ public class AccountBookEditActivity extends BaseActionBarActivity {
 		} else {
 			BizFacade.getInstance().editAccountBooksDetail(mTransData.getAccountBook().getAccountBookId(), name, description);
 		}
+		
+		// 更新标志，并重新加载数据
+		BizFacade.getInstance().markUpdate(UpdateMarkHelper.UPDATE_TYE_ACCOUNT_BOOK);
+		BizFacade.getInstance().reloadAccountBookInfo(AppData.getCreateAccountBookId());
 		
 		finish();
 	}

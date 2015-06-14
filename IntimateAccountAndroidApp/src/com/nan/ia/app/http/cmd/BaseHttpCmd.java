@@ -13,12 +13,12 @@ import org.apache.http.NameValuePair;
 
 import com.google.gson.Gson;
 import com.nan.ia.app.R;
+import com.nan.ia.app.dialog.CustomToast;
 import com.nan.ia.app.http.CustomHttpResponse;
 import com.nan.ia.app.http.HttpRequestHelper;
 import com.nan.ia.app.http.cmd.BaseHttpCmd.HttpCmdInfo.HttpMethod;
 import com.nan.ia.app.utils.LogUtils;
 import com.nan.ia.app.utils.MainThreadExecutor;
-import com.nan.ia.app.widget.CustomToast;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

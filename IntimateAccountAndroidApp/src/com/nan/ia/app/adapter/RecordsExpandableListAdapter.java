@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ public class RecordsExpandableListAdapter extends BaseExpandableListAdapter impl
     private Context mContext;
     private LayoutInflater mInflater;
     private ExpandableListView mListView;
+    private int mGroupBackgroudColor = Color.TRANSPARENT;
     
     private ArrayList<ListGroupRecord> mListGroupRecords = new ArrayList<ListGroupRecord>();
     private ArrayList<List<ListItemRecord>> mListItemRecordsList = new ArrayList<List<ListItemRecord>>();
@@ -50,6 +52,10 @@ public class RecordsExpandableListAdapter extends BaseExpandableListAdapter impl
         this.mContext = context;
         mInflater = LayoutInflater.from(context);
         mListView = listView;
+    }
+    
+    public void setGroupBackColor(int color) {
+    	mGroupBackgroudColor = color;
     }
     
     @SuppressWarnings("deprecation")
@@ -108,6 +114,15 @@ public class RecordsExpandableListAdapter extends BaseExpandableListAdapter impl
 			}
     		
     		mListItemRecordsList.get(mListItemRecordsList.size() - 1).add(item);
+		}
+    	
+    	// 没有数据，添加默认数据
+    	if (mListGroupRecords.size() == 0) {
+    		currentGroup = new ListGroupRecord();
+			currentGroup.setDate(new Date());
+			mListGroupRecords.add(currentGroup);
+			
+			mListItemRecordsList.add(new ArrayList<RecordsExpandableListAdapter.ListItemRecord>());
 		}
     }
 
@@ -286,13 +301,16 @@ public class RecordsExpandableListAdapter extends BaseExpandableListAdapter impl
 		View convertView = mInflater.inflate(R.layout.list_group_record, null);
 		GroupHolder groupHolder = new GroupHolder();
 		groupHolder.textMonth = (TextView) convertView.findViewById(R.id.text_month);
-		groupHolder.textDesc = (TextView) convertView.findViewById(R.id.text_desc);
-
+		groupHolder.textDateLast = (TextView) convertView.findViewById(R.id.text_date_last);
+		groupHolder.textDetails = (TextView) convertView.findViewById(R.id.text_details);
+		
 		convertView.setTag(groupHolder);
 		return convertView;
 	}
 	
 	private void updateGroupView(View convertView, int groupPosition) {
+		convertView.setBackgroundColor(mGroupBackgroudColor);
+		
 		GroupHolder groupHolder = (GroupHolder) convertView.getTag();
         ListGroupRecord group = (ListGroupRecord) getGroup(groupPosition);
         groupHolder.textMonth.setText(TimeUtils.dateFormatMM(group.getDate()));
@@ -302,25 +320,32 @@ public class RecordsExpandableListAdapter extends BaseExpandableListAdapter impl
         if (group.getDate().getYear() != new Date().getYear()) {
         	builder.append(group.getDate().getYear() + "年");
 		}
+        groupHolder.textDateLast.setText(builder.toString());
         
+        builder = new StringBuilder();
         if (group.getIncome() != 0.0f) {
-        	builder.append("，收" + Utils.formatCNY(group.getIncome()));
+        	builder.append("+" + Utils.formatCNY(group.getIncome()));
 		}
         
         if (group.getExpend() != 0.0f) {
-        	builder.append("，支" + Utils.formatCNY(group.getExpend()));
+        	if (builder.length() > 0) {
+        		builder.append("/");
+			}
+        	
+        	builder.append(Utils.formatCNY(group.getExpend()));
 		}
         
         if (group.getIncome() != 0.0f || group.getExpend() != 0.0f) {
         	builder.append("，结余" + Utils.formatCNY(group.getIncome() + group.getExpend()));
 		}
         
-        groupHolder.textDesc.setText(builder.toString());
+        groupHolder.textDetails.setText(builder.toString());
 	}
     
     public class GroupHolder {
     	TextView textMonth;
-    	TextView textDesc;
+    	TextView textDateLast;
+    	TextView textDetails;
     }
     
     public class ChildHolder {

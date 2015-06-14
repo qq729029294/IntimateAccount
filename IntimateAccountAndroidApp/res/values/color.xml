@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="main_color">#FF6699FF</color>
-    <color name="main_color_dark">#FF187CEB</color>
+
+    <color name="main_color_trans">#7F369DE0</color>
     <color name="main_color_lt">#FF88BBFF</color>
+    <color name="main_color">#FF3CA6E2</color>
+    <color name="main_color_dk">#FF1C85BD</color>
+    <color name="main_color_dkdk">#FF0066FF</color>
     <color name="white">#FFFFFFFF</color>
     <color name="white_transparent_press">#88FFFFFF</color>
     <color name="white_press">#33187CEB</color>
@@ -22,12 +25,15 @@
     <color name="blue_light_qn">#ffe6f1f5</color>
     <color name="blue_qn">#ff009cfe</color>
     <color name="click_marks">#33000000</color>
-    <color name="transparent">#00000000</color>
-    <color name="transparent_dark">#33000000</color>
-    <color name="expend_lt">#FFB0FFB0</color>
-    <color name="income_lt">#FFFFB0B0</color>
-    <color name="expend">#FF55B055</color>
-    <color name="income">#FFB05555</color>
+    <color name="trans">#00000000</color>
+    <color name="trans_dk">#33000000</color>
+    <color name="trans_dkdk">#66000000</color>
+    <color name="expend">#F555B055</color>
+    <color name="income">#F5B05555</color>
+    <color name="expend_lt">#F5B0FFB0</color>
+    <color name="income_lt">#F5FFB0B0</color>
+    <color name="expend_dk">#F500F000</color>
+    <color name="income_dk">#F5F00000</color>
     <color name="font_lt">#FF7E7E7E</color>
     <color name="font_ltlt">#FFAAAAAA</color>
     <color name="font_white_ltlt">#99ffffff</color>

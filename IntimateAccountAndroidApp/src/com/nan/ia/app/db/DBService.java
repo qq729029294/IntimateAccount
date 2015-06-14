@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.nan.ia.common.entities.AccountCategory;
 import com.nan.ia.common.entities.AccountRecord;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.style.UpdateAppearance;
 
 public class DBService {
 	private SQLiteDatabase mDatabase = null;
@@ -225,6 +225,33 @@ public class DBService {
 		cursor.close();
 		
 		return records;
+	}
+	
+	public double sumWaterValueByIdAndCategories(int accountBookId, List<AccountCategory> categories) {
+		double sum = 0;
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < categories.size(); i++) {
+			if (i != 0) {
+				sb.append(",");
+			}
+			
+			sb.append("\'" + categories.get(i).getCategory() + "\'");
+		}
+		
+		Cursor cursor = mDatabase
+				.rawQuery(
+						"SELECT SUM(water_value) FROM account_record_tbl WHERE"
+						+ " account_book_id = ?"
+						+ " AND category IN(" + sb.toString() + ")",
+						new String[] { String.valueOf(accountBookId) });
+		
+		while (cursor.moveToNext()) {
+			sum = cursor.getDouble(0);
+		}
+		
+		cursor.close();
+		
+		return sum;
 	}
 	
 	private int execOperateSQL(String sql) {
