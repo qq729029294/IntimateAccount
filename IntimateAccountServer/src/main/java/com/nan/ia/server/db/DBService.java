@@ -249,16 +249,14 @@ public class DBService {
 		Transaction trans = session.beginTransaction();
 		HibernateUtil.delete(session, deleteBookTbls);  // 删除账本
 		HibernateUtil.save(session, bookDeleteTbls);    // 保存删除账本记录
+		trans.commit();
 		
 		// 循环删除账本中的分类和账目
 		for (int i = 0; i < deleteBookTbls.size(); i++) {
-			int deleteBookId = deleteBookTbls.get(i)
-					.getAccountBookId();
+			int deleteBookId = deleteBookTbls.get(i).getAccountBookId();
 			deleteCategoryByAccountBookId(deleteBookId);
 			deleteAccountItemByAccountBookId(deleteBookId);
 		}
-		
-		trans.commit();
 		
 		return true;
 	}
@@ -523,12 +521,13 @@ public class DBService {
 	}
 
 	public boolean deleteCategoryByAccountBookId(int accountBookId) {
+		Session session = HibernateUtil.getSession();
+		Transaction trans = session.getTransaction();
+		
 		try {
-			Session session = HibernateUtil.getSession();
-			Transaction trans = session.beginTransaction();
-			
+			trans.begin();
 			Query query = session
-					.createQuery("DELETE FROM AccountCategoryTbl r WHERE r.accountBookId = ?");
+					.createQuery("DELETE FROM AccountCategoryTbl r WHERE r.id.accountBookId = ?");
 			query.setParameter(0, accountBookId);
 			query.executeUpdate();
 
@@ -536,6 +535,7 @@ public class DBService {
 			
 			return true;
 		} catch (Exception e) {
+			trans.rollback();
 			e.printStackTrace();
 		}
 
@@ -543,11 +543,13 @@ public class DBService {
 	}
 
 	public boolean deleteAccountItemByAccountBookId(int accountBookId) {
+		Session session = HibernateUtil.getSession();
+		Transaction trans = session.getTransaction();
+		
 		try {
-			Session session = HibernateUtil.getSession();
-			Transaction trans = session.beginTransaction();
+			trans.begin();
 			Query query = session
-					.createQuery("DELETE FROM AccountItemTbl r WHERE r.accountBookId = ?");
+					.createQuery("DELETE FROM AccountRecordTbl r WHERE r.accountBookId = ?");
 			query.setParameter(0, accountBookId);
 			query.executeUpdate();
 			
@@ -555,6 +557,7 @@ public class DBService {
 
 			return true;
 		} catch (Exception e) {
+			trans.rollback();
 			e.printStackTrace();
 		}
 
@@ -562,10 +565,11 @@ public class DBService {
 	}
 
 	public boolean insertAccountBookMember(int userId, int accountBookId) {
+		Session session = HibernateUtil.getSession();
+		Transaction trans = session.getTransaction();
+		
 		try {
-			Session session = HibernateUtil.getSession();
-			Transaction trans = session.beginTransaction();
-
+			trans.begin();
 			AccountBookMemberTbl tbl = new AccountBookMemberTbl();
 			AccountBookMemberTblId tblId = new AccountBookMemberTblId();
 			tblId.setMemberUserId(userId);
@@ -576,6 +580,7 @@ public class DBService {
 			trans.commit();
 			return true;
 		} catch (Exception e) {
+			trans.rollback();
 			e.printStackTrace();
 		}
 
@@ -583,9 +588,11 @@ public class DBService {
 	}
 
 	public boolean existUsername(String username) {
+		Session session = HibernateUtil.getSession();
+		Transaction trans = session.getTransaction();
+		
 		try {
-			Session session = HibernateUtil.getSession();
-			Transaction trans = session.beginTransaction();
+			trans.begin();
 			// 检查是否已经存在用户名
 			Query query = session
 					.createQuery("FROM AccountTbl r WHERE r.id.username = ?");
@@ -595,6 +602,7 @@ public class DBService {
 			
 			return size > 0;
 		} catch (Exception e) {
+			trans.rollback();
 			e.printStackTrace();
 		}
 
@@ -603,10 +611,11 @@ public class DBService {
 
 	@SuppressWarnings("unchecked")
 	public BoolResult<AccountTbl> getAccount(String username, int accountType) {
+		Session session = HibernateUtil.getSession();
+		Transaction trans = session.getTransaction();
+		
 		try {
-			Session session = HibernateUtil.getSession();
-			Transaction trans = session.beginTransaction();
-			
+			trans.begin();
 			// 检查是否已经存在用户名
 			Query query = session
 					.createQuery("FROM AccountTbl r WHERE r.id.username = ? AND r.id.accountType = ?");
@@ -622,6 +631,7 @@ public class DBService {
 				return BoolResult.True(null);
 			}
 		} catch (Exception e) {
+			trans.rollback();
 			e.printStackTrace();
 		}
 

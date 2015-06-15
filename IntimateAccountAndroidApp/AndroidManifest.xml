@@ -43,17 +43,23 @@
         
         <activity
             android:name=".ui.RegisterActivity"
-            android:label="@string/title_register" >
+            android:label="@string/title_register"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.nan.ia.app.register" >
         </activity>
         
         <activity
             android:name=".ui.VerifyVfCodeActivity"
-            android:label="@string/title_verify_vf_code" >
+            android:label="@string/title_verify_vf_code"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.nan.ia.app.register" >
         </activity>
         
         <activity
             android:name=".ui.CompleteRegisterActivity"
-            android:label="@string/title_complete_register" >
+            android:label="@string/title_complete_register"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.nan.ia.app.register" >
         </activity>
         
         <activity

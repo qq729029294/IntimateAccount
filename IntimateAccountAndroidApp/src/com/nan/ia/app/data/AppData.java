@@ -27,7 +27,7 @@ public class AppData {
 	// 应用数据
 	static boolean init = false;
 	static AccountInfo accountInfo = null;
-	static int createAccountBookId = Constant.DEFAULT_CREATE_ACCOUNT_BOOK_ID;
+	static int createAccountBookId = Constant.DEFAULT_ACCOUNT_BOOK_ID;
 	static int currentAccountBookId = -1;
 
 	static List<AccountBook> accountBooks = new ArrayList<AccountBook>();

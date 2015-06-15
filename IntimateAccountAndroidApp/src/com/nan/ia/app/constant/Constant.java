@@ -8,8 +8,10 @@ public class Constant {
 	
 	// 验证码长度
 	public static final int VF_CODE_LENGTH = 4;
+	// 空账本ID
+	public static final int NULL_ACCOUNT_BOOK_ID = -1;
 	// 默认创建账本的初始ID
-	public static final int DEFAULT_CREATE_ACCOUNT_BOOK_ID = -1;
+	public static final int DEFAULT_ACCOUNT_BOOK_ID = -2;
 	// 本地未登录账户ID
 	public static final int UNLOGIN_USER_ID = -1;
 	// 未登录账户

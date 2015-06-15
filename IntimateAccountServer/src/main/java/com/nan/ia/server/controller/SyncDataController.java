@@ -65,53 +65,64 @@ public class SyncDataController {
 		return response;
 	}
 	
-	public BoolResult<Map<Integer, Integer>> createNewBooks(SyncDataRequestData requestData ) {
+	public BoolResult<Map<Integer, Integer>> createNewBooks(
+			SyncDataRequestData requestData) {
 		DBService dbService = DBService.getInstance();
-		try {
-				// 插入新账本
-				BoolResult<Map<Integer, Integer>> resultBookIdMap = dbService
-						.insertBooks(requestData.getNewBooks());
-				if (resultBookIdMap.isFalse()) {
-					return BoolResult.False();
-				}
 
-				Map<Integer, Integer> newBookIdMap = resultBookIdMap.result();
-				// 添加账本的创建者为账本成员
-				for (int i = 0; null != requestData.getNewBooks() && i < requestData.getNewBooks().size(); i++) {
-					int accountBookId = requestData.getNewBooks().get(i).getAccountBookId();
-					if (newBookIdMap.containsKey(accountBookId)) {
-						// 如果是新建的，创建成员
-						if (!dbService.insertAccountBookMember(requestData.getNewBooks().get(i).getCreateUserId(),
-								newBookIdMap.get(accountBookId))) {
-							return BoolResult.False();
-						};
-					}
-				}
-				
-				// 替换分类的账本id
-				for (int i = 0; null != requestData.getNewCategories() && i < requestData.getNewCategories().size(); i++) {
-					int accountBookId = requestData.getNewCategories().get(i).getAccountBookId();
-					if (newBookIdMap.containsKey(accountBookId)) {
-						// 如果是需要替换的老账本id，替换为新的账本id
-						requestData.getNewCategories().get(i).setAccountBookId(newBookIdMap.get(accountBookId));
-					}
-				}
-				
-				// 替换记录的账本id
-				for (int i = 0; null != requestData.getNewRecords() && i < requestData.getNewRecords().size(); i++) {
-					int accountBookId = requestData.getNewRecords().get(i).getAccountBookId();
-					if (newBookIdMap.containsKey(accountBookId)) {
-						// 如果是需要替换的老账本id，替换为新的账本id
-						requestData.getNewRecords().get(i).setAccountBookId(newBookIdMap.get(accountBookId));
-					}
-				}
-				
-				return BoolResult.True(newBookIdMap);
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (requestData.getNewBooks() == null
+				|| requestData.getNewBooks().size() < 0) {
+			return BoolResult.True();
 		}
 
-		return BoolResult.False(null);	
+		// 插入新账本
+		BoolResult<Map<Integer, Integer>> resultBookIdMap = dbService
+				.insertBooks(requestData.getNewBooks());
+		if (resultBookIdMap.isFalse()) {
+			return BoolResult.False();
+		}
+
+		Map<Integer, Integer> newBookIdMap = resultBookIdMap.result();
+		// 添加账本的创建者为账本成员
+		for (int i = 0; null != requestData.getNewBooks()
+				&& i < requestData.getNewBooks().size(); i++) {
+			int accountBookId = requestData.getNewBooks().get(i)
+					.getAccountBookId();
+			if (newBookIdMap.containsKey(accountBookId)) {
+				// 如果是新建的，创建成员
+				if (!dbService.insertAccountBookMember(requestData
+						.getNewBooks().get(i).getCreateUserId(),
+						newBookIdMap.get(accountBookId))) {
+					return BoolResult.False();
+				}
+				;
+			}
+		}
+
+		// 替换分类的账本id
+		for (int i = 0; null != requestData.getNewCategories()
+				&& i < requestData.getNewCategories().size(); i++) {
+			int accountBookId = requestData.getNewCategories().get(i)
+					.getAccountBookId();
+			if (newBookIdMap.containsKey(accountBookId)) {
+				// 如果是需要替换的老账本id，替换为新的账本id
+				requestData.getNewCategories().get(i)
+						.setAccountBookId(newBookIdMap.get(accountBookId));
+			}
+		}
+
+		// 替换记录的账本id
+		for (int i = 0; null != requestData.getNewRecords()
+				&& i < requestData.getNewRecords().size(); i++) {
+			int accountBookId = requestData.getNewRecords().get(i)
+					.getAccountBookId();
+			if (newBookIdMap.containsKey(accountBookId)) {
+				// 如果是需要替换的老账本id，替换为新的账本id
+				requestData.getNewRecords().get(i)
+						.setAccountBookId(newBookIdMap.get(accountBookId));
+			}
+		}
+
+		return BoolResult.True(newBookIdMap);
 	}
 
 	public BoolResult<String> syncDataToDB(SyncDataRequestData requestData) {

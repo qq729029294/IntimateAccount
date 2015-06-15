@@ -83,8 +83,8 @@ public class MainActivity extends BaseActivity {
 	protected void onStart() {
 		if (mBizFacade.checkChange(Constant.CHANGE_TYE_CURRENT_ACCOUNT_BOOK, this.toString()) ||
 				mBizFacade.checkBookChange(AppData.getCurrentAccountBookId(), this.toString())) {
+			// 数据有变动
 			refreshUI();
-			
 			beginStartAnimation();
 		}
 		
@@ -277,8 +277,9 @@ public class MainActivity extends BaseActivity {
 			@Override
 			protected void onPostExecute(Integer result) {
 				MaskOperationDialog.hideMask();
-				
 				endLoadingAnimation();
+				
+				refreshUI();
 				beginDisplayAnimation();
 				super.onPostExecute(result);
 			}
@@ -286,6 +287,10 @@ public class MainActivity extends BaseActivity {
 	}
 	
 	private void refreshUI() {
+		// 标志已经更新
+		mBizFacade.checkChange(Constant.CHANGE_TYE_CURRENT_ACCOUNT_BOOK, this.toString());
+		mBizFacade.checkBookChange(AppData.getCurrentAccountBookId(), this.toString());
+		
 		AccountBookInfo accountBookInfo = mBizFacade.getAccountBookInfo(AppData
 				.getCurrentAccountBookId());
 

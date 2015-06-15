@@ -49,8 +49,17 @@ public class LoginActivity extends BaseActionBarActivity {
 	}
 
 	private void initUI() {
-		enableActionBarGo(getString(R.string.title_register), new Intent(
-				LoginActivity.this, RegisterActivity.class));
+		enableActionBarGo(getString(R.string.title_register), 
+				new Runnable() {
+					
+					@Override
+					public void run() {
+						Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);  
+						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+					    LoginActivity.this.startActivity(intent);
+					}
+				});
+		
 		mEditUsername = ((FullLineEditControl) findViewById(R.id.full_line_edit_control_username))
 				.getEditText();
 		mEditUsername.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS | InputType.TYPE_CLASS_TEXT);
@@ -152,7 +161,7 @@ public class LoginActivity extends BaseActionBarActivity {
 				LoadingDialog.hideLoading();
 				
 				if (result.getRet() == ServerErrorCode.RET_SUCCESS) {
-					startActivity(new Intent(LoginActivity.this, MainActivity.class));
+					LoginActivity.this.finish();
 				}
 				
 				super.onPostExecute(result);

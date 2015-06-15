@@ -65,14 +65,13 @@ public abstract class BaseActionBarActivity extends BaseActivity {
 	}
 
 	protected void enableActionBarGo(String text,
-			final Intent startActivityIntent) {
+			final Runnable runnable) {
 		mActionBar.enableGo(text, new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				if (null != startActivityIntent) {
-					BaseActionBarActivity.this
-							.startActivity(startActivityIntent);
+				if (null != runnable) {
+					runnable.run();
 				}
 			}
 		});

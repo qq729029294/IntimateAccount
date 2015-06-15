@@ -148,13 +148,13 @@ public class CompleteRegisterActivity extends BaseActionBarActivity {
 
 				CompleteRegisterActivity.this.finishAffinity();
 
-				LoginActivity.TransData toTransData = new LoginActivity.TransData();
-				toTransData.setUsername(mTtransData.getUsername());
-				toTransData.setPassword(mEditPassword.getText().toString());
-
-				Intent intent = new Intent(CompleteRegisterActivity.this,
-						LoginActivity.class);
-				startActivity(makeTransDataIntent(intent, toTransData));
+//				LoginActivity.TransData toTransData = new LoginActivity.TransData();
+//				toTransData.setUsername(mTtransData.getUsername());
+//				toTransData.setPassword(mEditPassword.getText().toString());
+//
+//				Intent intent = new Intent(CompleteRegisterActivity.this,
+//						LoginActivity.class);
+//				startActivity(makeTransDataIntent(intent, toTransData));
 
 				super.onPostExecute(result);
 			}

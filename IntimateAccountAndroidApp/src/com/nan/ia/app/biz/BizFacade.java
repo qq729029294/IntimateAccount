@@ -466,7 +466,7 @@ public class BizFacade {
 	}
 	
 	private boolean isLocalInvalidBook(int accountBookId) {
-		if (accountBookId == Constant.DEFAULT_CREATE_ACCOUNT_BOOK_ID) {
+		if (accountBookId == Constant.DEFAULT_ACCOUNT_BOOK_ID) {
 			// 是默认账本
 			if (DBService.getInstance(App.getInstance()).queryAccountCount(accountBookId) == 0) {
 				// 无效的账本
@@ -488,6 +488,16 @@ public class BizFacade {
 		}
 		List<AccountBook> serverBooks = pullAccountBooksResponse.getData().getBooks();
 		
+		// 计算默认账本是否有效账本
+		int invalidBookId = Constant.NULL_ACCOUNT_BOOK_ID;
+		if (getAccountBookById(Constant.DEFAULT_ACCOUNT_BOOK_ID) != null
+				&& isLocalInvalidBook(Constant.DEFAULT_ACCOUNT_BOOK_ID) 
+				&& serverBooks.size() > 0) {
+			// 本地默认账本是无效的账本
+			invalidBookId = Constant.DEFAULT_ACCOUNT_BOOK_ID;
+			
+		}
+		
 		// 获得需要同步的账本
 		List<AccountBook> newBooks = new ArrayList<AccountBook>();		// 新建账本
 		List<AccountBook> updateBooks = new ArrayList<AccountBook>();	// 更新账本
@@ -495,7 +505,7 @@ public class BizFacade {
 		for (int i = 0; i < AppData.getAccountBooks().size(); i++) {
 			AccountBook accountBook = AppData.getAccountBooks().get(i);
 			if (accountBook.getCreateTime().getTime() > lastSyncTime) {
-				if (isLocalInvalidBook(accountBook.getAccountBookId()) && serverBooks.size() > 0) {
+				if (invalidBookId == accountBook.getAccountBookId()) {
 					// 是本地无效账本，并且服务器上有账本，则不添加此账本
 					continue;
 				}
@@ -520,6 +530,11 @@ public class BizFacade {
 		for (int i = 0; i < AppData.getCategories().size(); i++) {
 			AccountCategory category = AppData.getCategories().get(i);
 			if (category.getCreateTime().getTime() > lastSyncTime) {
+				if (invalidBookId == category.getAccountBookId()) {
+					// 是本地无效账本，则不添加此账本的分类
+					continue;
+				}
+				
 				// 本地新建类别
 				newCategories.add(category);
 			} else if (category.getUpdateTime().getTime() > lastSyncTime) {
@@ -562,6 +577,21 @@ public class BizFacade {
 			// 如果当前账本是新账本，映射为新账本ID
 			if (responseData.getNewBookIdMap().containsKey(AppData.getCurrentAccountBookId())) {
 				AppData.setCurrentAccountBookId(responseData.getNewBookIdMap().get(AppData.getCurrentAccountBookId()));
+			}
+
+			boolean isValidBook = false;
+			// 当前账本是无效的账本，择选择第一个账本
+			for (int i = 0; i < AppData.getAccountBooks().size(); i++) {
+				if (AppData.getAccountBooks().get(i).getAccountBookId()
+						== AppData.getCurrentAccountBookId()) {
+					isValidBook = true;
+					break;
+				}
+			}
+			
+			if (!isValidBook) {
+				// 不是有效的，选择第一个
+				AppData.setCurrentAccountBookId(AppData.getAccountBooks().get(0).getAccountBookId());
 			}
 		}
 		
