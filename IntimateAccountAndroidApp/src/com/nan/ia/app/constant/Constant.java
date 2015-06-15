@@ -18,4 +18,7 @@ public class Constant {
 	public static final int ACCOUNT_TYPE_MAIL = 1;
 	// 手机用户
 	public static final int ACCOUNT_TYPE_PHONE = 2;
+	
+	// 变更标记
+	public static final String CHANGE_TYE_CURRENT_ACCOUNT_BOOK = "CHANGE_TYE_CURRENT_ACCOUNT_BOOK";
 }

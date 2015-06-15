@@ -43,8 +43,10 @@ public class DBService {
 	public int getUserCount() {
 		try {
 			String hqlString = "select count(*) from UserTbl";
+			Transaction trans = HibernateUtil.getSession().beginTransaction();
 			Query query = HibernateUtil.getSession().createQuery(hqlString);
-
+			trans.commit();
+			
 			return ((Number) query.uniqueResult()).intValue();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -63,7 +65,7 @@ public class DBService {
 			UserTbl userTbl = new UserTbl();
 			userTbl.setUserId(0);
 			// 默认信息
-			userTbl.setNickname("无名小辈");
+			userTbl.setNickname(username);
 			userTbl.setAvatar("http://p1.gexing.com/touxiang/2011-6/629344710201181462.jpg");
 			userTbl.setDescription("很懒哦，什么都没有留下~");
 			session.save(userTbl);
@@ -318,12 +320,14 @@ public class DBService {
 	public boolean checkUpdateBooks(int userId, long lastUpdateTime) {
 		try {
 			Session session = HibernateUtil.getSession();
+			Transaction trans = session.beginTransaction();
 			// 检查原表是否有更新
 			Query query = session
 					.createQuery("FROM AccountBookTbl r, AccountBookMemberTbl s WHERE s.id.memberUserId = ? AND r.accountBookId = s.id.accountBookId AND r.updateTime > ?");
 			query.setParameter(0, userId);
 			query.setParameter(1, new Date(lastUpdateTime));
 			if (query.list().size() > 0) {
+				trans.commit();
 				return true;
 			}
 
@@ -332,10 +336,13 @@ public class DBService {
 					.createQuery("FROM AccountBookTbl r, AccountBookMemberTbl s, AccountBookDeleteTbl t WHERE s.id.memberUserId = ? AND r.accountBookId = s.id.accountBookId AND s.id.accountBookId = t.accountBookId AND t.deleteTime > ?");
 			query.setParameter(0, userId);
 			query.setParameter(1, new Date(lastUpdateTime));
+			
 			if (query.list().size() > 0) {
+				trans.commit();
 				return true;
 			}
-
+			
+			trans.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -351,12 +358,15 @@ public class DBService {
 	public boolean checkUpdateCategories(int userId, long lastUpdateTime) {
 		try {
 			Session session = HibernateUtil.getSession();
+			Transaction trans = session.beginTransaction();
+			
 			// 检查原表是否有更新
 			Query query = session
 					.createQuery("FROM AccountCategoryTbl r, AccountBookMemberTbl s WHERE s.id.memberUserId = ? AND r.id.accountBookId = s.id.accountBookId AND r.updateTime > ?");
 			query.setParameter(0, userId);
 			query.setParameter(1, new Date(lastUpdateTime));
 			if (query.list().size() > 0) {
+				trans.commit();
 				return true;
 			}
 
@@ -366,9 +376,11 @@ public class DBService {
 			query.setParameter(0, userId);
 			query.setParameter(1, new Date(lastUpdateTime));
 			if (query.list().size() > 0) {
+				trans.commit();
 				return true;
 			}
 
+			trans.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -386,10 +398,12 @@ public class DBService {
 		List<AccountBookTbl> accountBookTbls = new ArrayList<AccountBookTbl>();
 		try {
 			Session session = HibernateUtil.getSession();
+			Transaction trans = session.beginTransaction();
 			Query query = session
 					.createQuery("SELECT r FROM AccountBookTbl r, AccountBookMemberTbl s WHERE s.id.memberUserId = ? AND r.accountBookId = s.id.accountBookId");
 			query.setParameter(0, userId);
 			accountBookTbls.addAll(query.list());
+			trans.commit();
 
 			return BoolResult.True(accountBookTbls);
 		} catch (Exception e) {
@@ -409,11 +423,13 @@ public class DBService {
 		List<AccountCategoryTbl> categoryTbls = new ArrayList<AccountCategoryTbl>();
 		try {
 			Session session = HibernateUtil.getSession();
+			Transaction trans = session.beginTransaction();
 			Query query = session
 					.createQuery("SELECT r FROM AccountCategoryTbl r, AccountBookMemberTbl s WHERE s.id.memberUserId = ? AND r.id.accountBookId = s.id.accountBookId");
 			query.setParameter(0, userId);
 			categoryTbls.addAll(query.list());
-
+			trans.commit();
+			
 			return BoolResult.True(categoryTbls);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -432,12 +448,16 @@ public class DBService {
 		List<AccountRecordTbl> recordTbls = new ArrayList<AccountRecordTbl>();
 		try {
 			Session session = HibernateUtil.getSession();
+			Transaction trans = session.beginTransaction();
+			
 			Query query = session
 					.createQuery("SELECT r FROM AccountRecordTbl r, AccountBookMemberTbl s WHERE s.id.memberUserId = ? AND r.id.accountBookId = s.id.accountBookId AND r.createTime > ?");
 			query.setParameter(0, userId);
 			query.setParameter(1, new Date(lastCreateTime));
 			recordTbls.addAll(query.list());
 
+			trans.commit();
+			
 			return BoolResult.True(recordTbls);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -456,6 +476,8 @@ public class DBService {
 		List<AccountRecordTbl> recordTbls = new ArrayList<AccountRecordTbl>();
 		try {
 			Session session = HibernateUtil.getSession();
+			Transaction trans = session.beginTransaction();
+			
 			Query query = session
 					.createQuery("SELECT r FROM AccountRecordTbl r, AccountBookMemberTbl s WHERE s.id.memberUserId = ? AND r.id.accountBookId = s.id.accountBookId AND r.createTime < ? AND r.updateTime > ?");
 			query.setParameter(0, userId);
@@ -463,6 +485,8 @@ public class DBService {
 			query.setParameter(2, new Date(lastUpdateTime));
 			recordTbls.addAll(query.list());
 
+			trans.commit();
+			
 			return BoolResult.True(recordTbls);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -481,6 +505,8 @@ public class DBService {
 		List<Integer> deleteRecordIds = new ArrayList<Integer>();
 		try {
 			Session session = HibernateUtil.getSession();
+			Transaction trans = session.beginTransaction();
+			
 			Query query = session
 					.createQuery("SELECT r.accountRecordId FROM AccountRecordDeleteTbl r, AccountBookMemberTbl s WHERE s.id.memberUserId = ? AND r.accountBookId = s.id.accountBookId AND r.createTime < ? AND r.deleteTime > ?");
 			query.setParameter(0, userId);
@@ -488,6 +514,8 @@ public class DBService {
 			query.setParameter(2, new Date(lastDeleteTime));
 			deleteRecordIds.addAll(query.list());
 
+			trans.commit();
+			
 			return BoolResult.True(deleteRecordIds);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -499,11 +527,15 @@ public class DBService {
 	public boolean deleteCategoryByAccountBookId(int accountBookId) {
 		try {
 			Session session = HibernateUtil.getSession();
+			Transaction trans = session.beginTransaction();
+			
 			Query query = session
 					.createQuery("DELETE FROM AccountCategoryTbl r WHERE r.accountBookId = ?");
 			query.setParameter(0, accountBookId);
 			query.executeUpdate();
 
+			trans.commit();
+			
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -515,10 +547,13 @@ public class DBService {
 	public boolean deleteAccountItemByAccountBookId(int accountBookId) {
 		try {
 			Session session = HibernateUtil.getSession();
+			Transaction trans = session.beginTransaction();
 			Query query = session
 					.createQuery("DELETE FROM AccountItemTbl r WHERE r.accountBookId = ?");
 			query.setParameter(0, accountBookId);
 			query.executeUpdate();
+			
+			trans.commit();
 
 			return true;
 		} catch (Exception e) {
@@ -552,15 +587,15 @@ public class DBService {
 	public boolean existUsername(String username) {
 		try {
 			Session session = HibernateUtil.getSession();
+			Transaction trans = session.beginTransaction();
 			// 检查是否已经存在用户名
 			Query query = session
 					.createQuery("FROM AccountTbl r WHERE r.id.username = ?");
 			query.setParameter(0, username);
-			if (query.list().size() > 0) {
-				return true;
-			}
-			;
-
+			int size = query.list().size();
+			trans.commit();
+			
+			return size > 0;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -572,6 +607,8 @@ public class DBService {
 	public BoolResult<AccountTbl> getAccount(String username, int accountType) {
 		try {
 			Session session = HibernateUtil.getSession();
+			Transaction trans = session.beginTransaction();
+			
 			// 检查是否已经存在用户名
 			Query query = session
 					.createQuery("FROM AccountTbl r WHERE r.id.username = ? AND r.id.accountType = ?");
@@ -579,6 +616,8 @@ public class DBService {
 			query.setParameter(1, accountType);
 
 			List<AccountTbl> tbls = query.list();
+			trans.commit();
+			
 			if (tbls.size() == 1) {
 				return BoolResult.True(tbls.get(0));
 			} else {
@@ -614,12 +653,16 @@ public class DBService {
 	public BoolResult<UserTbl> getUser(int userId) {
 		try {
 			Session session = HibernateUtil.getSession();
+			Transaction trans = session.beginTransaction();
+			
 			// 检查是否已经存在用户名
 			Query query = session
 					.createQuery("FROM UserTbl r WHERE r.userId = ?");
 			query.setParameter(0, userId);
 
 			List<UserTbl> tbls = query.list();
+			trans.commit();
+			
 			if (tbls.size() == 1) {
 				return BoolResult.True(tbls.get(0));
 			} else {

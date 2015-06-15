@@ -22,7 +22,6 @@ import android.widget.Scroller;
 import com.nan.ia.app.R;
 import com.nan.ia.app.adapter.AccountBookAdapter;
 import com.nan.ia.app.biz.BizFacade;
-import com.nan.ia.app.biz.UpdateMarkHelper;
 import com.nan.ia.app.data.AppData;
 import com.nan.ia.app.dialog.CustomToast;
 import com.nan.ia.app.ui.AccountBookEditActivity.Type;
@@ -66,6 +65,7 @@ public class AccountBookActivity extends BaseActionBarActivity {
 						.getItem(position);
 				BizFacade.getInstance().setCurrentAccountBook(
 						accountBook.getAccountBookId());
+
 				finish();
 			}
 		});
@@ -180,9 +180,6 @@ public class AccountBookActivity extends BaseActionBarActivity {
 					@Override
 					public void onClick(View v) {
 						BizFacade.getInstance().deleteAccountBook(accountBook.getAccountBookId());
-						// 更新标志，并重新加载数据
-						BizFacade.getInstance().markUpdate(UpdateMarkHelper.UPDATE_TYE_ACCOUNT_BOOK);
-						BizFacade.getInstance().reloadAccountBookInfo(AppData.getCreateAccountBookId());
 
 						dialogBuilder.dismiss();
 						mAdapter.notifyDataSetChanged();

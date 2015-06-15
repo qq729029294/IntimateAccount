@@ -165,6 +165,9 @@ public class BizFacade {
 	
 	public void setCurrentAccountBook(int accountBookId) {
 		AppData.setCurrentAccountBookId(accountBookId);
+		
+		// 标志更新
+		markChange(Constant.CHANGE_TYE_CURRENT_ACCOUNT_BOOK);
 	}
 	
 	public List<AccountBook> getAccountBooks() {
@@ -235,6 +238,9 @@ public class BizFacade {
 			AppData.setAccountBooks(AppData.getAccountBooks());
 		}
 		
+		// 更新标志
+		markBookChange(accountBookId);
+		
 		return accountBook;
 	}
 	
@@ -261,7 +267,19 @@ public class BizFacade {
 		}
 	}
 	
+	public boolean checkBookChange(int accountBookId, String checker) {
+		return checkChange("Book" + accountBookId, checker);
+	}
+	
+	public void markBookChange(int accountBookId) {
+		markChange("Book" + accountBookId);
+	}
+	
 	public AccountBookInfo getAccountBookInfo(int accountBookId) {
+		if (checkBookChange(accountBookId, "getAccountBookInfo")) {
+			reloadAccountBookInfo(accountBookId);
+		}
+		
 		if (!AppData.getBookInfoCache().containsKey(accountBookId)) {
 			reloadAccountBookInfo(accountBookId);
 		}
@@ -409,21 +427,22 @@ public class BizFacade {
 	public void createAccountRecord(AccountRecord record) {
 		DBService.getInstance(App.getInstance()).createAccountRecord(record);
 		
-		markUpdate(UpdateMarkHelper.UPDATE_TYE_RECORD);
-		reloadAccountBookInfo(record.getAccountBookId());
+		// 更新标志
+		markBookChange(record.getAccountBookId());
 	}
 
 	public void editAccountRecord(AccountRecord record) {
 		DBService.getInstance(App.getInstance()).updateAccountRecord(record);
 		
-		markUpdate(UpdateMarkHelper.UPDATE_TYE_RECORD);
-		reloadAccountBookInfo(record.getAccountBookId());
+		// 更新标志
+		markBookChange(record.getAccountBookId());
 	}
 	
 	public void deleteAccountRecord(int accountRecordId) {
 		DBService.getInstance(App.getInstance()).deleteAccountRecord(accountRecordId);
 		
-		markUpdate(UpdateMarkHelper.UPDATE_TYE_RECORD);
+		// 更新标志
+		markBookChange(accountRecordId);
 	}
 	
 	// 重新加载数据
@@ -528,11 +547,18 @@ public class BizFacade {
 			dbService.deleteAccountRecords(responseData.getDeleteRecordIds());
 		}
 		
+		// 如果账本数大于1，并且默认生成账本没有数据，删除默认账本
+		
 		// 更新最后更新时间
 		AppData.setLastSyncDataLocalTime(System.currentTimeMillis());
 		AppData.setLastSyncDataTime(responseData.getLastSyncDataTime());
 		
 		AppData.endStore();
+		
+		// 标志更新
+		for (int i = 0; i < AppData.getAccountBooks().size(); i++) {
+			markBookChange(AppData.getAccountBooks().get(i).getAccountBookId());
+		}
 	}
 	
 	// 同步服务器数据
@@ -682,12 +708,12 @@ public class BizFacade {
 		DBService.getInstance(App.getInstance()).updateAccountRecordsUserId(oldUserId, newUserId);
 	}
 	
-	public void markUpdate(String updateType) {
-		UpdateMarkHelper.markUpdate(updateType);
+	public void markChange(String changeType) {
+		ChangeMarkHelper.markChange(changeType);
 	}
 	
-	public boolean checkNeedUpdate(String updateType, String updater) {
-		return UpdateMarkHelper.checkNeedUpdate(updateType, updater);
+	public boolean checkChange(String changeType, String checker) {
+		return ChangeMarkHelper.checkChange(changeType, checker);
 	}
 	
 	public boolean checkLogin(final Activity activity) {

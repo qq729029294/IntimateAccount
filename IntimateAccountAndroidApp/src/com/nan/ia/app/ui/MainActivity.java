@@ -32,7 +32,6 @@ import com.nan.ia.app.R;
 import com.nan.ia.app.adapter.RecordsExpandableListAdapter;
 import com.nan.ia.app.adapter.RecordsExpandableListAdapter.ListItemRecord;
 import com.nan.ia.app.biz.BizFacade;
-import com.nan.ia.app.biz.UpdateMarkHelper;
 import com.nan.ia.app.constant.Constant;
 import com.nan.ia.app.data.AppData;
 import com.nan.ia.app.dialog.CustomToast;
@@ -81,9 +80,13 @@ public class MainActivity extends BaseActivity {
 	
 	@Override
 	protected void onStart() {
-		refreshData();
-		
-		beginStartAnimation();
+		if (mBizFacade.checkChange(Constant.CHANGE_TYE_CURRENT_ACCOUNT_BOOK, this.toString()) ||
+				mBizFacade.checkBookChange(AppData.getCurrentAccountBookId(), this.toString())) {
+			refreshUI();
+			
+			beginStartAnimation();
+			return;
+		}
 		
 		super.onStart();
 	}
@@ -291,77 +294,71 @@ public class MainActivity extends BaseActivity {
 		}.execute(0);
 	}
 	
-	private void refreshData() {
-		AccountBookInfo accountBookInfo = mBizFacade.getAccountBookInfo(AppData.getCurrentAccountBookId());
-		
-		if (mBizFacade.checkNeedUpdate(UpdateMarkHelper.UPDATE_TYE_RECORD, this.toString())) {
-			mRatioCircleMain.clearItems();
-			
-			double income = accountBookInfo.getStatisticalInfo().getIncome();
-			double expend = accountBookInfo.getStatisticalInfo().getExpend();
-			double denominator = Math.max(Math.abs(income), Math.abs(expend));
-			
-			mTextIncome.setVisibility((income == 0) ? View.GONE : View.VISIBLE);
-			mTextExpend.setVisibility((expend == 0) ? View.GONE : View.VISIBLE);
-			
-			if (denominator == 0) {
-				// 为空，给一个相等值
-				income = 1.0f;
-				expend = -1.0f;
-				denominator = 1.0f;
-			}
-			
-//			mRatioCircleMain.addItem((float) (income / denominator), getResources().getColor(R.color.income_lt));
-//	        mRatioCircleMain.addItem((float) (-expend / denominator), getResources().getColor(R.color.expend_lt));
-			mRatioCircleMain.addItem((float) (income / denominator), getResources().getColor(R.color.white));
-	        mRatioCircleMain.addItem((float) (-expend / denominator), getResources().getColor(R.color.white));
-	        
-			// 刷新记录ListView数据
-			mAdapter.setData(mBizFacade.getMoreAccountRecords(AppData.getCurrentAccountBookId(),
-					System.currentTimeMillis()));
-			mAdapter.notifyDataSetChanged();
-			
-	        // 展开所有group
-			mListViewRecords.post(new Runnable() {
-				
-				@Override
-				public void run() {
-			        for (int i = 0, count = mAdapter.getGroupCount(); i < count; i++) {
-			        	mListViewRecords.expandGroup(i);
-			        }
+	private void refreshUI() {
+		AccountBookInfo accountBookInfo = mBizFacade.getAccountBookInfo(AppData
+				.getCurrentAccountBookId());
+
+		mRatioCircleMain.clearItems();
+		double income = accountBookInfo.getStatisticalInfo().getIncome();
+		double expend = accountBookInfo.getStatisticalInfo().getExpend();
+		double denominator = Math.max(Math.abs(income), Math.abs(expend));
+
+		mTextIncome.setVisibility((income == 0) ? View.GONE : View.VISIBLE);
+		mTextExpend.setVisibility((expend == 0) ? View.GONE : View.VISIBLE);
+
+		if (denominator == 0) {
+			// 为空，给一个相等值
+			income = 1.0f;
+			expend = -1.0f;
+			denominator = 1.0f;
+		}
+
+		mRatioCircleMain.addItem((float) (income / denominator), getResources()
+				.getColor(R.color.white));
+		mRatioCircleMain.addItem((float) (-expend / denominator),
+				getResources().getColor(R.color.white));
+
+		// 刷新记录ListView数据
+		mAdapter.setData(mBizFacade.getMoreAccountRecords(
+				AppData.getCurrentAccountBookId(), System.currentTimeMillis()));
+		mAdapter.notifyDataSetChanged();
+
+		// 展开所有group
+		mListViewRecords.post(new Runnable() {
+
+			@Override
+			public void run() {
+				for (int i = 0, count = mAdapter.getGroupCount(); i < count; i++) {
+					mListViewRecords.expandGroup(i);
 				}
-			});
-		}
-        
-		if (mBizFacade.checkNeedUpdate(UpdateMarkHelper.UPDATE_TYE_ACCOUNT_BOOK, this.toString())) {
-			// 刷新title
-			mBtnAccountBookSettings.setText(mBizFacade.getAccountBookById(AppData.getCurrentAccountBookId()).getName());
-		}
+			}
+		});
+		
+		// 刷新title
+		mBtnAccountBookSettings.setText(mBizFacade.getAccountBookById(
+				AppData.getCurrentAccountBookId()).getName());
 	}
 	
 	private void beginStartAnimation() {
-		if (mBizFacade.checkNeedUpdate(UpdateMarkHelper.UPDATE_TYE_RECORD,
-				"beginDisplayAnimation")) {
-			// 开始加载动画
-			mRatioCircleMain.postDelayed(new Runnable() {
+		// 开始加载动画
+		mRatioCircleMain.postDelayed(new Runnable() {
 
-				@Override
-				public void run() {
-					beginLoadingAnimation();
+			@Override
+			public void run() {
+				beginLoadingAnimation();
 
-					mRatioCircleMain.postDelayed(new Runnable() {
+				mRatioCircleMain.postDelayed(new Runnable() {
 
-						@Override
-						public void run() {
-							endLoadingAnimation();
-
-							// 开始展示动画
-							beginDisplayAnimation();
-						}
-					}, MIN_LOADING_DURATION);
-				}
-			}, DISPLAY_ANIMATION_DELAY);
-		}
+					@Override
+					public void run() {
+						endLoadingAnimation();
+						
+						// 开始展示动画
+						beginDisplayAnimation();
+					}
+				}, MIN_LOADING_DURATION);
+			}
+		}, DISPLAY_ANIMATION_DELAY);
 	}
 	
 	private void beginLoadingAnimation() {

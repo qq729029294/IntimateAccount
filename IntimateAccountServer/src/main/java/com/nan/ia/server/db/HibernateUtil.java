@@ -32,12 +32,12 @@ public class HibernateUtil {
     }
     
     public static Session getSession() {
-//    	Session session = getSessionFactory().getCurrentSession();
-//    	if (null != session) {
-//			return session;
-//		}
+    	Session session = getSessionFactory().getCurrentSession();
+    	if (null != session) {
+			return session;
+		}
 //    	
-    	Session session = getSessionFactory().openSession();
+    	session = getSessionFactory().openSession();
     	
     	return session;
     }

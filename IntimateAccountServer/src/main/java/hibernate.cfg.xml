@@ -4,6 +4,7 @@
 <hibernate-configuration>
 	<session-factory>
 		<property name="show_sql">true</property>
+		<property name="hibernate.current_session_context_class">thread</property>
 		<mapping class="com.nan.ia.server.db.entities.UserTbl" />
 		<mapping class="com.nan.ia.server.db.entities.AccountBookDeleteTbl" />
 		<mapping class="com.nan.ia.server.db.entities.AccountBookMemberTbl" />
