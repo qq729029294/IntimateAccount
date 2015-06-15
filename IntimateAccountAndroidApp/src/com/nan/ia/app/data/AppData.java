@@ -109,6 +109,8 @@ public class AppData {
 
 	public static void setLastSyncDataTime(long lastSyncDataTime) {
 		AppData.lastSyncDataTime = lastSyncDataTime;
+		
+		new Storage("lastSyncDataTime").store();
 	}
 
 	public static long getLastSyncDataLocalTime() {

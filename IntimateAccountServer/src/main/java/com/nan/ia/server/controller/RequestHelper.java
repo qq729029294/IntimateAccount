@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.google.gson.Gson;
 import com.nan.ia.common.constant.ServerErrorCode;
 import com.nan.ia.common.http.cmd.entities.EmptyRequestData;
+import com.nan.ia.common.http.cmd.entities.NullResponseData;
 import com.nan.ia.common.http.cmd.entities.ServerResponse;
 import com.nan.ia.common.utils.BoolResult;
 
@@ -84,7 +85,7 @@ public class RequestHelper {
 	 * @return
 	 */
 	public static String responseSuccess() {
-		ServerResponse<Object> response = new ServerResponse<Object>();
+		ServerResponse<NullResponseData> response = new ServerResponse<NullResponseData>();
 		response.setRet(ServerErrorCode.RET_SUCCESS);
 		String errMsg = "请求成功";
 		response.setErrMsg(errMsg);

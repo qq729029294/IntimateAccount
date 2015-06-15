@@ -155,6 +155,17 @@ public class DBService {
 		return records;
 	}
 	
+	public int queryAccountCount(int accountBookId) {
+		Cursor cursor = mDatabase
+				.rawQuery(
+						"SELECT * FROM account_record_tbl WHERE account_book_id = ?",
+						new String[] { String.valueOf(accountBookId) });
+		int count = cursor.getCount();
+		cursor.close();
+		
+		return count;
+	}
+	
 	public List<AccountRecord> queryNewAccountRecords(long lastSyncTime) {
 		Cursor cursor = mDatabase
 				.rawQuery(

@@ -62,7 +62,7 @@ public class BaseActivity extends FragmentActivity {
 		super.onDestroy();
 	}
 	
-	public Intent createTransDataIntent(Intent intent, Serializable transData) {
+	public static Intent makeTransDataIntent(Intent intent, Serializable transData) {
 		if (null == intent) {
 			return null;
 		}

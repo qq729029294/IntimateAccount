@@ -31,6 +31,7 @@ import com.nan.ia.app.widget.CustomCheckBox;
 import com.nan.ia.app.widget.FullLineEditControl;
 import com.nan.ia.app.widget.CustomCheckBox.CustomCheckBoxListener;
 import com.nan.ia.common.constant.ServerErrorCode;
+import com.nan.ia.common.http.cmd.entities.NullResponseData;
 import com.nan.ia.common.http.cmd.entities.ServerResponse;
 
 public class CompleteRegisterActivity extends BaseActionBarActivity {
@@ -128,10 +129,10 @@ public class CompleteRegisterActivity extends BaseActionBarActivity {
 			return;
 		}
 
-		new AsyncTask<Integer, Integer, ServerResponse<Object>>() {
+		new AsyncTask<Integer, Integer, ServerResponse<NullResponseData>>() {
 
 			@Override
-			protected ServerResponse<Object> doInBackground(Integer... params) {
+			protected ServerResponse<NullResponseData> doInBackground(Integer... params) {
 				return BizFacade.getInstance().register(
 						CompleteRegisterActivity.this,
 						mTtransData.getUsername(),
@@ -140,7 +141,7 @@ public class CompleteRegisterActivity extends BaseActionBarActivity {
 			}
 
 			@Override
-			protected void onPostExecute(ServerResponse<Object> result) {
+			protected void onPostExecute(ServerResponse<NullResponseData> result) {
 				if (result.getRet() != ServerErrorCode.RET_SUCCESS) {
 					return;
 				}
@@ -153,7 +154,7 @@ public class CompleteRegisterActivity extends BaseActionBarActivity {
 
 				Intent intent = new Intent(CompleteRegisterActivity.this,
 						LoginActivity.class);
-				startActivity(createTransDataIntent(intent, toTransData));
+				startActivity(makeTransDataIntent(intent, toTransData));
 
 				super.onPostExecute(result);
 			}

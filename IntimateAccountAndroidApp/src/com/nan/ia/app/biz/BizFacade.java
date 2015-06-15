@@ -20,11 +20,15 @@ import com.nan.ia.app.entities.AccountBookStatisticalInfo;
 import com.nan.ia.app.entities.AccountBookInfo;
 import com.nan.ia.app.entities.AccountInfo;
 import com.nan.ia.app.http.cmd.server.AccountLoginServerCmd;
+import com.nan.ia.app.http.cmd.server.PullAccountBooksServerCmd;
 import com.nan.ia.app.http.cmd.server.RegisterServerCmd;
 import com.nan.ia.app.http.cmd.server.SyncDataServerCmd;
 import com.nan.ia.app.http.cmd.server.VerifyMailServerCmd;
 import com.nan.ia.app.http.cmd.server.VerifyVfCodeServerCmd;
+import com.nan.ia.app.ui.AccountBookEditActivity;
 import com.nan.ia.app.ui.LoginActivity;
+import com.nan.ia.app.ui.AccountBookEditActivity.Type;
+import com.nan.ia.app.utils.MainThreadExecutor;
 import com.nan.ia.app.utils.Utils;
 import com.nan.ia.app.widget.CustomDialogBuilder;
 import com.nan.ia.common.constant.ServerErrorCode;
@@ -33,12 +37,16 @@ import com.nan.ia.common.entities.AccountCategory;
 import com.nan.ia.common.entities.AccountRecord;
 import com.nan.ia.common.http.cmd.entities.AccountLoginRequestData;
 import com.nan.ia.common.http.cmd.entities.AccountLoginResponseData;
+import com.nan.ia.common.http.cmd.entities.NullResponseData;
+import com.nan.ia.common.http.cmd.entities.PullAccountBooksRequestData;
+import com.nan.ia.common.http.cmd.entities.PullAccountBooksResponseData;
 import com.nan.ia.common.http.cmd.entities.RegisterRequestData;
 import com.nan.ia.common.http.cmd.entities.ServerResponse;
 import com.nan.ia.common.http.cmd.entities.SyncDataRequestData;
 import com.nan.ia.common.http.cmd.entities.SyncDataResponseData;
 import com.nan.ia.common.http.cmd.entities.VerifyMailRequestData;
 import com.nan.ia.common.http.cmd.entities.VerifyVfCodeRequestData;
+import com.nan.ia.common.utils.BoolResult;
 
 public class BizFacade {
 
@@ -457,9 +465,28 @@ public class BizFacade {
 		
 	}
 	
-	private SyncDataRequestData buildSyncDataRequestData() {
+	private boolean isLocalInvalidBook(int accountBookId) {
+		if (accountBookId == Constant.DEFAULT_CREATE_ACCOUNT_BOOK_ID) {
+			// 是默认账本
+			if (DBService.getInstance(App.getInstance()).queryAccountCount(accountBookId) == 0) {
+				// 无效的账本
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private BoolResult<SyncDataRequestData> buildSyncDataRequestData(Context context) {
 		DBService dbService = DBService.getInstance(App.getInstance());
 		long lastSyncTime = AppData.getLastSyncDataLocalTime();
+		
+		// 拉取服务器账本
+		ServerResponse<PullAccountBooksResponseData> pullAccountBooksResponse = pullAccountBooks(context);
+		if (pullAccountBooksResponse.getRet() != ServerErrorCode.RET_SUCCESS) {
+			return BoolResult.False();
+		}
+		List<AccountBook> serverBooks = pullAccountBooksResponse.getData().getBooks();
 		
 		// 获得需要同步的账本
 		List<AccountBook> newBooks = new ArrayList<AccountBook>();		// 新建账本
@@ -468,12 +495,22 @@ public class BizFacade {
 		for (int i = 0; i < AppData.getAccountBooks().size(); i++) {
 			AccountBook accountBook = AppData.getAccountBooks().get(i);
 			if (accountBook.getCreateTime().getTime() > lastSyncTime) {
+				if (isLocalInvalidBook(accountBook.getAccountBookId()) && serverBooks.size() > 0) {
+					// 是本地无效账本，并且服务器上有账本，则不添加此账本
+					continue;
+				}
+				
 				// 本地新建的账本
 				newBooks.add(accountBook);
 			} else if (accountBook.getUpdateTime().getTime() > lastSyncTime) {
 				// 更新的装备
 				updateBooks.add(accountBook);
 			}
+		}
+		
+		// 检查本地账本与服务器重名问题
+		if (checkDupliBookNameWithServer(context, newBooks, serverBooks)) {
+			return BoolResult.False();
 		}
 		
 		// 获得需要同步的类别数据
@@ -509,7 +546,7 @@ public class BizFacade {
 		requestData.setUpdateRecords(updateRecords);
 		requestData.setDeleteRecords(deleteRecords);
 		
-		return requestData;
+		return BoolResult.True(requestData);
 	}
 	
 	public void syncDataFromServer(SyncDataResponseData responseData) {
@@ -547,8 +584,6 @@ public class BizFacade {
 			dbService.deleteAccountRecords(responseData.getDeleteRecordIds());
 		}
 		
-		// 如果账本数大于1，并且默认生成账本没有数据，删除默认账本
-		
 		// 更新最后更新时间
 		AppData.setLastSyncDataLocalTime(System.currentTimeMillis());
 		AppData.setLastSyncDataTime(responseData.getLastSyncDataTime());
@@ -562,9 +597,13 @@ public class BizFacade {
 	}
 	
 	// 同步服务器数据
-	public void syncDataToServer() {
-		SyncDataRequestData requestData = buildSyncDataRequestData();
+	public void syncDataToServer(Context context) {
+		BoolResult<SyncDataRequestData> result = buildSyncDataRequestData(context);
+		if (result.isFalse()) {
+			return;
+		}
 		
+		SyncDataRequestData requestData = result.result();
 		SyncDataServerCmd cmd = new SyncDataServerCmd();
 		ServerResponse<SyncDataResponseData> response = cmd.send(App.getInstance(), requestData, false);
 		if (response.getRet() == ServerErrorCode.RET_SUCCESS) {
@@ -572,14 +611,73 @@ public class BizFacade {
 		}
 	}
 	
+	public boolean checkDupliBookNameWithServer(final Context context,
+			List<AccountBook> localBooks, List<AccountBook> serverBooks) {
+		for (int i = 0; i < localBooks.size(); i++) {
+			for (int j = 0; j < serverBooks.size(); j++) {
+				final AccountBook localBook = localBooks.get(i);
+				AccountBook serverBook = serverBooks.get(i);
+				
+				if (localBook.getAccountBookId() != serverBook.getAccountBookId() &&
+						localBook.getName().equals(serverBook.getName())) {
+					
+					// 有重名的，弹出提示去修改
+					MainThreadExecutor.run(new Runnable() {
+						
+						@Override
+						public void run() {
+							
+							final CustomDialogBuilder dialogBuilder = CustomDialogBuilder.getInstance(context);
+							String msg = String.format("本地的账本\"%s\"的名称与服务器上的账本名称有冲突，换一个名字吧", localBook.getName());
+							dialogBuilder
+							.withButton2Drawable(R.drawable.selector_btn_inverse)
+							.withButton2TextColor(context.getResources().getColor(R.color.main_color))
+							.withMessage(msg)
+							.withButton1Text(context.getString(R.string.btn_ok))
+							.withButton2Text(context.getString(R.string.btn_cancel))
+							.setButton1Click(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									// 跳转到修改账本名页面
+									AccountBookEditActivity.TransData transData = new AccountBookEditActivity.TransData();
+									transData.setType(Type.EDIT);
+									transData.setAccountBook(localBook);
+
+									Intent intent = new Intent(context, AccountBookEditActivity.class);
+									context.startActivity(AccountBookEditActivity.makeTransDataIntent(intent, transData));
+									
+									dialogBuilder.dismiss();
+								}
+							}).setButton2Click(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									dialogBuilder.dismiss();
+								}
+							}).show();
+						}
+					});
+					
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	// 拉取账本信息
+	public ServerResponse<PullAccountBooksResponseData> pullAccountBooks(Context context) {
+		PullAccountBooksServerCmd cmd = new PullAccountBooksServerCmd();
+		ServerResponse<PullAccountBooksResponseData> response = cmd.send(context, new PullAccountBooksRequestData(), false);
+		return response;
+	}
+	
 	// 用户相关接口
-	
-	
 	/**
 	 * 验证邮箱
 	 * @param mail
 	 */
-	public ServerResponse<Object> verifyMail(Context context, String mail) {
+	public ServerResponse<NullResponseData> verifyMail(Context context, String mail) {
 		VerifyMailRequestData requestData = new VerifyMailRequestData();
 		requestData.setMail(mail);
 		return new VerifyMailServerCmd().send(context, requestData, false);
@@ -592,7 +690,7 @@ public class BizFacade {
 	 * @param vfCode
 	 * @return
 	 */
-	public ServerResponse<Object> verifyVfCode(Context context, String username, int accountType, int vfCode) {
+	public ServerResponse<NullResponseData> verifyVfCode(Context context, String username, int accountType, int vfCode) {
 		VerifyVfCodeRequestData requestData = new VerifyVfCodeRequestData();
 		requestData.setUsername(username);
 		requestData.setAccountType(accountType);
@@ -608,7 +706,7 @@ public class BizFacade {
 	 * @param vfCode
 	 * @return
 	 */
-	public ServerResponse<Object> register(Context context, String username, String password, int accountType, int vfCode) {
+	public ServerResponse<NullResponseData> register(Context context, String username, String password, int accountType, int vfCode) {
 		RegisterRequestData requestData = new RegisterRequestData();
 		requestData.setUsername(username);
 		requestData.setPassword(password);

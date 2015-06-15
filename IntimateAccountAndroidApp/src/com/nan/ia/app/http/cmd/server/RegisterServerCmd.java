@@ -10,10 +10,11 @@ package com.nan.ia.app.http.cmd.server;
 import com.nan.ia.app.constant.Url;
 import com.nan.ia.app.http.cmd.BaseHttpCmd.HttpCmdInfo;
 import com.nan.ia.app.http.cmd.BaseHttpCmd.HttpCmdInfo.HttpMethod;
+import com.nan.ia.common.http.cmd.entities.NullResponseData;
 import com.nan.ia.common.http.cmd.entities.RegisterRequestData;
 
 public class RegisterServerCmd extends
-		BaseServerCmd<RegisterRequestData, Object> {
+		BaseServerCmd<RegisterRequestData, NullResponseData> {
 
 	@Override
 	protected HttpCmdInfo createHttpCmdInfo() {
@@ -22,4 +23,5 @@ public class RegisterServerCmd extends
 		httpCmdInfo.setUrl(Url.URL_REGISTER);
 		
 		return httpCmdInfo;
-	}}
+	}
+}

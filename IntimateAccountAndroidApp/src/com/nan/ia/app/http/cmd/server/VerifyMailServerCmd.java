@@ -10,10 +10,11 @@ package com.nan.ia.app.http.cmd.server;
 import com.nan.ia.app.constant.Url;
 import com.nan.ia.app.http.cmd.BaseHttpCmd.HttpCmdInfo;
 import com.nan.ia.app.http.cmd.BaseHttpCmd.HttpCmdInfo.HttpMethod;
+import com.nan.ia.common.http.cmd.entities.NullResponseData;
 import com.nan.ia.common.http.cmd.entities.VerifyMailRequestData;
 
 public class VerifyMailServerCmd extends
-		BaseServerCmd<VerifyMailRequestData, Object> {
+		BaseServerCmd<VerifyMailRequestData, NullResponseData> {
 
 	@Override
 	protected HttpCmdInfo createHttpCmdInfo() {

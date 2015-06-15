@@ -16,6 +16,7 @@ import com.nan.ia.app.dialog.LoadingDialog;
 import com.nan.ia.app.widget.CustomTextButton;
 import com.nan.ia.app.widget.FullLineEditControl;
 import com.nan.ia.common.constant.ServerErrorCode;
+import com.nan.ia.common.http.cmd.entities.NullResponseData;
 import com.nan.ia.common.http.cmd.entities.ServerResponse;
 
 import android.content.Intent;
@@ -117,10 +118,10 @@ public class VerifyVfCodeActivity extends BaseActionBarActivity {
 	private void doNext() {
 		// 验证验证码
 		LoadingDialog.showLoading(this);
-		new AsyncTask<Integer, Integer, ServerResponse<Object>>() {
+		new AsyncTask<Integer, Integer, ServerResponse<NullResponseData>>() {
 
 			@Override
-			protected ServerResponse<Object> doInBackground(Integer... params) {
+			protected ServerResponse<NullResponseData> doInBackground(Integer... params) {
 				return BizFacade.getInstance().verifyVfCode(
 						VerifyVfCodeActivity.this, mTransData.getUsername(),
 						mTransData.getAccountType(),
@@ -128,7 +129,7 @@ public class VerifyVfCodeActivity extends BaseActionBarActivity {
 			}
 
 			@Override
-			protected void onPostExecute(ServerResponse<Object> result) {
+			protected void onPostExecute(ServerResponse<NullResponseData> result) {
 				super.onPostExecute(result);
 				LoadingDialog.hideLoading();
 				if (result.getRet() == ServerErrorCode.RET_SUCCESS) {
@@ -141,7 +142,7 @@ public class VerifyVfCodeActivity extends BaseActionBarActivity {
 					toTransData.setVfCode(Integer.valueOf(mEditVfCode.getText()
 							.toString()));
 
-					startActivity(createTransDataIntent(intent, toTransData));
+					startActivity(makeTransDataIntent(intent, toTransData));
 				}
 			}
 		}.execute(0);
@@ -158,16 +159,16 @@ public class VerifyVfCodeActivity extends BaseActionBarActivity {
 	private void sendVfCode() {
 		// 发送验证码
 		LoadingDialog.showLoading(this);
-		new AsyncTask<Integer, Integer, ServerResponse<Object>>() {
+		new AsyncTask<Integer, Integer, ServerResponse<NullResponseData>>() {
 
 			@Override
-			protected ServerResponse<Object> doInBackground(Integer... params) {
+			protected ServerResponse<NullResponseData> doInBackground(Integer... params) {
 				return BizFacade.getInstance().verifyMail(VerifyVfCodeActivity.this,
 						mTransData.getUsername());
 			}
 
 			@Override
-			protected void onPostExecute(ServerResponse<Object> result) {
+			protected void onPostExecute(ServerResponse<NullResponseData> result) {
 				super.onPostExecute(result);
 				LoadingDialog.hideLoading();
 				

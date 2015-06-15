@@ -114,7 +114,7 @@ public class AccountBookActivity extends BaseActionBarActivity {
 		transData.setType(Type.NEW);
 		Intent intent = new Intent(AccountBookActivity.this,
 				AccountBookEditActivity.class);
-		startActivity(createTransDataIntent(intent, transData));
+		startActivity(makeTransDataIntent(intent, transData));
 	}
 	
 	private void showPopupMenu(View view, final int position) {
@@ -148,7 +148,7 @@ public class AccountBookActivity extends BaseActionBarActivity {
 		transData.setAccountBook(AppData.getAccountBooks().get(position));
 
 		Intent intent = new Intent(this, AccountBookEditActivity.class);
-		startActivity(createTransDataIntent(intent, transData));
+		startActivity(makeTransDataIntent(intent, transData));
 	}
 
 	void deleteAccountBook(int position) {

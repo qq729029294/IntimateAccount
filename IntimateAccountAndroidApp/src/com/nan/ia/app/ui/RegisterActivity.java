@@ -14,6 +14,7 @@ import com.nan.ia.app.dialog.LoadingDialog;
 import com.nan.ia.app.utils.Utils;
 import com.nan.ia.app.widget.FullLineEditControl;
 import com.nan.ia.common.constant.ServerErrorCode;
+import com.nan.ia.common.http.cmd.entities.NullResponseData;
 import com.nan.ia.common.http.cmd.entities.ServerResponse;
 
 import android.content.Intent;
@@ -80,16 +81,16 @@ public class RegisterActivity extends BaseActionBarActivity {
 	private void doNext() {
 		// 发送验证码
 		LoadingDialog.showLoading(this);
-		new AsyncTask<Integer, Integer, ServerResponse<Object>>() {
+		new AsyncTask<Integer, Integer, ServerResponse<NullResponseData>>() {
 
 			@Override
-			protected ServerResponse<Object> doInBackground(Integer... params) {
+			protected ServerResponse<NullResponseData> doInBackground(Integer... params) {
 				return BizFacade.getInstance().verifyMail(RegisterActivity.this,
 						editEmail.getText().toString());
 			}
 
 			@Override
-			protected void onPostExecute(ServerResponse<Object> result) {
+			protected void onPostExecute(ServerResponse<NullResponseData> result) {
 				super.onPostExecute(result);
 				LoadingDialog.hideLoading();
 				
@@ -102,7 +103,7 @@ public class RegisterActivity extends BaseActionBarActivity {
 				transData.setAccountType(Constant.ACCOUNT_TYPE_MAIL);
 				
 				Intent intent = new Intent(RegisterActivity.this, VerifyVfCodeActivity.class);
-				startActivity(createTransDataIntent(intent, transData));
+				startActivity(makeTransDataIntent(intent, transData));
 			}
 		}.execute(0);
 	}

@@ -39,6 +39,7 @@ import com.nan.ia.app.dialog.MaskOperationDialog;
 import com.nan.ia.app.entities.AccountBookInfo;
 import com.nan.ia.app.entities.AccountBookStatisticalInfo;
 import com.nan.ia.app.ui.RecordActivity.RecordActivityType;
+import com.nan.ia.app.utils.MinDurationWaiter;
 import com.nan.ia.app.utils.Utils;
 import com.nan.ia.app.widget.CustomPopupMenu;
 import com.nan.ia.app.widget.RatioCircleView;
@@ -85,7 +86,6 @@ public class MainActivity extends BaseActivity {
 			refreshUI();
 			
 			beginStartAnimation();
-			return;
 		}
 		
 		super.onStart();
@@ -261,25 +261,16 @@ public class MainActivity extends BaseActivity {
 			return;
 		}
 		
-		final long beginLoadTime = System.currentTimeMillis();
 		beginSyncLoadingAnimation();
 		MaskOperationDialog.showMask(this);	// 防止操作
+		final MinDurationWaiter waiter = new MinDurationWaiter();
+		waiter.begin();
 		new AsyncTask<Integer, Integer, Integer>() {
 
 			@Override
 			protected Integer doInBackground(Integer... params) {
-				mBizFacade.syncDataToServer();
-				long loadingDisplayTime = (MIN_LOADING_DURATION + beginLoadTime)
-						- System.currentTimeMillis();
-				if (loadingDisplayTime > 0) {
-					// 等待最小时间
-					try {
-						Thread.sleep(loadingDisplayTime);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				
+				mBizFacade.syncDataToServer(MainActivity.this);
+				waiter.waitForDuration(MIN_LOADING_DURATION);
 				return null;
 			}
 
@@ -482,6 +473,6 @@ public class MainActivity extends BaseActivity {
 		transData.setAccountRecord(accountRecord);
 		
 		Intent intent = new Intent(MainActivity.this, RecordActivity.class);
-		MainActivity.this.startActivity(createTransDataIntent(intent, transData));
+		MainActivity.this.startActivity(makeTransDataIntent(intent, transData));
 	}
 }
