@@ -75,6 +75,10 @@
             android:name=".ui.RecordActivity"
             android:label="@string/title_record" >
         </activity>
+                <activity
+            android:name=".ui.InviteMemberActivity"
+            android:label="@string/title_invite_member" >
+        </activity>
 
     </application>
 

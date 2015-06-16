@@ -16,6 +16,7 @@ public class ServerErrorCode {
 	public static final int RET_INVALID_VF_CODE 		= -12;      // 无效的验证码
 	public static final int RET_PASSWORD_ERROR			= -20;      // 密码错误
 	public static final int RET_USERNAME_NOT_EXIST 		= -21;		// 用户名不存在
+	public static final int RET_HAS_BEEN_MEMBER  		= -31;		// 已经是成员
 	public static final int RET_HTTP_REQUEST_EXCEPTION 	= -910;		// HTTP请求异常
 	public static final int RET_HTTP_REQUEST_ERROR 		= -911;		// HTTP请求错误
 	public static final int RET_SERVER_NOT_RESPONDING	= -920;		// 服务器没有响应

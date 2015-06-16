@@ -32,6 +32,7 @@ public class AppData {
 
 	static List<AccountBook> accountBooks = new ArrayList<AccountBook>();
 	static List<AccountBook> deleteBooks = new ArrayList<AccountBook>();
+	static HashMap<Integer, List<Integer>> bookMembersMap =  new HashMap<Integer, List<Integer>>();
 	static List<AccountCategory> categories = new ArrayList<AccountCategory>();
 	static List<AccountCategory> deleteCategories = new ArrayList<AccountCategory>();
 	static List<AccountRecord> deleteRecords = new ArrayList<AccountRecord>();
@@ -131,6 +132,17 @@ public class AppData {
 		AppData.deleteBooks = deleteBooks;
 
 		new Storage("deleteBooks").store();
+	}
+
+	public static HashMap<Integer, List<Integer>> getBookMembersMap() {
+		return bookMembersMap;
+	}
+
+	public static void setBookMembersMap(
+			HashMap<Integer, List<Integer>> bookMembersMap) {
+		AppData.bookMembersMap = bookMembersMap;
+		
+		new Storage("bookMembersMap").store();
 	}
 
 	public static List<AccountCategory> getDeleteCategories() {

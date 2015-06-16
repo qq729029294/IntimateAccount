@@ -1,0 +1,38 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res/com.nan.ia.app"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+
+    <TextView
+        android:id="@+id/text_lbl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/main_color"
+        android:padding="@dimen/padding"
+        android:text="温馨提示：输入好友用户名，邀请好友一起记录账本吧~"
+        android:textColor="@color/font_white_ltlt"
+        android:textSize="14sp" />
+
+    <com.nan.ia.app.widget.FullLineEditControl
+        android:id="@+id/full_line_edit_control_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin"
+        android:layout_below="@id/text_lbl"
+        app:fulllineedit_left_text="受邀用户名"
+        app:fulllineedit_max_length="16" >
+    </com.nan.ia.app.widget.FullLineEditControl>
+
+    <com.nan.ia.app.widget.CustomButton
+        android:id="@+id/btn_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/full_line_edit_control_username"
+        android:layout_marginLeft="@dimen/margin_horizontal"
+        android:layout_marginRight="@dimen/margin_horizontal"
+        android:layout_marginTop="@dimen/margin_vertical_large"
+        android:text="@string/btn_ok" />
+
+</RelativeLayout>

@@ -7,9 +7,13 @@
 
 package com.nan.ia.server.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,9 +29,11 @@ import com.nan.ia.common.http.cmd.entities.SyncDataResponseData;
 import com.nan.ia.common.utils.BoolResult;
 import com.nan.ia.server.biz.EntitySwitcher;
 import com.nan.ia.server.db.DBService;
+import com.nan.ia.server.db.entities.AccountBookMemberTbl;
 import com.nan.ia.server.db.entities.AccountBookTbl;
 import com.nan.ia.server.db.entities.AccountCategoryTbl;
 import com.nan.ia.server.db.entities.AccountRecordTbl;
+import com.nan.ia.server.db.entities.UserTbl;
 
 @Controller
 public class SyncDataController {
@@ -191,6 +197,30 @@ public class SyncDataController {
 			
 			// 新账本ID对照
 			responseData.setNewBookIdMap(newBookIdMap);
+			
+			// 更新成员
+			Map<Integer, List<Integer>> bookMembersMap = new HashMap<Integer, List<Integer>>();
+			Set<Integer> relateUserIds = new HashSet<Integer>();
+			for (int i = 0; i < responseData.getBooks().size(); i++) {
+				List<AccountBookMemberTbl> memberTbls = dbService.getBookMembers(responseData.getBooks().get(i).getAccountBookId());
+				
+				List<Integer> memberUserIds = new ArrayList<Integer>();
+				for (int j = 0; j < memberTbls.size(); j++) {
+					int memberUserId = memberTbls.get(j).getId().getMemberUserId();
+					memberUserIds.add(memberUserId);
+					relateUserIds.add(memberUserId);
+				}
+				
+				bookMembersMap.put(responseData.getBooks().get(i).getAccountBookId(), memberUserIds);
+			}
+			responseData.setBookMembersMap(bookMembersMap);
+			
+			// 更新相关成员的信息
+			BoolResult<List<UserTbl>> resultGetUsers = dbService.getUsers(new ArrayList<Integer>(relateUserIds));
+			if (resultGetUsers.isFalse()) {
+				return RequestHelper.responseAccessDBError("");
+			}
+			responseData.setRelateUserInfos(EntitySwitcher.toUserItems(resultGetUsers.result()));
 		}
 		
 		// 是否需要更新分类数据

@@ -2,12 +2,14 @@ package com.nan.ia.app.biz;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.view.View;
 
 import com.nan.ia.app.App;
@@ -20,7 +22,11 @@ import com.nan.ia.app.entities.AccountBookStatisticalInfo;
 import com.nan.ia.app.entities.AccountBookInfo;
 import com.nan.ia.app.entities.AccountInfo;
 import com.nan.ia.app.http.cmd.server.AccountLoginServerCmd;
+import com.nan.ia.app.http.cmd.server.AgreeInviteMemberServerCmd;
+import com.nan.ia.app.http.cmd.server.InviteMemberServerCmd;
 import com.nan.ia.app.http.cmd.server.PullAccountBooksServerCmd;
+import com.nan.ia.app.http.cmd.server.PullMsgsServerCmd;
+import com.nan.ia.app.http.cmd.server.PullUserInfosServerCmd;
 import com.nan.ia.app.http.cmd.server.RegisterServerCmd;
 import com.nan.ia.app.http.cmd.server.SyncDataServerCmd;
 import com.nan.ia.app.http.cmd.server.VerifyMailServerCmd;
@@ -35,11 +41,19 @@ import com.nan.ia.common.constant.ServerErrorCode;
 import com.nan.ia.common.entities.AccountBook;
 import com.nan.ia.common.entities.AccountCategory;
 import com.nan.ia.common.entities.AccountRecord;
+import com.nan.ia.common.entities.InviteMemberInfo;
+import com.nan.ia.common.entities.UserInfo;
 import com.nan.ia.common.http.cmd.entities.AccountLoginRequestData;
 import com.nan.ia.common.http.cmd.entities.AccountLoginResponseData;
+import com.nan.ia.common.http.cmd.entities.AgreeInviteMemberRequestData;
+import com.nan.ia.common.http.cmd.entities.InviteMemberRequestData;
 import com.nan.ia.common.http.cmd.entities.NullResponseData;
 import com.nan.ia.common.http.cmd.entities.PullAccountBooksRequestData;
 import com.nan.ia.common.http.cmd.entities.PullAccountBooksResponseData;
+import com.nan.ia.common.http.cmd.entities.PullMsgsRequestData;
+import com.nan.ia.common.http.cmd.entities.PullMsgsResponseData;
+import com.nan.ia.common.http.cmd.entities.PullUserInfosRequestData;
+import com.nan.ia.common.http.cmd.entities.PullUserInfosResponseData;
 import com.nan.ia.common.http.cmd.entities.RegisterRequestData;
 import com.nan.ia.common.http.cmd.entities.ServerResponse;
 import com.nan.ia.common.http.cmd.entities.SyncDataRequestData;
@@ -315,6 +329,14 @@ public class BizFacade {
 		
 		info.setStatisticalInfo(statisticalInfo);
 		
+		// 成员用户信息
+		List<UserInfo> memberUserInfos = new ArrayList<UserInfo>();
+		List<Integer> memberUserIds = AppData.getBookMembersMap().get(accountBookId);
+		for (int i = 0; null != memberUserIds && i < memberUserIds.size(); i++) {
+			memberUserInfos.add(obtainUserInfo(null, memberUserIds.get(i), false));
+		}
+		info.setMemberUserInfos(memberUserInfos);
+		
 		// 加入到缓存中
 		AppData.getBookInfoCache().put(accountBookId, info);
 	}
@@ -578,18 +600,28 @@ public class BizFacade {
 			if (responseData.getNewBookIdMap().containsKey(AppData.getCurrentAccountBookId())) {
 				AppData.setCurrentAccountBookId(responseData.getNewBookIdMap().get(AppData.getCurrentAccountBookId()));
 			}
+			
+			// 更新账本成员信息
+			AppData.setBookMembersMap((HashMap<Integer, List<Integer>>) responseData.getBookMembersMap());
+			
+			// 更新相关用户信息
+			for (int i = 0; i < responseData.getRelateUserInfos().size(); i++) {
+				UserInfo userInfo = responseData.getRelateUserInfos().get(i);
+				AppData.getUserInfoCache().put(userInfo.getUserId(), userInfo);
+			}
+			AppData.setUserInfoCache(AppData.getUserInfoCache());
 
-			boolean isValidBook = false;
+			boolean isInvalidBook = false;
 			// 当前账本是无效的账本，择选择第一个账本
 			for (int i = 0; i < AppData.getAccountBooks().size(); i++) {
 				if (AppData.getAccountBooks().get(i).getAccountBookId()
 						== AppData.getCurrentAccountBookId()) {
-					isValidBook = true;
+					isInvalidBook = true;
 					break;
 				}
 			}
 			
-			if (!isValidBook) {
+			if (!isInvalidBook) {
 				// 不是有效的，选择第一个
 				AppData.setCurrentAccountBookId(AppData.getAccountBooks().get(0).getAccountBookId());
 			}
@@ -872,5 +904,128 @@ public class BizFacade {
 		}
 		
 		return true;
+	}
+	
+	public ServerResponse<NullResponseData> inviteMember(Context context, int accountBookId, String username) {
+		InviteMemberRequestData requestData = new InviteMemberRequestData();
+		requestData.setAccountBookId(accountBookId);
+		requestData.setAccountBookName(getAccountBookById(accountBookId).getName());
+		requestData.setInviteeUsername(username);
+		InviteMemberServerCmd cmd = new InviteMemberServerCmd();
+		return cmd.send(context, requestData, false);
+	}
+	
+	public ServerResponse<NullResponseData> agreeInviteMember(Context context, int accountBookId) {
+		AgreeInviteMemberRequestData requestData = new AgreeInviteMemberRequestData();
+		requestData.setAccountBookId(accountBookId);
+		AgreeInviteMemberServerCmd cmd = new AgreeInviteMemberServerCmd();
+		return cmd.send(context, requestData, false);
+	}
+	
+	public ServerResponse<PullUserInfosResponseData> pullUserInfos(Context context, List<Integer> userIds) {
+		PullUserInfosRequestData requestData = new PullUserInfosRequestData();
+		requestData.setUserIds(userIds);
+		PullUserInfosServerCmd cmd = new PullUserInfosServerCmd();
+		return cmd.send(context, requestData, false);
+	}
+	
+	public UserInfo obtainUserInfo(Context context, int userId, boolean pullWhenNoFound) {
+		UserInfo info = AppData.getUserInfoCache().get(userId);
+		if (info == null) {
+			if (pullWhenNoFound) {
+				List<Integer> userIds = new ArrayList<Integer>();
+				userIds.add(userId);
+				ServerResponse<PullUserInfosResponseData> response = pullUserInfos(context, userIds);
+				if (response.getRet() == ServerErrorCode.RET_SUCCESS && response.getData().getUserInfos().size() > 0) {
+					info = response.getData().getUserInfos().get(0);
+					AppData.getUserInfoCache().put(userId, info);
+				}
+			}
+			
+			if (null == info) {
+				info = new UserInfo();
+				info.setUserId(userId);
+				info.setNickname("未知用户，id" + userId);	
+			}
+		}
+		
+		return info;
+	}
+	
+	public void pullAndHandleMsgs(Context context) {
+		PullMsgsServerCmd cmd = new PullMsgsServerCmd();
+		ServerResponse<PullMsgsResponseData> response = cmd.send(context, new PullMsgsRequestData() , false);
+		if (response.getRet() == ServerErrorCode.RET_SUCCESS) {
+			PullMsgsResponseData responseData = response.getData();
+			List<InviteMemberInfo> infos = responseData.getInviteMemberInfos();
+			
+			if (null != infos && infos.size() > 0) {
+				doInviteMembers(context, infos);
+			}
+		}
+	}
+	
+	public void doInviteMembers(final Context context, final List<InviteMemberInfo> infos) {
+		if (infos.size() == 0) {
+			return;
+		}
+
+		final Object wait = new Object();
+		for (int i = 0; i < infos.size(); i++) {
+			final InviteMemberInfo info = infos.get(i);
+			final UserInfo userInfo = obtainUserInfo(context, info.getInviterUserId(), true);
+			MainThreadExecutor.run(new Runnable() {
+				
+				@Override
+				public void run() {
+					final CustomDialogBuilder dialogBuilder = CustomDialogBuilder
+							.getInstance(context);
+					String msg = String.format("%s 邀请您一起记录账本\"%s\"，要加入吗？", userInfo.getNickname(), info.getAccountBookName());
+					dialogBuilder
+							.withMessage(msg)
+							.withButton1Text("爽快加入")
+							.withButton2Text("残忍拒绝")
+							.setButton1Click(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									new AsyncTask<Integer, Integer, Integer>() {
+
+										@Override
+										protected Integer doInBackground(Integer... params) {
+											agreeInviteMember(context, info.getAccountBookId());
+											
+											dialogBuilder.dismiss();
+											synchronized(wait) {
+												wait.notifyAll();
+											}
+											
+											return null;
+										}
+									}.execute(0);
+
+									dialogBuilder.dismiss();
+								}
+							}).setButton2Click(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									dialogBuilder.dismiss();
+									synchronized(wait) {
+										wait.notifyAll();
+									}
+								}
+							}).show();
+				}
+			});				
+			
+			// 阻塞线程
+			synchronized(wait) {
+				try {
+					wait.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
 	}
 }

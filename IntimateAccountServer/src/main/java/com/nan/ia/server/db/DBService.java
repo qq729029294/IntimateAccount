@@ -307,6 +307,21 @@ public class DBService {
 
 		return false;
 	}
+	
+	public List<AccountBookMemberTbl> getBookMembers(int accountBookId) {
+		// 检查成员表是否有新成员
+		Session session = HibernateUtil.getSession();
+		Transaction trans = session.beginTransaction();
+
+		Query query = session
+				.createQuery("FROM AccountBookMemberTbl r WHERE r.id.accountBookId = ?");
+		query.setParameter(0, accountBookId);
+
+		List<AccountBookMemberTbl> memberTbls = query.list();
+		trans.commit();
+
+		return memberTbls;
+	}
 
 	/**
 	 * 检查是否需要更新账本信息
@@ -314,9 +329,10 @@ public class DBService {
 	 * @return
 	 */
 	public boolean checkUpdateBooks(int userId, long lastUpdateTime) {
+		Session session = HibernateUtil.getSession();
+		Transaction trans = session.getTransaction();
 		try {
-			Session session = HibernateUtil.getSession();
-			Transaction trans = session.beginTransaction();
+			trans.begin();
 			// 检查原表是否有更新
 			Query query = session
 					.createQuery("FROM AccountBookTbl r, AccountBookMemberTbl s WHERE s.id.memberUserId = ? AND r.accountBookId = s.id.accountBookId AND r.updateTime > ?");
@@ -338,8 +354,19 @@ public class DBService {
 				return true;
 			}
 			
+			// 检查成员表是否有新成员
+			query = session.createQuery("FROM AccountBookMemberTbl r WHERE r.createTime > ? AND r.accountBookId IN( SELECT s.id.accountBookId FROM AccountBookMemberTbl s WHERE s.id.memberUserId = ? )");
+			query.setParameter(0, new Date(lastUpdateTime));
+			query.setParameter(1, userId);
+			
+			if (query.list().size() > 0) {
+				trans.commit();
+				return true;
+			}
+			
 			trans.commit();
 		} catch (Exception e) {
+			trans.rollback();
 			e.printStackTrace();
 		}
 
@@ -610,7 +637,7 @@ public class DBService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public BoolResult<AccountTbl> getAccount(String username, int accountType) {
+	public BoolResult<AccountTbl> getAccount(String username) {
 		Session session = HibernateUtil.getSession();
 		Transaction trans = session.getTransaction();
 		
@@ -618,9 +645,8 @@ public class DBService {
 			trans.begin();
 			// 检查是否已经存在用户名
 			Query query = session
-					.createQuery("FROM AccountTbl r WHERE r.id.username = ? AND r.id.accountType = ?");
+					.createQuery("FROM AccountTbl r WHERE r.id.username = ?");
 			query.setParameter(0, username);
-			query.setParameter(1, accountType);
 
 			List<AccountTbl> tbls = query.list();
 			trans.commit();
@@ -681,5 +707,27 @@ public class DBService {
 		}
 
 		return BoolResult.False();
+	}
+	
+	public BoolResult<List<UserTbl>> getUsers(List<Integer> userIds) {
+		Session session = HibernateUtil.getSession();
+		Transaction trans = session.beginTransaction();
+
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < userIds.size(); i++) {
+			if (i != 0) {
+				sb.append(",");
+			}
+
+			sb.append(userIds.get(i));
+		}
+
+		Query query = session
+				.createQuery(String.format("FROM UserTbl r WHERE r.userId IN(%s)", sb.toString()));
+
+		List<UserTbl> tbls = query.list();
+		trans.commit();
+
+		return BoolResult.True(tbls);
 	}
 }

@@ -33,7 +33,6 @@ import com.nan.ia.common.entities.AccountBook;
 public class AccountBookActivity extends BaseActionBarActivity {
 	ListView mListView;
 	AccountBookAdapter mAdapter;
-	Scroller mScroller;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

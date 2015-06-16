@@ -17,6 +17,7 @@
     <string name="title_account_book">账本管理</string>
     <string name="title_account_book_edit">编辑账本</string>
     <string name="title_record">记一笔</string>
+    <string name="title_invite_member">邀请</string>
     <string name="title_new_account_book">新建账本</string>
     <string name="hint_username">邮箱</string>
     <string name="lbl_password">输入密码</string>

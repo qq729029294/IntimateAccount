@@ -13,12 +13,16 @@ import java.util.Map;
 import com.nan.ia.common.entities.AccountBook;
 import com.nan.ia.common.entities.AccountCategory;
 import com.nan.ia.common.entities.AccountRecord;
+import com.nan.ia.common.entities.UserInfo;
 
 public class SyncDataResponseData {
 	long lastSyncDataTime;
+	
 	boolean updateBooks;
 	List<AccountBook> books;
+	Map<Integer, List<Integer>> bookMembersMap;
 	Map<Integer, Integer> newBookIdMap;
+	List<UserInfo> relateUserInfos;
 	
 	boolean updateCategories;
 	List<AccountCategory> categories;
@@ -43,6 +47,12 @@ public class SyncDataResponseData {
 	}
 	public void setBooks(List<AccountBook> books) {
 		this.books = books;
+	}
+	public Map<Integer, List<Integer>> getBookMembersMap() {
+		return bookMembersMap;
+	}
+	public void setBookMembersMap(Map<Integer, List<Integer>> bookMembersMap) {
+		this.bookMembersMap = bookMembersMap;
 	}
 	public Map<Integer, Integer> getNewBookIdMap() {
 		return newBookIdMap;
@@ -79,5 +89,11 @@ public class SyncDataResponseData {
 	}
 	public void setDeleteRecordIds(List<Integer> deleteRecordIds) {
 		this.deleteRecordIds = deleteRecordIds;
+	}
+	public List<UserInfo> getRelateUserInfos() {
+		return relateUserInfos;
+	}
+	public void setRelateUserInfos(List<UserInfo> relateUserInfos) {
+		this.relateUserInfos = relateUserInfos;
 	}
 }

@@ -11,6 +11,7 @@ import java.util.List;
 
 import com.nan.ia.common.entities.AccountBook;
 import com.nan.ia.common.entities.AccountCategory;
+import com.nan.ia.common.entities.UserInfo;
 
 public class AccountBookInfo {
 	AccountBook accountBook;
@@ -18,6 +19,7 @@ public class AccountBookInfo {
 	List<AccountCategory> categories;
 	List<AccountCategory> incomeCategories;
 	List<AccountCategory> expendCategories;
+	List<UserInfo> memberUserInfos;
 	
 	public AccountBook getAccountBook() {
 		return accountBook;
@@ -48,5 +50,11 @@ public class AccountBookInfo {
 	}
 	public void setExpendCategories(List<AccountCategory> expendCategories) {
 		this.expendCategories = expendCategories;
+	}
+	public List<UserInfo> getMemberUserInfos() {
+		return memberUserInfos;
+	}
+	public void setMemberUserInfos(List<UserInfo> memberUserInfos) {
+		this.memberUserInfos = memberUserInfos;
 	}
 }

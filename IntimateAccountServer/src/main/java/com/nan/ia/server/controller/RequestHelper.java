@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.google.gson.Gson;
 import com.nan.ia.common.constant.ServerErrorCode;
-import com.nan.ia.common.http.cmd.entities.EmptyRequestData;
 import com.nan.ia.common.http.cmd.entities.NullResponseData;
 import com.nan.ia.common.http.cmd.entities.ServerResponse;
 import com.nan.ia.common.utils.BoolResult;
@@ -32,19 +31,6 @@ public class RequestHelper {
 	}
 	
 	public static <T> boolean parseRequestData(HttpServletRequest request, T requestData, Class<T> requestDataClass) {
-		if (requestDataClass.equals(EmptyRequestData.class)) {
-			try {
-				requestData = requestDataClass.newInstance();
-				return true;
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
-			
-			return false;
-		}
-		
 		String dataJson = request.getParameter("data");
 		if (null != dataJson && !dataJson.isEmpty()) {
 			Gson gson = new Gson();
@@ -56,18 +42,6 @@ public class RequestHelper {
 	}
 	
 	public static <T> BoolResult<T> parseRequestData(HttpServletRequest request, Class<T> requestDataClass) {
-		if (requestDataClass.equals(EmptyRequestData.class)) {
-			try {
-				return BoolResult.True(requestDataClass.newInstance());
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
-			
-			return BoolResult.False();
-		}
-		
 		String dataJson = request.getParameter("data");
 		if (null != dataJson && !dataJson.isEmpty()) {
 			Gson gson = new Gson();

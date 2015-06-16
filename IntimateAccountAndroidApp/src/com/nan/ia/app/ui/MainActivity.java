@@ -1,10 +1,12 @@
 package com.nan.ia.app.ui;
 
+import java.util.List;
+
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.TimeAnimator;
-import android.animation.ValueAnimator;
 import android.animation.TimeAnimator.TimeListener;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -22,9 +24,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -44,6 +46,7 @@ import com.nan.ia.app.utils.Utils;
 import com.nan.ia.app.widget.CustomPopupMenu;
 import com.nan.ia.app.widget.RatioCircleView;
 import com.nan.ia.common.entities.AccountRecord;
+import com.nan.ia.common.entities.UserInfo;
 import com.ryg.expandable.ui.PinnedHeaderExpandableListView;
 import com.ryg.expandable.ui.StickyLayout;
 import com.ryg.expandable.ui.StickyLayout.OnGiveUpTouchEventListener;
@@ -62,6 +65,7 @@ public class MainActivity extends BaseActivity {
     RatioCircleView mRatioCircleMain;
     LinearLayout mLayoutDetails;
     LinearLayout mLayoutLoading;
+    TextView mTextInviteMember;
 	TextView mTextBalance;
 	TextView mTextIncome;
 	TextView mTextExpend;
@@ -99,6 +103,19 @@ public class MainActivity extends BaseActivity {
 	}
 	
 	private void setupMainContent() {
+		// 邀请好友
+		mTextInviteMember = (TextView) findViewById(R.id.text_invite_member);
+		mTextInviteMember.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MainActivity.this, InviteMemberActivity.class);
+				InviteMemberActivity.TransData transData = new InviteMemberActivity.TransData();
+				transData.setAccountBookId(AppData.getCurrentAccountBookId());
+				startActivity(makeTransDataIntent(intent, transData));
+			}
+		});
+		
 		// 记一笔
 		findViewById(R.id.btn_record).setOnClickListener(new OnClickListener() {
 			
@@ -183,7 +200,7 @@ public class MainActivity extends BaseActivity {
 					
 					@Override
 					public void onClick(View v) {
-						editRecord(item.getAccountRecord());
+						deleteRecord(item.getAccountRecord().getAccountBookId());
 					}
 				});
 				
@@ -269,7 +286,11 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			protected Integer doInBackground(Integer... params) {
+				// 拉取处理邀请信息
+				mBizFacade.pullAndHandleMsgs(MainActivity.this);
+				// 同步数据
 				mBizFacade.syncDataToServer(MainActivity.this);
+				
 				waiter.waitForDuration(MIN_LOADING_DURATION);
 				return null;
 			}
@@ -294,6 +315,7 @@ public class MainActivity extends BaseActivity {
 		AccountBookInfo accountBookInfo = mBizFacade.getAccountBookInfo(AppData
 				.getCurrentAccountBookId());
 
+		// 详细信息
 		mRatioCircleMain.clearItems();
 		double income = accountBookInfo.getStatisticalInfo().getIncome();
 		double expend = accountBookInfo.getStatisticalInfo().getExpend();
@@ -333,6 +355,31 @@ public class MainActivity extends BaseActivity {
 		// 刷新title
 		mBtnAccountBookSettings.setText(mBizFacade.getAccountBookById(
 				AppData.getCurrentAccountBookId()).getName());
+		
+		// 邀请好友
+		List<UserInfo> memberUserInfos = accountBookInfo.getMemberUserInfos();
+		if (memberUserInfos.size() > 1) {
+			// 有其他成员
+			StringBuffer sb = new StringBuffer();
+			sb.append("成员");
+			for (int i = 0; i < memberUserInfos.size(); i++) {
+				if (memberUserInfos.get(i).getUserId() == AppData.getAccountInfo().getUserId()) {
+					// 不添加当前用户
+					continue;
+				}
+				
+				if (!sb.toString().equals("成员")) {
+					sb.append("、");
+				}
+				
+				sb.append(memberUserInfos.get(i).getNickname());
+			}
+			
+			sb.append("，添加＋");
+			mTextInviteMember.setText(sb.toString());
+		} else {
+			mTextInviteMember.setText("邀请亲朋好友，一起来记录账本吧＋");
+		}
 	}
 	
 	private void beginStartAnimation() {
@@ -385,9 +432,7 @@ public class MainActivity extends BaseActivity {
         colorAnim.setDuration(DISPLAY_ANIMATION_DURATION);
         colorAnim.setEvaluator(new ArgbEvaluator());
         colorAnim.start();
-        
-//        mAdapter.setGroupBackColor(newColor);
-	}
+    }
 	
 	private void beginDisplayAnimation() {
 		final AccountBookStatisticalInfo statisticalInfo = mBizFacade
@@ -472,12 +517,16 @@ public class MainActivity extends BaseActivity {
 		timeAnimator.start();
 	}
 	
-	private void editRecord(AccountRecord accountRecord) {
+	private void editRecord(AccountRecord record) {
 		RecordActivity.TransData transData = new RecordActivity.TransData();
 		transData.setType(RecordActivityType.EDIT);
-		transData.setAccountRecord(accountRecord);
+		transData.setAccountRecord(record);
 		
 		Intent intent = new Intent(MainActivity.this, RecordActivity.class);
 		MainActivity.this.startActivity(makeTransDataIntent(intent, transData));
+	}
+	
+	private void deleteRecord(int accountRecordId) {
+		mBizFacade.deleteAccountRecord(accountRecordId);
 	}
 }

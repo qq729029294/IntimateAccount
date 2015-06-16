@@ -135,7 +135,7 @@ public class UserController {
 		
 		// 检查登录信息
 		BoolResult<AccountTbl> resultGetLoginAccount =
-				DBService.getInstance().getAccount(requestData.getUsername(), requestData.getAccountType());
+				DBService.getInstance().getAccount(requestData.getUsername());
 		if (resultGetLoginAccount.isFalse()) {
 			return RequestHelper.responseAccessDBError("");
 		}

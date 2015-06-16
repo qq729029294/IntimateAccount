@@ -123,6 +123,17 @@ public class EntitySwitcher {
 		return item;
 	}
 	
+	public static List<UserInfo> toUserItems(List<UserTbl> tbls) {
+		List<UserInfo> items = new ArrayList<UserInfo>();
+		if (null != tbls) {
+			for (int i = 0; i < tbls.size(); i++) {
+				items.add(toItem(tbls.get(i)));
+			}
+		}
+		
+		return items;
+	}
+	
 	public static AccountCategoryTbl toTblForDB(AccountCategory item) {
 		if (null == item) {
 			return null;

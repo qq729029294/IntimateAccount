@@ -10,16 +10,16 @@ package com.nan.ia.app.http.cmd.server;
 import com.nan.ia.app.constant.Url;
 import com.nan.ia.app.http.cmd.BaseHttpCmd.HttpCmdInfo;
 import com.nan.ia.app.http.cmd.BaseHttpCmd.HttpCmdInfo.HttpMethod;
-import com.nan.ia.common.http.cmd.entities.PullAccountBooksRequestData;
-import com.nan.ia.common.http.cmd.entities.PullAccountBooksResponseData;
+import com.nan.ia.common.http.cmd.entities.PullMsgsRequestData;
+import com.nan.ia.common.http.cmd.entities.PullMsgsResponseData;
 
-public class PullAccountBooksServerCmd extends BaseServerCmd<PullAccountBooksRequestData, PullAccountBooksResponseData> {
+public class PullMsgsServerCmd extends BaseServerCmd<PullMsgsRequestData, PullMsgsResponseData> {
 
 	@Override
 	protected HttpCmdInfo createHttpCmdInfo() {
 		HttpCmdInfo httpCmdInfo = new HttpCmdInfo();
 		httpCmdInfo.setHttpMethod(HttpMethod.POST);
-		httpCmdInfo.setUrl(Url.URL_PULL_ACCOUNT_BOOKS);
+		httpCmdInfo.setUrl(Url.URL_PULL_MSGS);
 		
 		return httpCmdInfo;
 	}

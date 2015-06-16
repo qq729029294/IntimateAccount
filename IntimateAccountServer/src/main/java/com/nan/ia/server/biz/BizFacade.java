@@ -7,13 +7,16 @@
 
 package com.nan.ia.server.biz;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.nan.ia.common.entities.InviteMemberInfo;
 import com.nan.ia.common.utils.BoolResult;
 import com.nan.ia.server.ServerConfigs;
 import com.nan.ia.server.controller.HomeController;
@@ -24,6 +27,7 @@ public class BizFacade {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	Map<String, RegistionVfCode> mMapVfCodeCache = new HashMap<String, RegistionVfCode>();
+	Map<Integer, List<InviteMemberInfo>> mMapInviteMemberInfos = new HashMap<Integer, List<InviteMemberInfo>>();
 	
 	private static BizFacade sInstance = null;
 	public static BizFacade getInstance() {
@@ -103,5 +107,42 @@ public class BizFacade {
 		} else {
 			return BoolResult.False("无效的验证码");
 		}
+	}
+	
+	/**
+	 * 获得邀请信息
+	 * @param userId
+	 * @return
+	 */
+	public List<InviteMemberInfo> popInviteMemberInfos(int userId) {
+		List<InviteMemberInfo> infos = new ArrayList<InviteMemberInfo>();
+		if (mMapInviteMemberInfos.containsKey(userId)) {
+			infos.addAll(mMapInviteMemberInfos.get(userId));
+		}
+		
+		return infos;
+	}
+	
+	/**
+	 * 添加邀请信息到缓存中
+	 * @param inviteeUserId
+	 * @param info
+	 */
+	public void pushInviteMemberInfos(int inviteeUserId, InviteMemberInfo info) {
+		if (!mMapInviteMemberInfos.containsKey(inviteeUserId)) {
+			mMapInviteMemberInfos.put(inviteeUserId, new ArrayList<InviteMemberInfo>());
+		}
+		
+		List<InviteMemberInfo> infos = mMapInviteMemberInfos.get(inviteeUserId);
+		for (int i = 0; i < infos.size(); i++) {
+			if (infos.get(i).getAccountBookId() == info.getAccountBookId() ||
+				infos.get(i).getInviteeUserId() == info.getInviteeUserId() ||
+				infos.get(i).getInviterUserId() == info.getInviterUserId()) {
+				// 已经存在一个了
+				return;
+			}
+		}
+		
+		mMapInviteMemberInfos.get(inviteeUserId).add(info);
 	}
 }
