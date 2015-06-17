@@ -1,5 +1,6 @@
 package com.nan.ia.app.ui;
 
+import java.io.Serializable;
 import java.util.List;
 
 import android.animation.ArgbEvaluator;
@@ -7,6 +8,7 @@ import android.animation.ObjectAnimator;
 import android.animation.TimeAnimator;
 import android.animation.TimeAnimator.TimeListener;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -54,7 +56,7 @@ import com.special.ResideMenu.ResideMenu;
 import com.special.ResideMenu.ResideMenuItem;
 
 public class MainActivity extends BaseActivity {
-	private static final long DISPLAY_ANIMATION_DURATION = 1500;
+	private static final long DISPLAY_ANIMATION_DURATION = 1250;
 	private static final long DISPLAY_ANIMATION_DELAY = 500;
 	private static final long MIN_LOADING_DURATION = 1250;
 	
@@ -81,11 +83,20 @@ public class MainActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		initUI();
+		
+		TransData transData = readTransData();
+		if (null != transData && transData.isLoginImmediate()) {
+			startActivity(new Intent(this, LoginActivity.class));
+		}
 	}
 	
 	@Override
 	protected void onStart() {
-		if (mBizFacade.checkChange(Constant.CHANGE_TYE_CURRENT_ACCOUNT_BOOK, this.toString()) ||
+		if (mBizFacade.applyChange(Constant.CHANGE_TYE_DO_SYNC_DATA, this.toString())) {
+			// 需要同步数据
+			refreshUI();
+			doSync();
+		} else if (mBizFacade.checkChange(Constant.CHANGE_TYE_CURRENT_ACCOUNT_BOOK, this.toString()) ||
 				mBizFacade.checkBookChange(AppData.getCurrentAccountBookId(), this.toString())) {
 			// 数据有变动
 			refreshUI();
@@ -308,12 +319,11 @@ public class MainActivity extends BaseActivity {
 	}
 	
 	private void refreshUI() {
-		// 标志已经更新
-		mBizFacade.checkChange(Constant.CHANGE_TYE_CURRENT_ACCOUNT_BOOK, this.toString());
-		mBizFacade.checkBookChange(AppData.getCurrentAccountBookId(), this.toString());
-		
 		AccountBookInfo accountBookInfo = mBizFacade.getAccountBookInfo(AppData
 				.getCurrentAccountBookId());
+		// 标志已经更新
+		mBizFacade.applyBookChange(accountBookInfo.getAccountBook().getAccountBookId(), this.toString());
+		mBizFacade.applyChange(Constant.CHANGE_TYE_CURRENT_ACCOUNT_BOOK, this.toString());
 
 		// 详细信息
 		mRatioCircleMain.clearItems();
@@ -361,21 +371,19 @@ public class MainActivity extends BaseActivity {
 		if (memberUserInfos.size() > 1) {
 			// 有其他成员
 			StringBuffer sb = new StringBuffer();
-			sb.append("成员");
 			for (int i = 0; i < memberUserInfos.size(); i++) {
-				if (memberUserInfos.get(i).getUserId() == AppData.getAccountInfo().getUserId()) {
-					// 不添加当前用户
-					continue;
-				}
-				
-				if (!sb.toString().equals("成员")) {
+				if (sb.length() > 0) {
 					sb.append("、");
 				}
 				
-				sb.append(memberUserInfos.get(i).getNickname());
+				if (memberUserInfos.get(i).getUserId() == AppData.getAccountInfo().getUserId()) {
+					sb.append("我");
+				} else {
+					sb.append(memberUserInfos.get(i).getNickname());
+				}
 			}
 			
-			sb.append("，添加＋");
+			sb.append(String.format("共位%d成员，添加＋", memberUserInfos.size()));
 			mTextInviteMember.setText(sb.toString());
 		} else {
 			mTextInviteMember.setText("邀请亲朋好友，一起来记录账本吧＋");
@@ -528,5 +536,18 @@ public class MainActivity extends BaseActivity {
 	
 	private void deleteRecord(int accountRecordId) {
 		mBizFacade.deleteAccountRecord(accountRecordId);
+	}
+	
+	public static class TransData implements Serializable {
+		private static final long serialVersionUID = 1L;
+		
+		boolean loginImmediate;
+		public boolean isLoginImmediate() {
+			return loginImmediate;
+		}
+
+		public void setLoginImmediate(boolean loginImmediate) {
+			this.loginImmediate = loginImmediate;
+		}
 	}
 }

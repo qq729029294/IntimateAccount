@@ -31,6 +31,7 @@ import com.nan.ia.app.utils.TimeUtils;
 import com.nan.ia.app.utils.Utils;
 import com.nan.ia.common.entities.AccountCategory;
 import com.nan.ia.common.entities.AccountRecord;
+import com.nan.ia.common.entities.UserInfo;
 import com.ryg.expandable.ui.PinnedHeaderExpandableListView.OnHeaderUpdateListener;
 
 /***
@@ -263,9 +264,12 @@ public class RecordsExpandableListAdapter extends BaseExpandableListAdapter impl
         	childHolder.imageRecorderAvatar.setVisibility(View.GONE);
         	childHolder.textRecorderName.setVisibility(View.GONE);
 		} else {
-			// TODO 还没有数据
 			childHolder.imageRecorderAvatar.setVisibility(View.VISIBLE);
 			childHolder.textRecorderName.setVisibility(View.VISIBLE);
+			
+			UserInfo userInfo = BizFacade.getInstance().obtainUserInfo(mContext,
+					item.getAccountRecord().getRecordUserId(), false);
+			childHolder.textRecorderName.setText(userInfo.getNickname());
 		}
         
         // 每天最后一项的线

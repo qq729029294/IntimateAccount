@@ -7,8 +7,9 @@
     <color name="main_color_dk">#FF1C85BD</color>
     <color name="main_color_dkdk">#FF0066FF</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="white_transparent_press">#88FFFFFF</color>
     <color name="white_press">#33187CEB</color>
+    <color name="white_trans">#F5FFFFFF</color>
+    <color name="white_trans_press">#88FFFFFF</color>
     <color name="white_text_press">#88FFFFFF</color>
     <color name="gray">#FF7F7F7F</color>
     <color name="gray_lt">#FFCCCCCC</color>
@@ -38,8 +39,6 @@
     <color name="font_ltlt">#FFAAAAAA</color>
     <color name="font_white_ltlt">#99ffffff</color>
     <color name="font_white_lt">#f5ffffff</color>
-    <color name="white_lt_transparent">#f5ffffff</color>
-    <color name="white_lt_transparent_press">#f5ADE8FF</color>
     <color name="list_item_selected">#FFE9E9E9</color>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.nan.ia.app.ui;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 
@@ -22,11 +23,9 @@ public class StartActivity extends BaseActivity {
         indicator.setViewPager(pager);
         
         final float density = getResources().getDisplayMetrics().density;
-//        indicator.setBackgroundColor(0xFFCCCCCC);
-        indicator.setRadius(10 * density);
-        indicator.setPageColor(0x880000FF);
-        indicator.setFillColor(0xFF888888);
-        indicator.setStrokeColor(0xFF000000);
-        indicator.setStrokeWidth(2 * density);
+        indicator.setRadius(4 * density);
+        indicator.setPageColor(Color.TRANSPARENT);
+        indicator.setFillColor(Color.WHITE);
+        indicator.setStrokeColor(Color.WHITE);
     }
 }

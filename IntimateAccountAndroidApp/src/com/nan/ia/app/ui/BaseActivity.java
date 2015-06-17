@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Window;
+import android.view.WindowManager;
 
 public class BaseActivity extends FragmentActivity {
 	protected static final String EXTRA_KEY_TRANS_DATA = "EXTRA_KEY_TRANS_DATA";
@@ -21,6 +22,9 @@ public class BaseActivity extends FragmentActivity {
 				+ " onCreate() invoked!!");
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		
+		// 默认软键盘出来时不调整布局
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 	}
 
 	@Override

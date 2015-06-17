@@ -5,6 +5,8 @@
 
     <padding
         android:bottom="@dimen/padding"
+        android:left="@dimen/padding"
+        android:right="@dimen/padding"
         android:top="@dimen/padding" />
 
     <solid android:color="@color/gray_lt" />

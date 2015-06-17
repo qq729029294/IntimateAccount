@@ -118,6 +118,8 @@ public class BizFacade {
 		List<InviteMemberInfo> infos = new ArrayList<InviteMemberInfo>();
 		if (mMapInviteMemberInfos.containsKey(userId)) {
 			infos.addAll(mMapInviteMemberInfos.get(userId));
+			// 清除缓存中的邀请
+			mMapInviteMemberInfos.remove(userId);
 		}
 		
 		return infos;

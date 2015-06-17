@@ -64,14 +64,18 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="@dimen/margin_large"
                     layout="@layout/view_account_book_content" />
-
+                
                 <TextView
                     android:id="@+id/text_invite_member"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_large_large"
+                    android:layout_marginRight="@dimen/margin_large_large"
+                    android:ellipsize="middle"
+                    android:singleLine="true"
                     android:text="邀请亲朋好友，一起来记录账本吧＋"
-                    android:textSize="14dp"
-                    android:textColor="@drawable/selector_color_white_trans_clickable" />
+                    android:textColor="@drawable/selector_color_white_trans_clickable"
+                    android:textSize="16dp" />
 
                 <Button
                     android:id="@+id/btn_record"

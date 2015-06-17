@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.view.View;
 
 import com.nan.ia.app.App;
@@ -21,6 +20,7 @@ import com.nan.ia.app.db.DBService;
 import com.nan.ia.app.entities.AccountBookStatisticalInfo;
 import com.nan.ia.app.entities.AccountBookInfo;
 import com.nan.ia.app.entities.AccountInfo;
+import com.nan.ia.app.http.HttpUtil;
 import com.nan.ia.app.http.cmd.server.AccountLoginServerCmd;
 import com.nan.ia.app.http.cmd.server.AgreeInviteMemberServerCmd;
 import com.nan.ia.app.http.cmd.server.InviteMemberServerCmd;
@@ -87,6 +87,24 @@ public class BizFacade {
 		// 初始化数据
 		AppData.initAppData(App.getInstance());
 		
+		checkAndCreateDefaultInfo();
+		
+		// 统计账本信息
+		for (int i = 0; i < AppData.getAccountBooks().size(); i++) {
+			reloadAccountBookInfo(AppData.getAccountBooks().get(i).getAccountBookId());
+		}
+		
+		// 如果是Wi-Fi开启，并且已经登录的情况，默认同步数据
+		if (AppData.getAccountInfo().getAccountType() != Constant.ACCOUNT_TYPE_UNLOGIN &&
+				HttpUtil.isWifiDataEnable(App.getInstance())) {
+			markChange(Constant.CHANGE_TYE_DO_SYNC_DATA);
+		}
+		
+		// 启动，标记账本变化
+		markChange(Constant.CHANGE_TYE_CURRENT_ACCOUNT_BOOK);
+	}
+	
+	private void checkAndCreateDefaultInfo() {
 		if (AppData.getAccountInfo() == null) {
 			// 没有账户信息，创建本地默认账户
 			createDefaultAccountInfo();
@@ -111,11 +129,6 @@ public class BizFacade {
 		if (!hasCurrentAccountBook) {
 			// 没有当前账本，则设置第一个账本
 			AppData.setCurrentAccountBookId(AppData.getAccountBooks().get(0).getAccountBookId());
-		}
-		
-		// 统计账本信息
-		for (int i = 0; i < AppData.getAccountBooks().size(); i++) {
-			reloadAccountBookInfo(AppData.getAccountBooks().get(i).getAccountBookId());
 		}
 	}
 	
@@ -276,7 +289,7 @@ public class BizFacade {
 				AppData.beginStore();
 				AppData.setAccountBooks(accountBooks);
 				
-				if (AppData.getLastSyncDataLocalTime() > accountBook.getCreateTime().getTime()) {
+				if (AppData.getLastSyncDataTime() > accountBook.getCreateTime().getTime()) {
 					// 是在最后一次同步之前创建的，则需要保留到delete中，以同步数据
 					AppData.getDeleteBooks().add(accountBook);
 					AppData.setDeleteBooks(AppData.getDeleteBooks());
@@ -289,16 +302,8 @@ public class BizFacade {
 		}
 	}
 	
-	public boolean checkBookChange(int accountBookId, String checker) {
-		return checkChange("Book" + accountBookId, checker);
-	}
-	
-	public void markBookChange(int accountBookId) {
-		markChange("Book" + accountBookId);
-	}
-	
 	public AccountBookInfo getAccountBookInfo(int accountBookId) {
-		if (checkBookChange(accountBookId, "getAccountBookInfo")) {
+		if (applyBookChange(accountBookId, "getAccountBookInfo")) {
 			reloadAccountBookInfo(accountBookId);
 		}
 		
@@ -440,7 +445,7 @@ public class BizFacade {
 		AppData.setCategories(AppData.getCategories());
 
 		if (accountCategory.getCreateTime().getTime() < AppData
-				.getLastSyncDataLocalTime()) {
+				.getLastSyncDataTime()) {
 			// 最后一次同步数据之前创建的分类，需要保存到删除对象中
 			AppData.getDeleteCategories().add(accountCategory);
 			AppData.setDeleteCategories(AppData.getDeleteCategories());
@@ -501,7 +506,7 @@ public class BizFacade {
 	
 	private BoolResult<SyncDataRequestData> buildSyncDataRequestData(Context context) {
 		DBService dbService = DBService.getInstance(App.getInstance());
-		long lastSyncTime = AppData.getLastSyncDataLocalTime();
+		long lastSyncTime = AppData.getLastSyncDataTime();
 		
 		// 拉取服务器账本
 		ServerResponse<PullAccountBooksResponseData> pullAccountBooksResponse = pullAccountBooks(context);
@@ -868,12 +873,33 @@ public class BizFacade {
 		DBService.getInstance(App.getInstance()).updateAccountRecordsUserId(oldUserId, newUserId);
 	}
 	
+	/************************** 变更标记 ******************************************/
 	public void markChange(String changeType) {
 		ChangeMarkHelper.markChange(changeType);
 	}
 	
+	public void cleanMark(String changeType) {
+		ChangeMarkHelper.cleanMark(changeType);
+	}
+	
 	public boolean checkChange(String changeType, String checker) {
 		return ChangeMarkHelper.checkChange(changeType, checker);
+	}
+	
+	public boolean applyChange(String changeType, String checker) {
+		return ChangeMarkHelper.applyChange(changeType, checker);
+	}
+	
+	public boolean checkBookChange(int accountBookId, String checker) {
+		return checkChange("Book" + accountBookId, checker);
+	}
+	
+	public boolean applyBookChange(int accountBookId, String checker) {
+		return applyChange("Book" + accountBookId, checker);
+	}
+	
+	public void markBookChange(int accountBookId) {
+		markChange("Book" + accountBookId);
 	}
 	
 	public boolean checkLogin(final Activity activity) {
@@ -988,20 +1014,17 @@ public class BizFacade {
 							.setButton1Click(new View.OnClickListener() {
 								@Override
 								public void onClick(View v) {
-									new AsyncTask<Integer, Integer, Integer>() {
-
+									new Thread(new Runnable() {
+										
 										@Override
-										protected Integer doInBackground(Integer... params) {
+										public void run() {
 											agreeInviteMember(context, info.getAccountBookId());
 											
-											dialogBuilder.dismiss();
 											synchronized(wait) {
 												wait.notifyAll();
 											}
-											
-											return null;
 										}
-									}.execute(0);
+									}).start();
 
 									dialogBuilder.dismiss();
 								}

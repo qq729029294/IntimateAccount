@@ -10,15 +10,15 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static final String DB_NAME = "intimate_account_db";
 	private static final int DB_VERSION = 1;
 
-	private static DBHelper mdbHelper;
+	private static DBHelper sDBHelper;
 	public static DBHelper getInstance(Context context)
 	{
-		if(mdbHelper == null)
+		if(sDBHelper == null)
 		{
-			mdbHelper = new DBHelper(context);
+			sDBHelper = new DBHelper(context);
 		}
 		
-		return mdbHelper;
+		return sDBHelper;
 	}
 
 	private DBHelper(Context context) {

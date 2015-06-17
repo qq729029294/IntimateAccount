@@ -11,6 +11,7 @@ import java.io.Serializable;
 
 import com.nan.ia.app.R;
 import com.nan.ia.app.biz.BizFacade;
+import com.nan.ia.app.constant.Constant;
 import com.nan.ia.app.dialog.CustomToast;
 import com.nan.ia.app.dialog.LoadingDialog;
 import com.nan.ia.app.widget.CustomCheckBox;
@@ -162,6 +163,7 @@ public class LoginActivity extends BaseActionBarActivity {
 				
 				if (result.getRet() == ServerErrorCode.RET_SUCCESS) {
 					LoginActivity.this.finish();
+					BizFacade.getInstance().markChange(Constant.CHANGE_TYE_DO_SYNC_DATA);
 				}
 				
 				super.onPostExecute(result);

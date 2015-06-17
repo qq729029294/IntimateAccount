@@ -10,8 +10,6 @@ package com.nan.ia.app.widget;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.nan.ia.app.utils.LogUtils;
-
 import android.animation.TimeAnimator;
 import android.animation.TimeAnimator.TimeListener;
 import android.content.Context;
@@ -20,7 +18,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Paint.Cap;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -33,7 +30,7 @@ public class RatioCircleView extends ImageView {
 	float mMarginWidth = DEFAULT_MARGIN_WIDTH;
 	
 	Paint mCircleBgPaint;
-	int mCircleBgColor = Color.argb(33, 255, 255, 255);
+	int mCircleBgColor = Color.argb(66, 255, 255, 255);
 	RectF mCircleBgRect;
 	
 	List<Paint> mItemPaints = new ArrayList<Paint>();
@@ -144,7 +141,6 @@ public class RatioCircleView extends ImageView {
 			Paint paint = new Paint();
 			paint.setAntiAlias(true);
 			paint.setStyle(Paint.Style.STROKE);
-			paint.setStrokeCap(Cap.ROUND);
 			paint.setStrokeWidth(mStroKeWidth);
 			paint.setColor(mItems.get(i).color);
 			mItemPaints.add(paint);
