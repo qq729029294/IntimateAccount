@@ -14,7 +14,7 @@ public class ServerConfigs {
 	public static final String MAIL_SMTP_SERVER = "smtp.126.com";
 	public static final String MAIL_FROM_MAIL = "weijiangnan@126.com";
 	public static final String MAIL_FROM_MAIL_PASSWORD = "lj86598095";
-	public static final String MAIL_SUBJECT = "亲密账-账号注册";
+	public static final String MAIL_SUBJECT = "一起记账-账号注册";
 	public static final String MAIL_KEY_VERIFICATION_CODE = "${verification_code}";
-	public static final String MAIL_FMT_CONTENT = "欢迎加入亲密帐：\n\n请输入以下验证码，完成注册\n${verification_code}\n\n亲密账";
+	public static final String MAIL_FMT_CONTENT = "欢迎加入一起记账：\n\n请输入以下验证码，完成注册\n${verification_code}\n\n一起记账";
 }

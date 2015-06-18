@@ -359,7 +359,7 @@ public class DBService {
 			}
 			
 			// 检查成员表是否有新成员
-			query = session.createQuery("FROM AccountBookMemberTbl r WHERE r.createTime > ? AND r.accountBookId IN( SELECT s.id.accountBookId FROM AccountBookMemberTbl s WHERE s.id.memberUserId = ? )");
+			query = session.createQuery("FROM AccountBookMemberTbl r WHERE r.createTime > ? AND r.id.accountBookId IN( SELECT s.id.accountBookId FROM AccountBookMemberTbl s WHERE s.id.memberUserId = ? )");
 			query.setParameter(0, new Date(lastUpdateTime));
 			query.setParameter(1, userId);
 			

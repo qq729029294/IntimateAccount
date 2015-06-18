@@ -102,8 +102,7 @@ public class MainActivity extends BaseActivity {
 		} else if (mBizFacade.checkChange(Constant.CHANGE_TYE_CURRENT_ACCOUNT_BOOK, this.toString()) ||
 				mBizFacade.checkBookChange(AppData.getCurrentAccountBookId(), this.toString())) {
 			// 数据有变动
-			refreshUI();
-			beginStartAnimation();
+			doRefresh();
 		}
 		
 		super.onStart();
@@ -218,7 +217,7 @@ public class MainActivity extends BaseActivity {
 					
 					@Override
 					public void onClick(View v) {
-						deleteRecord(item.getAccountRecord().getAccountBookId());
+						deleteRecord(item.getAccountRecord());
 					}
 				});
 				
@@ -313,6 +312,12 @@ public class MainActivity extends BaseActivity {
 				doSync();
 			}
 		});
+	}
+	
+	private void doRefresh() {
+		// 数据有变动
+		refreshUI();
+		beginStartAnimation();
 	}
 	
 	private void doSync() {
@@ -572,8 +577,11 @@ public class MainActivity extends BaseActivity {
 		MainActivity.this.startActivity(makeTransDataIntent(intent, transData));
 	}
 	
-	private void deleteRecord(int accountRecordId) {
-		mBizFacade.deleteAccountRecord(accountRecordId);
+	private void deleteRecord(AccountRecord record) {
+		mBizFacade.deleteRecord(record);
+		
+		// 刷新
+		doRefresh();
 	}
 	
 	public static class TransData implements Serializable {

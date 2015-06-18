@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.nan.ia.app.biz.BizFacade;
 import com.nan.ia.common.entities.AccountCategory;
 import com.nan.ia.common.entities.AccountRecord;
 
@@ -34,13 +35,13 @@ public class DBService {
 	}
 	
 	public void createAccountBook(int userId, String name, String description) {
-		long currentTimeMillis = System.currentTimeMillis();
+		long currentTimeMillis = BizFacade.getInstance().obtainNowUpdateTime();
 		mDatabase.execSQL("INSERT INTO `account_book_tbl` (`name`, `description`, `create_user_id`, `update_time`, `create_time`) VALUES (?, ?, ?, ?, ?);",
 				new Object[] { name, description, userId, currentTimeMillis, currentTimeMillis });
 	}
 	
 	public void createAccountRecord(AccountRecord record) {
-		long now = System.currentTimeMillis();
+		long now = BizFacade.getInstance().obtainNowUpdateTime();
 		mDatabase.execSQL(
 						"INSERT INTO `account_record_tbl` (`account_book_id`, `category`, `water_value`, `description`, `record_time`, `record_user_id`, `create_time`, `update_time`) VALUES"
 								+ "(?, ?, ?, ?, ?, ?, ?, ?);",
@@ -52,7 +53,7 @@ public class DBService {
 	}
 	
 	public void updateAccountRecord(AccountRecord record) {
-		long now = System.currentTimeMillis();
+		long now = BizFacade.getInstance().obtainNowUpdateTime();
 		mDatabase.execSQL("UPDATE `account_record_tbl` SET `account_book_id`=?, `category`=?, `water_value`=?, `description`=?, `record_time`=?, `record_user_id`=?, `create_time`=?, `update_time`=? WHERE `account_record_id`=?",
 				new Object[] {
 				record.getAccountBookId(),

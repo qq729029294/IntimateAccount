@@ -219,10 +219,10 @@ public class RecordActivity extends BaseActionBarActivity {
 		// 完成编辑
 		if (mTransData.getType() == RecordActivityType.NEW) {
 			// 新建
-			BizFacade.getInstance().createAccountRecord(mCurrentRecord);
+			BizFacade.getInstance().createRecord(mCurrentRecord);
 		} else {
 			// 编辑
-			BizFacade.getInstance().editAccountRecord(mCurrentRecord);
+			BizFacade.getInstance().editRecord(mCurrentRecord);
 		}
 		
 		finish();

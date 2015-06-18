@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import com.nan.ia.app.R;
 import com.nan.ia.app.biz.BizFacade;
+import com.nan.ia.app.data.AppData;
+import com.nan.ia.app.dialog.CustomToast;
 import com.nan.ia.app.dialog.LoadingDialog;
 import com.nan.ia.app.widget.FullLineEditControl;
 import com.nan.ia.common.constant.ServerErrorCode;
@@ -94,7 +96,7 @@ public class InviteMemberActivity extends BaseActionBarActivity {
 	}
 	
 	private void doOK() {
-		if (!checkInput()) {
+		if (!checkCanDo()) {
 			return;
 		}
 		
@@ -125,6 +127,15 @@ public class InviteMemberActivity extends BaseActionBarActivity {
 			return false;
 		}
 
+		return true;
+	}
+	
+	private boolean checkCanDo() {
+		if (mEditusername.getText().toString().equals(AppData.getAccountInfo().getUsername())) {
+			CustomToast.showToast("不能邀请自己！");
+			return false;
+		}
+		
 		return true;
 	}
 	

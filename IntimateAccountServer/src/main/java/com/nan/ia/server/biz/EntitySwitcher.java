@@ -259,7 +259,7 @@ public class EntitySwitcher {
 		}
 		
 		AccountRecordTbl tbl = new AccountRecordTbl();
-		tbl.setAccountRecordId(item.getAccountBookId());
+		tbl.setAccountRecordId(item.getAccountRecordId());
 		tbl.setAccountBookId(item.getAccountBookId());
 		tbl.setCategory(item.getCategory());
 		tbl.setWaterValue(item.getWaterValue());
@@ -287,7 +287,8 @@ public class EntitySwitcher {
 		}
 		
 		AccountRecordDeleteTbl tbl = new AccountRecordDeleteTbl();
-		tbl.setAccountRecordId(item.getAccountBookId());
+		tbl.setAccountRecordId(item.getAccountRecordId());
+		tbl.setAccountBookId(item.getAccountBookId());
 		tbl.setDeleteUserId(deleteUserId);
 		tbl.setCreateTime(item.getCreateTime());
 		
