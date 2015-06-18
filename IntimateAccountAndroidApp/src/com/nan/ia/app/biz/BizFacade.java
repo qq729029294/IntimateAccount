@@ -97,7 +97,7 @@ public class BizFacade {
 		// 如果是Wi-Fi开启，并且已经登录的情况，默认同步数据
 		if (AppData.getAccountInfo().getAccountType() != Constant.ACCOUNT_TYPE_UNLOGIN &&
 				HttpUtil.isWifiDataEnable(App.getInstance())) {
-			markChange(Constant.CHANGE_TYE_DO_SYNC_DATA);
+			markChange(Constant.CHANGE_TYE_USER);
 		}
 		
 		// 启动，标记账本变化

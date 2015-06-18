@@ -1,6 +1,7 @@
 package com.nan.ia.app.ui;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.animation.ArgbEvaluator;
@@ -30,6 +31,7 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nan.ia.app.R;
@@ -65,13 +67,14 @@ public class MainActivity extends BaseActivity {
     FrameLayout mLayoutColor;
     StickyLayout mStickyLayout;
     RatioCircleView mRatioCircleMain;
-    LinearLayout mLayoutDetails;
+    RelativeLayout mLayoutDetails;
     LinearLayout mLayoutLoading;
     TextView mTextInviteMember;
 	TextView mTextBalance;
 	TextView mTextIncome;
 	TextView mTextExpend;
 	TextView mTextLoading;
+	TextView mTextNickname;
 	
     Button mBtnAccountBookSettings;
     ResideMenu mResideMenu;
@@ -92,7 +95,7 @@ public class MainActivity extends BaseActivity {
 	
 	@Override
 	protected void onStart() {
-		if (mBizFacade.applyChange(Constant.CHANGE_TYE_DO_SYNC_DATA, this.toString())) {
+		if (mBizFacade.applyChange(Constant.CHANGE_TYE_USER, this.toString())) {
 			// 需要同步数据
 			refreshUI();
 			doSync();
@@ -120,6 +123,10 @@ public class MainActivity extends BaseActivity {
 			
 			@Override
 			public void onClick(View v) {
+				if (!mBizFacade.checkLogin(MainActivity.this)) {
+					return;
+				}
+				
 				Intent intent = new Intent(MainActivity.this, InviteMemberActivity.class);
 				InviteMemberActivity.TransData transData = new InviteMemberActivity.TransData();
 				transData.setAccountBookId(AppData.getCurrentAccountBookId());
@@ -154,7 +161,7 @@ public class MainActivity extends BaseActivity {
         
         mLayoutColor = (FrameLayout) findViewById(R.id.layout_color);
         mRatioCircleMain = (RatioCircleView) findViewById(R.id.ratio_circle_main);
-        mLayoutDetails = (LinearLayout) findViewById(R.id.layout_details);
+        mLayoutDetails = (RelativeLayout) findViewById(R.id.layout_details);
         mLayoutLoading = (LinearLayout) findViewById(R.id.layout_loading);
 		mTextBalance = (TextView) findViewById(R.id.text_balance);
 		mTextIncome = (TextView) findViewById(R.id.text_income);
@@ -221,27 +228,45 @@ public class MainActivity extends BaseActivity {
 		});
 	}
 	
-	private void setupMenu() {
-        // attach to current activity;
-		mResideMenu = new ResideMenu(this);
-		mResideMenu.setBackground(R.drawable.menu_background);
-		mResideMenu.attachToActivity(this);
-        //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip. 
-		mResideMenu.setScaleValue(0.6f);
-
+	private void refreshMenu() {
+		if (!mBizFacade.applyChange(Constant.CHANGE_TYE_CURRENT_ACCOUNT_BOOK, "refreshMenu" + this.toString())) {
+			return;
+		}
+		
+		mResideMenu.removeAllMenuItems();
+		
         // create menu items;
 		View view = LayoutInflater.from(this).inflate(R.layout.slide_menu_account, null);
+		TextView textNickname = (TextView) view.findViewById(R.id.text_nickname);
+		if (AppData.getAccountInfo().getAccountType() == Constant.ACCOUNT_TYPE_UNLOGIN) {
+			// 未登录，去登录
+			textNickname.setText("点击登录");
+			view.setClickable(true);
+			view.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					startActivity(new Intent(MainActivity.this, LoginActivity.class));
+				}
+			});
+		} else {
+			view.setClickable(false);
+			textNickname.setText(AppData.getAccountInfo().getUsername());
+		}
+		
 		mResideMenu.addCustomMenuItem(view, ResideMenu.DIRECTION_LEFT);
 		
-		ResideMenuItem itemLogin = new ResideMenuItem(this, R.drawable.icon_login, R.string.menu_account_login);
-		itemLogin.setOnClickListener(new OnClickListener() {
+		ResideMenuItem itemPersonalInfo = new ResideMenuItem(this, R.drawable.icon_personal_info, "个人信息");
+		itemPersonalInfo.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(MainActivity.this, LoginActivity.class));
+				// TODO
+				CustomToast.showToast("施工中");
 			}
 		});
-		mResideMenu.addMenuItem(itemLogin, ResideMenu.DIRECTION_LEFT);
+		
+		mResideMenu.addMenuItem(itemPersonalInfo, ResideMenu.DIRECTION_LEFT);
 		
 		ResideMenuItem itemAbout = new ResideMenuItem(this, R.drawable.icon_settings, R.string.menu_about);
 		itemAbout.setOnClickListener(new OnClickListener() {
@@ -252,7 +277,16 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 		
-        mResideMenu.addMenuItem(itemAbout, ResideMenu.DIRECTION_LEFT);
+		mResideMenu.addMenuItem(itemAbout, ResideMenu.DIRECTION_LEFT);
+	}
+	
+	private void setupMenu() {
+        // attach to current activity;
+		mResideMenu = new ResideMenu(this);
+		mResideMenu.setBackground(R.drawable.menu_background);
+		mResideMenu.attachToActivity(this);
+        //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip. 
+		mResideMenu.setScaleValue(0.6f);
 	}
 	
 	private void setupTop() {
@@ -331,8 +365,8 @@ public class MainActivity extends BaseActivity {
 		double expend = accountBookInfo.getStatisticalInfo().getExpend();
 		double denominator = Math.max(Math.abs(income), Math.abs(expend));
 
-		mTextIncome.setVisibility((income == 0) ? View.GONE : View.VISIBLE);
-		mTextExpend.setVisibility((expend == 0) ? View.GONE : View.VISIBLE);
+//		mTextIncome.setVisibility((income == 0) ? View.GONE : View.VISIBLE);
+//		mTextExpend.setVisibility((expend == 0) ? View.GONE : View.VISIBLE);
 
 		if (denominator == 0) {
 			// 为空，给一个相等值
@@ -388,6 +422,8 @@ public class MainActivity extends BaseActivity {
 		} else {
 			mTextInviteMember.setText("邀请亲朋好友，一起来记录账本吧＋");
 		}
+		
+		refreshMenu();
 	}
 	
 	private void beginStartAnimation() {
@@ -502,23 +538,23 @@ public class MainActivity extends BaseActivity {
 				// 结余
 				String str = Utils.formatCNY(curBalance);
 				SpannableStringBuilder style = new SpannableStringBuilder(str);
-				style.setSpan(
-						new AbsoluteSizeSpan(Utils.sp2px(MainActivity.this, 14)),
-						str.indexOf("元"), str.indexOf("元") + 1,
-						Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-				style.setSpan(new ForegroundColorSpan(MainActivity.this
-						.getResources().getColor(R.color.font_white_ltlt)), str
-						.indexOf("元"), str.indexOf("元") + 1,
-						Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+//				style.setSpan(
+//						new AbsoluteSizeSpan(Utils.sp2px(MainActivity.this, 14)),
+//						str.indexOf("元"), str.indexOf("元") + 1,
+//						Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+//				style.setSpan(new ForegroundColorSpan(MainActivity.this
+//						.getResources().getColor(R.color.font_white_ltlt)), str
+//						.indexOf("元"), str.indexOf("元") + 1,
+//						Spannable.SPAN_INCLUSIVE_INCLUSIVE);
 				mTextBalance.setText(style);
 
-				// 收入
-				str = "+" + Utils.formatCNY(curIncome);
+				// 收入/支出
+				str = "+" + Utils.formatCNY(curIncome) + "/" + Utils.formatCNY(curExpend);
 				mTextIncome.setText(str);
 
 				// 支出
-				str = Utils.formatCNY(curExpend);
-				mTextExpend.setText(str);
+//				str = Utils.formatCNY(curExpend);
+//				mTextExpend.setText(str);
 			}
 		});
 

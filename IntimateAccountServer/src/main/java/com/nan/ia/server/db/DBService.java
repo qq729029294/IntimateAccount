@@ -69,6 +69,10 @@ public class DBService {
 			userTbl.setAvatar("http://p1.gexing.com/touxiang/2011-6/629344710201181462.jpg");
 			userTbl.setDescription("很懒哦，什么都没有留下~");
 			session.save(userTbl);
+			
+			// 昵称填入id
+			userTbl.setNickname("用户" + userTbl.getUserId());
+			session.save(userTbl);
 
 			// 创建登录账户
 			AccountTbl AccountTbl = new AccountTbl();

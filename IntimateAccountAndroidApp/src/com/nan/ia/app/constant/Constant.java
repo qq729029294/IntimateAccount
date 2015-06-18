@@ -23,5 +23,5 @@ public class Constant {
 	
 	// 变更标记
 	public static final String CHANGE_TYE_CURRENT_ACCOUNT_BOOK = "CHANGE_TYE_CURRENT_ACCOUNT_BOOK";
-	public static final String CHANGE_TYE_DO_SYNC_DATA = "CHANGE_TYE_DO_SYNC_DATA";
+	public static final String CHANGE_TYE_USER = "CHANGE_TYE_USER";
 }

@@ -22,8 +22,8 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 public class RatioCircleView extends ImageView {
-    private static final float DEFAULT_STROKE_WIDTH = 22;
-    private static final float DEFAULT_MARGIN_WIDTH = 8;
+    private static final float DEFAULT_STROKE_WIDTH = 18;
+    private static final float DEFAULT_MARGIN_WIDTH = 6;
     
 	List<RatioCircleItem> mItems = new ArrayList<RatioCircleView.RatioCircleItem>();
 	float mStroKeWidth = DEFAULT_STROKE_WIDTH;

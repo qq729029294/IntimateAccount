@@ -56,7 +56,7 @@ public class LoginActivity extends BaseActionBarActivity {
 					@Override
 					public void run() {
 						Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);  
-						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					    LoginActivity.this.startActivity(intent);
 					}
 				});
@@ -162,8 +162,10 @@ public class LoginActivity extends BaseActionBarActivity {
 				LoadingDialog.hideLoading();
 				
 				if (result.getRet() == ServerErrorCode.RET_SUCCESS) {
+					BizFacade.getInstance().markChange(Constant.CHANGE_TYE_USER);
+					
+					LoginActivity.this.startActivity(new Intent(LoginActivity.this, MainActivity.class));
 					LoginActivity.this.finish();
-					BizFacade.getInstance().markChange(Constant.CHANGE_TYE_DO_SYNC_DATA);
 				}
 				
 				super.onPostExecute(result);

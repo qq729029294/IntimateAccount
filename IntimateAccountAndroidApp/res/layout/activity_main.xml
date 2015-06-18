@@ -59,8 +59,8 @@
                 android:orientation="vertical" >
 
                 <include
-                    android:layout_width="240dp"
-                    android:layout_height="240dp"
+                    android:layout_width="260dp"
+                    android:layout_height="260dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="@dimen/margin_large"
                     layout="@layout/view_account_book_content" />

@@ -175,6 +175,13 @@ public class ResideMenu extends FrameLayout{
             layoutRightMenu.addView(view);
         }
     }
+    
+	public void removeAllMenuItems() {
+		layoutLeftMenu.removeAllViews();
+		layoutRightMenu.removeAllViews();
+		leftMenuItems.clear();
+		rightMenuItems.clear();
+	}
     // add by weijiangnan on 2015/06/02 end
 
     /**
