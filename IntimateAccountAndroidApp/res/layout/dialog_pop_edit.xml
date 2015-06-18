@@ -17,9 +17,10 @@
         android:layout_height="match_parent"
         android:layout_below="@id/image_line0"
         android:background="@android:color/white"
-        android:ems="10"
         android:gravity="top|left"
+        android:imeOptions="actionDone"
         android:padding="@dimen/padding_small"
         android:textSize="20sp" >
-    </EditText>
+    </EditText>
+
 </RelativeLayout>

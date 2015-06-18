@@ -130,11 +130,12 @@ public abstract class BaseHttpCmd<T> {
 			
 			if (response.getStatusCode() == CustomHttpResponse.HTTP_REQUEST_EXCEPTION) {
 				// 请求异常，直接返回
+				final String errMsg = response.getErrMsg();
 				MainThreadExecutor.run(new Runnable() {
 
 					@Override
 					public void run() {
-						CustomToast.showToast(R.string.http_request_exception);
+						CustomToast.showToast(errMsg);
 					}
 				});
 			} else {

@@ -3,47 +3,53 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <LinearLayout
-        android:id="@+id/layout_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/layout_bottom"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/margin_large"
-        android:visibility="gone" >
-
-        <com.nan.ia.app.widget.CustomButton
-            android:id="@+id/btn_login"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:text="登录账户" />
-        
-        <com.nan.ia.app.widget.CustomButton
-            android:id="@+id/btn_start"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_large_large"
-            android:text="@string/start" />
-        
-    </LinearLayout>
-
     <RelativeLayout
-        android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/trans_dkdk"
         android:layout_alignParentBottom="true"
-        android:background="@color/trans_dkdk" >
+        android:paddingTop="@dimen/padding"
+        android:paddingLeft="@dimen/padding"
+        android:paddingRight="@dimen/padding"
+        android:paddingBottom="36dp" >
 
         <TextView
             android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_margin="@dimen/margin_large"
-            android:paddingBottom="20dp"
+            android:layout_centerHorizontal="true"
             android:text="赶快一起来吧！"
             android:textColor="@color/white_trans"
-            android:textSize="22dp" />
-    </RelativeLayout>
+            android:textSize="18dp" />
 
+        <LinearLayout
+            android:id="@+id/layout_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_large"
+            android:visibility="gone" >
+
+            <Button
+                android:id="@+id/btn_login"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_btn_circle_white_trans"
+                android:text="账号登录"
+                android:textColor="@drawable/selector_color_white_trans_clickable"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btn_start"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/margin_large_large"
+                android:background="@drawable/selector_btn_circle_white_trans"
+                android:text="@string/start"
+                android:textColor="@drawable/selector_color_white_trans_clickable"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

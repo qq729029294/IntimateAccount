@@ -8,8 +8,8 @@
 package com.nan.ia.app.constant;
 
 public class Url {
-	public static final String URL_PREFIX = "http://192.168.11.207:8080/ia";
-//	public static final String URL_PREFIX = "http://10.235.6.93:8080/ia";
+//	public static final String URL_PREFIX = "http://192.168.11.207:8080/ia";
+	public static final String URL_PREFIX = "http://10.235.6.93:8080/ia";
 	
 	// 同步数据
 	public static final String URL_SYNC_DATA = URL_PREFIX + "/sync_data";

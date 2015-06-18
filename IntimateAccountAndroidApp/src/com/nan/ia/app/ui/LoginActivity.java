@@ -163,8 +163,6 @@ public class LoginActivity extends BaseActionBarActivity {
 				
 				if (result.getRet() == ServerErrorCode.RET_SUCCESS) {
 					BizFacade.getInstance().markChange(Constant.CHANGE_TYE_USER);
-					
-					LoginActivity.this.startActivity(new Intent(LoginActivity.this, MainActivity.class));
 					LoginActivity.this.finish();
 				}
 				

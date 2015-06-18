@@ -72,13 +72,14 @@
         android:background="@color/line_1dp_light_gray" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/layout_center"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/image_category"
         android:layout_toLeftOf="@+id/layout_right"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/margin"
-        android:layout_marginRight="@dimen/margin"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginRight="@dimen/margin_small"
         android:orientation="vertical" >
 
         <TextView
@@ -86,6 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="支出"
+            android:singleLine="true"
             android:textSize="18sp" />
 
         <TextView
@@ -102,11 +104,11 @@
 
     <LinearLayout
         android:id="@id/layout_right"
-        android:layout_width="wrap_content"
+        android:layout_width="117dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="@dimen/margin"
         android:orientation="vertical" >
 
         <TextView
@@ -114,19 +116,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:text="+100"
+            android:text="-1234.56万元"
             android:textColor="@color/expend"
             android:textSize="18sp"
+            android:singleLine="true"
             android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_gravity="right" >
 
             <ImageView
                 android:id="@+id/image_recorder_avatar"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/icon_default_avatar" />
 
@@ -138,6 +142,7 @@
                 android:layout_marginLeft="@dimen/margin_small"
                 android:text="韦江南"
                 android:textColor="@color/font_ltlt"
+                android:singleLine="true"
                 android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>

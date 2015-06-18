@@ -8,6 +8,8 @@ import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.view.View;
 
@@ -906,7 +908,7 @@ public class BizFacade {
 		if (AppData.getAccountInfo().getAccountType() == Constant.ACCOUNT_TYPE_UNLOGIN) {
 			// 未登录，先登录
 			final CustomDialogBuilder dialogBuilder = CustomDialogBuilder.getInstance(activity);
-			String msg = "必须先登录才能同步数据";
+			String msg = "必须先登录才能使用此功能";
 			dialogBuilder
 					.withButton2Drawable(R.drawable.selector_btn_inverse)
 					.withMessage(msg)
@@ -978,7 +980,7 @@ public class BizFacade {
 		return info;
 	}
 	
-	public void pullAndHandleMsgs(Context context) {
+	public boolean pullAndHandleMsgs(Context context) {
 		PullMsgsServerCmd cmd = new PullMsgsServerCmd();
 		ServerResponse<PullMsgsResponseData> response = cmd.send(context, new PullMsgsRequestData() , false);
 		if (response.getRet() == ServerErrorCode.RET_SUCCESS) {
@@ -988,7 +990,11 @@ public class BizFacade {
 			if (null != infos && infos.size() > 0) {
 				doInviteMembers(context, infos);
 			}
+			
+			return true;
 		}
+		
+		return false;
 	}
 	
 	public void doInviteMembers(final Context context, final List<InviteMemberInfo> infos) {
@@ -1032,11 +1038,19 @@ public class BizFacade {
 								@Override
 								public void onClick(View v) {
 									dialogBuilder.dismiss();
-									synchronized(wait) {
-										wait.notifyAll();
-									}
+
 								}
 							}).show();
+					
+					dialogBuilder.setOnCancelListener(new OnCancelListener() {
+						
+						@Override
+						public void onCancel(DialogInterface dialog) {
+							synchronized(wait) {
+								wait.notifyAll();
+							}
+						}
+					});
 				}
 			});				
 			

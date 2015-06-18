@@ -22,7 +22,7 @@
         android:layout_marginTop="@dimen/margin"
         android:layout_below="@id/text_lbl"
         app:fulllineedit_left_text="受邀用户名"
-        app:fulllineedit_max_length="16" >
+        app:fulllineedit_max_length="22" >
     </com.nan.ia.app.widget.FullLineEditControl>
 
     <com.nan.ia.app.widget.CustomButton

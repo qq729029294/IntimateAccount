@@ -73,7 +73,7 @@
                     android:layout_marginRight="@dimen/margin_large_large"
                     android:ellipsize="middle"
                     android:singleLine="true"
-                    android:text="邀请亲朋好友，一起来记录账本吧＋"
+                    android:text="邀请小伙伴，一起来记录账本吧＋"
                     android:textColor="@drawable/selector_color_white_trans_clickable"
                     android:textSize="16dp" />
 

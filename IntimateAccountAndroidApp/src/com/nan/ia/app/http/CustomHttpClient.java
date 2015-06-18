@@ -61,6 +61,7 @@ public class CustomHttpClient {
     public static CustomHttpResponse postFromWebByHttpClient(Context context, String url,
             NameValuePair... nameValuePairs) throws IOException {
     	HttpResponse response = null;
+    	String errMsg = null;
         try {
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             if (nameValuePairs != null) {
@@ -85,18 +86,13 @@ public class CustomHttpClient {
                 throw new RuntimeException("请求失败");
             }
             cookieStore = client.getCookieStore();
-        } catch (UnsupportedEncodingException e) {
-            LogUtils.w(TAG, "----UnsupportedEncodingException"
+        } catch (Exception e) {
+            LogUtils.w(TAG, "----Http Post Exception"
                     + e.getMessage());
-        } catch (ClientProtocolException e) {
-            LogUtils.w(TAG, "----ClientProtocolException" + e.getMessage());
-        } catch (IOException e) {
-            LogUtils.w(TAG, "----IOException" + e.getMessage());
-            // throw new RuntimeException(context.getResources().getString(
-            // R.string.httpError), e);
+            errMsg = "网络请求出现异常:" + e.getMessage();
         }
         
-        return CustomHttpClient.parseCustomHttpResponse(response);
+        return CustomHttpClient.parseCustomHttpResponse(response, errMsg);
     }
 
     public static CustomHttpResponse getFromWebByHttpClient(Context context, String url,
@@ -136,7 +132,7 @@ public class CustomHttpClient {
         }
         cookieStore = httpclient.getCookieStore();
         
-        return CustomHttpClient.parseCustomHttpResponse(response);
+        return CustomHttpClient.parseCustomHttpResponse(response, null);
     }
 
     /**
@@ -182,7 +178,7 @@ public class CustomHttpClient {
         return customerHttpClient;
     }
     
-    private static CustomHttpResponse parseCustomHttpResponse(HttpResponse response) throws ParseException, IOException {
+    private static CustomHttpResponse parseCustomHttpResponse(HttpResponse response, String errMsg) throws ParseException, IOException {
     	CustomHttpResponse customHttpResponse = new CustomHttpResponse();
     	if (null != response) {
     		customHttpResponse.setStatusCode(response.getStatusLine().getStatusCode());
@@ -192,7 +188,10 @@ public class CustomHttpClient {
                     CHARSET_UTF8));
 		}
     	
-    	LogUtils.d(TAG, "Http result, statusCode=" + customHttpResponse.getStatusCode() + "\nresponse=" + customHttpResponse.getResponse());
+    	customHttpResponse.setErrMsg(errMsg);
+    	LogUtils.d(TAG, "Http result, statusCode=" + customHttpResponse.getStatusCode() +
+    			", errMsg=" + errMsg +
+    			"\nresponse=" + customHttpResponse.getResponse());
     	
     	return customHttpResponse;
     }

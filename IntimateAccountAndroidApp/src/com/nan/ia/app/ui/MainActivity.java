@@ -229,10 +229,6 @@ public class MainActivity extends BaseActivity {
 	}
 	
 	private void refreshMenu() {
-		if (!mBizFacade.applyChange(Constant.CHANGE_TYE_CURRENT_ACCOUNT_BOOK, "refreshMenu" + this.toString())) {
-			return;
-		}
-		
 		mResideMenu.removeAllMenuItems();
 		
         // create menu items;
@@ -287,6 +283,8 @@ public class MainActivity extends BaseActivity {
 		mResideMenu.attachToActivity(this);
         //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip. 
 		mResideMenu.setScaleValue(0.6f);
+		
+		refreshMenu();
 	}
 	
 	private void setupTop() {
@@ -331,10 +329,11 @@ public class MainActivity extends BaseActivity {
 
 			@Override
 			protected Integer doInBackground(Integer... params) {
-				// 拉取处理邀请信息
-				mBizFacade.pullAndHandleMsgs(MainActivity.this);
-				// 同步数据
-				mBizFacade.syncDataToServer(MainActivity.this);
+				// 拉取并处理邀请信息
+				if (mBizFacade.pullAndHandleMsgs(MainActivity.this)) {
+					// 同步数据
+					mBizFacade.syncDataToServer(MainActivity.this);
+				}
 				
 				waiter.waitForDuration(MIN_LOADING_DURATION);
 				return null;
@@ -353,6 +352,11 @@ public class MainActivity extends BaseActivity {
 	}
 	
 	private void refreshUI() {
+		// 刷新menu
+		if (mBizFacade.applyChange(Constant.CHANGE_TYE_USER, "refreshMenu" + this.toString())) {
+			refreshMenu();
+		}
+		
 		AccountBookInfo accountBookInfo = mBizFacade.getAccountBookInfo(AppData
 				.getCurrentAccountBookId());
 		// 标志已经更新
@@ -420,10 +424,8 @@ public class MainActivity extends BaseActivity {
 			sb.append(String.format("共位%d成员，添加＋", memberUserInfos.size()));
 			mTextInviteMember.setText(sb.toString());
 		} else {
-			mTextInviteMember.setText("邀请亲朋好友，一起来记录账本吧＋");
+			mTextInviteMember.setText("邀请小伙伴，一起来记录账本吧＋");
 		}
-		
-		refreshMenu();
 	}
 	
 	private void beginStartAnimation() {

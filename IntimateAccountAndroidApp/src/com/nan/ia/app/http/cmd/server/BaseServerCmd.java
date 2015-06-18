@@ -114,7 +114,7 @@ public abstract class BaseServerCmd<REQUEST_DATA, RESPONSE_DATA> {
             if (response.getStatusCode() == CustomHttpResponse.HTTP_REQUEST_EXCEPTION) {
             	// 请求异常
             	serverResponse.setRet(ServerErrorCode.RET_HTTP_REQUEST_EXCEPTION);
-            	serverResponse.setErrMsg(context.getString(R.string.http_request_exception));
+            	serverResponse.setErrMsg(response.getErrMsg());
             	return serverResponse;
             } else if (response.getStatusCode() != HttpStatus.SC_OK) {
             	// 请求错误

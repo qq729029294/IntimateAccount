@@ -6,7 +6,8 @@ package com.nan.ia.app.http;
 public class CustomHttpResponse {
 	public static final int HTTP_REQUEST_EXCEPTION = -1;
 	
-	private int statusCode;
+	private int statusCode = HTTP_REQUEST_EXCEPTION;
+	private String errMsg;
 	private String response;
 	
 	public int getStatusCode() {
@@ -20,5 +21,11 @@ public class CustomHttpResponse {
 	}
 	public void setResponse(String response) {
 		this.response = response;
+	}
+	public String getErrMsg() {
+		return errMsg;
+	}
+	public void setErrMsg(String errMsg) {
+		this.errMsg = errMsg;
 	}
 }

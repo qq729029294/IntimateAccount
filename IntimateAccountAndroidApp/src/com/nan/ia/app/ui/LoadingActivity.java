@@ -65,18 +65,18 @@ public class LoadingActivity extends BaseActivity {
 	}
 	
 	private void loadComplete() {
-//		if (!AppData.isInit()) {
+		if (!AppData.isInit()) {
 			// 初始化引导界面
 			AppData.setInit(true);
 			
 			Intent intent = new Intent(LoadingActivity.this, StartActivity.class);
 			startActivity(intent);
 			finish();
-//		} else {
-//			// 主界面
-//			Intent intent = new Intent(LoadingActivity.this, MainActivity.class);
-//			startActivity(intent);
-//			finish();
-//		}
+		} else {
+			// 主界面
+			Intent intent = new Intent(LoadingActivity.this, MainActivity.class);
+			startActivity(intent);
+			finish();
+		}
 	}
 }
