@@ -2,10 +2,15 @@ package com.nan.ia.server.db;
 
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistryBuilder;
+
+import com.nan.ia.common.utils.BoolResult;
+import com.nan.ia.server.db.entities.AccountTbl;
 
 public class HibernateUtil {
 
@@ -64,5 +69,49 @@ public class HibernateUtil {
     	for (int i = 0; i < list.size(); i++) {
 			session.delete(list.get(i));
 		}
+    }
+    
+    public static abstract class TransactionBoolResultRunable<RESULT> {
+		public abstract RESULT run(Session session);
+		public BoolResult<RESULT> execute() {
+			Session session = HibernateUtil.getSession();
+			Transaction trans = session.getTransaction();
+			RESULT result = null;
+			try {
+				trans.begin();
+				result = this.run(session);
+				trans.commit();
+				
+				return BoolResult.True(result);
+			} catch (Exception e) {
+				trans.rollback();
+				e.printStackTrace();
+			}
+			
+			return BoolResult.False();
+		}
+    }
+    
+    public static abstract class TransactionRunable<RESULT> {
+		public abstract RESULT run(Session session);
+		public RESULT execute() {
+			Session session = HibernateUtil.getSession();
+			Transaction trans = session.getTransaction();
+			RESULT result = null;
+			try {
+				trans.begin();
+				result = this.run(session);
+				trans.commit();
+			} catch (Exception e) {
+				trans.rollback();
+				e.printStackTrace();
+			}
+			
+			return result;
+		}
+    }
+    
+    public static void executeTranscation(Runnable runnable) {
+    	
     }
 }

@@ -22,15 +22,15 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 public class RatioCircleView extends ImageView {
-    private static final float DEFAULT_STROKE_WIDTH = 18;
-    private static final float DEFAULT_MARGIN_WIDTH = 6;
+    private static final float DEFAULT_STROKE_WIDTH = 24;
+    private static final float DEFAULT_MARGIN_WIDTH = 8;
     
 	List<RatioCircleItem> mItems = new ArrayList<RatioCircleView.RatioCircleItem>();
 	float mStroKeWidth = DEFAULT_STROKE_WIDTH;
 	float mMarginWidth = DEFAULT_MARGIN_WIDTH;
 	
 	Paint mCircleBgPaint;
-	int mCircleBgColor = Color.argb(66, 255, 255, 255);
+	int mCircleBgColor = Color.argb(127, 255, 255, 255);
 	RectF mCircleBgRect;
 	
 	List<Paint> mItemPaints = new ArrayList<Paint>();

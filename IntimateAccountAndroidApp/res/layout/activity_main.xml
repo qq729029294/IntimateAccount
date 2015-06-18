@@ -75,7 +75,7 @@
                     android:singleLine="true"
                     android:text="邀请小伙伴，一起来记录账本吧＋"
                     android:textColor="@drawable/selector_color_white_trans_clickable"
-                    android:textSize="16dp" />
+                    android:textSize="18dp" />
 
                 <Button
                     android:id="@+id/btn_record"

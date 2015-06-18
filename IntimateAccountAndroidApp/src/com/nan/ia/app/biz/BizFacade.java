@@ -762,7 +762,7 @@ public class BizFacade {
 		for (int i = 0; i < localBooks.size(); i++) {
 			for (int j = 0; j < serverBooks.size(); j++) {
 				final AccountBook localBook = localBooks.get(i);
-				AccountBook serverBook = serverBooks.get(i);
+				AccountBook serverBook = serverBooks.get(j);
 
 				if (localBook.getAccountBookId() != serverBook
 						.getAccountBookId()

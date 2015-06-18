@@ -1,7 +1,6 @@
 package com.nan.ia.app.ui;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import android.animation.ArgbEvaluator;
@@ -9,16 +8,12 @@ import android.animation.ObjectAnimator;
 import android.animation.TimeAnimator;
 import android.animation.TimeAnimator.TimeListener;
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -305,7 +300,7 @@ public class MainActivity extends BaseActivity {
 			}
 		});
 		
-		findViewById(R.id.btn_sync).setOnClickListener(new OnClickListener() {
+		findViewById(R.id.layout_details).setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {

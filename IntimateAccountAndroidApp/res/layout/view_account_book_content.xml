@@ -10,99 +10,86 @@
 
     <RelativeLayout
         android:id="@+id/layout_details"
-        android:layout_width="260dp"
-        android:layout_height="260dp"
+        android:layout_width="190dp"
+        android:layout_height="190dp"
+        android:layout_gravity="center"
+        android:background="@drawable/selector_btn_trans_circle"
+        android:clickable="true"
         android:orientation="vertical" >
 
-        <RelativeLayout
-            android:id="@+id/btn_sync"
-            android:layout_width="196dp"
-            android:layout_height="196dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@drawable/selector_btn_trans_circle"
-            android:clickable="true"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:paddingTop="@dimen/padding" >
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/text_balance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:paddingTop="@dimen/padding"
-                android:orientation="vertical" >
+                android:layout_gravity="center"
+                android:ellipsize="none"
+                android:maxWidth="180dp"
+                android:singleLine="true"
+                android:text="500元"
+                android:textColor="@color/font_white_lt"
+                android:textSize="36sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/text_balance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:ellipsize="none"
-                    android:singleLine="true"
-                    android:text="500元"
-                    android:textColor="@color/white"
-                    android:textSize="34sp"
-                    android:textStyle="bold" />
+            <TextView
+                android:id="@+id/text_income"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ellipsize="none"
+                android:singleLine="true"
+                android:text="+3000元/-2000元"
+                android:textColor="@color/font_white_ltlt"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/text_income"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:ellipsize="none"
-                    android:singleLine="true"
-                    android:text="+3000元/-2000元"
-                    android:textColor="@color/font_white_ltlt"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+            <TextView
+                android:id="@+id/text_expend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ellipsize="none"
+                android:singleLine="true"
+                android:text="支2500元"
+                android:textColor="@color/font_white_ltlt"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/text_expend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:ellipsize="none"
-                    android:singleLine="true"
-                    android:text="支2500元"
-                    android:textColor="@color/font_white_ltlt"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:visibility="gone" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/margin"
-                    android:ellipsize="none"
-                    android:singleLine="true"
-                    android:text="点击同步数据"
-                    android:textColor="@color/font_white_ltlt"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </RelativeLayout>
-
-        <!--
-        <ImageView
-            android:id="@+id/btn_sync"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/margin"
-            android:src="@drawable/icon_sync" />        -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin"
+                android:ellipsize="none"
+                android:singleLine="true"
+                android:text="点击同步数据"
+                android:textColor="@color/font_white_ltlt"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/layout_loading"
-        android:layout_width="260dp"
-        android:layout_height="260dp"
+        android:layout_width="190dp"
+        android:layout_height="190dp"
+        android:layout_gravity="center"
+        android:background="@drawable/selector_btn_trans_circle"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone" >
 
         <ImageView
             android:id="@+id/image_loading"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:layout_gravity="center_horizontal"
             android:background="@anim/frame_loading_expression" />
 
@@ -111,12 +98,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin"
             android:ellipsize="none"
             android:singleLine="true"
             android:text="拼命加载中~"
-            android:layout_marginTop="@dimen/margin"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="22sp"
             android:textStyle="bold" />
     </LinearLayout>
 
