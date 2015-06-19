@@ -86,8 +86,6 @@ public class RecordActivity extends BaseActionBarActivity {
 	}
 	
 	private void initUI() {
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-		
 		// 两个父分类
 		final AccountCategory categoryExpend = BizFacade.getInstance().getCategory(
 				AppData.getCurrentAccountBookId(), Constant.CATEGORY_EXPEND);

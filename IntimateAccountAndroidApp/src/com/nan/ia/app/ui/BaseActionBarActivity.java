@@ -38,8 +38,6 @@ public abstract class BaseActionBarActivity extends BaseActivity {
 				R.id.actionBar);
 		mLayoutContainer = (RelativeLayout) getWindow().getDecorView()
 				.findViewById(R.id.layout_container);
-		
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
 		initActionBar();
 	}

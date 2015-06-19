@@ -14,6 +14,10 @@ public class MinDurationWaiter {
 		beginTime = System.currentTimeMillis();
 	}
 	
+	public boolean isWaitTimeout(long duration) {
+		return (beginTime + duration) < System.currentTimeMillis();
+	}
+	
 	public void waitForDuration(long duration) {
 		long restTime = (beginTime + duration) - System.currentTimeMillis();
 		if (restTime > 0) {

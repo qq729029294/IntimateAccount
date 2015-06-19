@@ -312,6 +312,7 @@ public class RecordsExpandableListAdapter extends BaseExpandableListAdapter impl
 		return convertView;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void updateGroupView(View convertView, int groupPosition) {
 		convertView.setBackgroundColor(mGroupBackgroudColor);
 		

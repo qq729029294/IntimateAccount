@@ -2,7 +2,6 @@ package com.nan.ia.app.adapter;
 
 import java.util.List;
 
-import com.nan.ia.app.data.AppData;
 import com.nan.ia.app.view.CategoryFragment;
 import com.nan.ia.common.entities.AccountCategory;
 

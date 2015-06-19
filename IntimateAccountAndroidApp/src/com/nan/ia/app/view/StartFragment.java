@@ -3,6 +3,7 @@ package com.nan.ia.app.view;
 import com.nan.ia.app.R;
 import com.nan.ia.app.ui.LoginActivity;
 import com.nan.ia.app.ui.MainActivity;
+import com.nan.ia.app.ui.MainActivity.TransData;
 import com.nan.ia.app.widget.CustomButton;
 
 import android.support.v4.app.Fragment;
@@ -70,13 +71,13 @@ public class StartFragment extends Fragment {
 				
 				@Override
 				public void onClick(View v) {
-					getActivity().finish();
-					
-					// 跳转到主界面，但是马上调用登录
+					// 跳转到主界面，立刻跳转到登录
 					Intent intent = new Intent(getActivity(), MainActivity.class);
 					MainActivity.TransData transData = new MainActivity.TransData();
 					transData.setLoginImmediate(true);
-					startActivity(MainActivity.makeTransDataIntent(intent, transData));
+					getActivity().startActivity(MainActivity.makeTransDataIntent(intent, transData));
+					getActivity().finish();
+					getActivity().overridePendingTransition(R.anim.activity_open_enter, R.anim.activity_open_exit);
 				}
 			});
 			
@@ -84,11 +85,11 @@ public class StartFragment extends Fragment {
 				
 				@Override
 				public void onClick(View v) {
-					getActivity().finish();
-					
 					// 主界面
 					Intent intent = new Intent(getActivity(), MainActivity.class);
-					startActivity(intent);
+					getActivity().startActivity(intent);
+					getActivity().finish();
+					getActivity().overridePendingTransition(R.anim.activity_open_enter, R.anim.activity_open_exit);
 				}
 			});
 		}

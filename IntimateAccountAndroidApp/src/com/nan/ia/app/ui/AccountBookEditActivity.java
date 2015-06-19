@@ -43,11 +43,6 @@ public class AccountBookEditActivity extends BaseActionBarActivity {
 	}
 	
 	private void initUI() {
-		// 默认弹出软键盘
-		getWindow().setSoftInputMode(
-				WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
-						| WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-		
 		mEditName = ((FullLineEditControl) findViewById(R.id.full_line_edit_control_name)).getEditText();
 		mEditDescription = ((FullLineEditControl) findViewById(R.id.full_line_edit_control_description)).getEditText();
 		

@@ -8,12 +8,14 @@ import android.animation.ObjectAnimator;
 import android.animation.TimeAnimator;
 import android.animation.TimeAnimator.TimeListener;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.nan.ia.app.App;
 import com.nan.ia.app.R;
 import com.nan.ia.app.adapter.RecordsExpandableListAdapter;
 import com.nan.ia.app.adapter.RecordsExpandableListAdapter.ListItemRecord;
@@ -73,6 +76,8 @@ public class MainActivity extends BaseActivity {
 	
     Button mBtnAccountBookSettings;
     ResideMenu mResideMenu;
+    
+    MinDurationWaiter mExitWaiter = new MinDurationWaiter();
     
     BizFacade mBizFacade = BizFacade.getInstance();
 
@@ -222,6 +227,7 @@ public class MainActivity extends BaseActivity {
 		});
 	}
 	
+	@SuppressLint("InflateParams")
 	private void refreshMenu() {
 		mResideMenu.removeAllMenuItems();
 		
@@ -241,7 +247,10 @@ public class MainActivity extends BaseActivity {
 			});
 		} else {
 			view.setClickable(false);
-			textNickname.setText(AppData.getAccountInfo().getUsername());
+			int userId = AppData.getAccountInfo().getUserId();
+			UserInfo userInfo = mBizFacade.getInstance().obtainUserInfo(this, userId, false);
+			textNickname.setText(userInfo.getNickname());
+			
 		}
 		
 		mResideMenu.addCustomMenuItem(view, ResideMenu.DIRECTION_LEFT);
@@ -273,10 +282,11 @@ public class MainActivity extends BaseActivity {
 	private void setupMenu() {
         // attach to current activity;
 		mResideMenu = new ResideMenu(this);
-		mResideMenu.setBackground(R.drawable.menu_background);
+		mResideMenu.setBackground(R.drawable.bg_slide_menu);
 		mResideMenu.attachToActivity(this);
+		mResideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
         //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip. 
-		mResideMenu.setScaleValue(0.6f);
+		mResideMenu.setScaleValue(0.5f);
 		
 		refreshMenu();
 	}
@@ -577,6 +587,31 @@ public class MainActivity extends BaseActivity {
 		
 		// 刷新
 		doRefresh();
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK
+				&& event.getAction() == KeyEvent.ACTION_DOWN) {
+			
+			if (mResideMenu.isOpened()) {
+				// 如果打开菜单，先关闭菜单
+				mResideMenu.closeMenu();
+				return true;
+			}
+			
+			if (mExitWaiter.isWaitTimeout(Constant.EXIT_TIME_INTERVAL)) {
+				CustomToast.showToast("再点一次退出程序");
+				mExitWaiter.begin();
+			} else {
+				// 退出应用
+				App.getInstance().exitApp();
+			}
+
+			return true;
+		}
+		
+		return super.onKeyDown(keyCode, event);
 	}
 	
 	public static class TransData implements Serializable {

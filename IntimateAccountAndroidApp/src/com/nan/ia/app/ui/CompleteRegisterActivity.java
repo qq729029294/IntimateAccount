@@ -18,7 +18,6 @@ import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -50,11 +49,6 @@ public class CompleteRegisterActivity extends BaseActionBarActivity {
 	}
 
 	private void initUI() {
-		// 默认弹出软键盘
-		getWindow().setSoftInputMode(
-				WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
-						| WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-		
 		mEditPassword = ((FullLineEditControl) findViewById(R.id.full_line_edit_control_password))
 				.getEditText();
 		mEditPassword.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -146,15 +140,9 @@ public class CompleteRegisterActivity extends BaseActionBarActivity {
 					return;
 				}
 
-				CompleteRegisterActivity.this.finishAffinity();
-
-//				LoginActivity.TransData toTransData = new LoginActivity.TransData();
-//				toTransData.setUsername(mTtransData.getUsername());
-//				toTransData.setPassword(mEditPassword.getText().toString());
-//
-//				Intent intent = new Intent(CompleteRegisterActivity.this,
-//						LoginActivity.class);
-//				startActivity(makeTransDataIntent(intent, toTransData));
+				Intent intent = new Intent(CompleteRegisterActivity.this, LoginActivity.class);   
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);  //注意本行的FLAG设置  
+				startActivity(intent);
 
 				super.onPostExecute(result);
 			}

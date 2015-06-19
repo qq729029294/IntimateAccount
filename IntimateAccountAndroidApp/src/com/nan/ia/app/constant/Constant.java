@@ -21,6 +21,9 @@ public class Constant {
 	// 手机用户
 	public static final int ACCOUNT_TYPE_PHONE = 2;
 	
+	// 按返回退出程序的时间间隔
+	public static final long EXIT_TIME_INTERVAL = 2000;
+	
 	// 变更标记
 	public static final String CHANGE_TYE_CURRENT_ACCOUNT_BOOK = "CHANGE_TYE_CURRENT_ACCOUNT_BOOK";
 	public static final String CHANGE_TYE_USER = "CHANGE_TYE_USER";

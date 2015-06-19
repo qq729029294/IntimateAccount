@@ -12,7 +12,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="@dimen/margin_vertical"
         app:fulllineedit_hint="@string/hint_email_register"
-        app:fulllineedit_max_length="18" >
+        app:fulllineedit_max_length="32" >
 
     </com.nan.ia.app.widget.FullLineEditControl>
 

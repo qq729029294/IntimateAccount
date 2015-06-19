@@ -22,9 +22,6 @@ public class BaseActivity extends FragmentActivity {
 				+ " onCreate() invoked!!");
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
-		// 默认软键盘出来时不调整布局
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 	}
 
 	@Override

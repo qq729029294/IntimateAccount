@@ -7,7 +7,6 @@ import com.nan.ia.app.utils.MinDurationWaiter;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.content.Intent;
@@ -54,16 +53,6 @@ public class LoadingActivity extends BaseActivity {
 		}.execute(0);
 	}
 	
-	@Override
-	protected void onStop() {
-		super.onStop();
-	}
-	
-	public void finish() {
-		super.finish();
-		overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-	}
-	
 	private void loadComplete() {
 		if (!AppData.isInit()) {
 			// 初始化引导界面
@@ -78,5 +67,7 @@ public class LoadingActivity extends BaseActivity {
 			startActivity(intent);
 			finish();
 		}
+		
+		overridePendingTransition(R.anim.activity_open_enter_alpha, R.anim.activity_open_exit_alpha);
 	}
 }

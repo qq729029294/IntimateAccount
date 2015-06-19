@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/trans_dkdk" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -9,21 +10,44 @@
         android:layout_centerHorizontal="true"
         android:orientation="vertical" >
 
-        <ImageView
-            android:id="@+id/image_avatar"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/icon_default_avatar" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/image_avatar"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/icon_default_avatar" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/text_nickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="麦田守望者"
+                    android:textColor="@color/font_white_lt"
+                    android:textSize="22sp" />
+            </LinearLayout>
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/text_nickname"
+            android:id="@+id/text_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small_small"
-            android:layout_gravity="center_horizontal"
-            android:text="未登录"
-            android:textColor="@color/white"
+            android:text="账户：729029294@qq.com"
+            android:textColor="@color/font_white_ltlt"
+            android:layout_marginTop="@dimen/margin"
             android:textSize="18sp" />
     </LinearLayout>
 

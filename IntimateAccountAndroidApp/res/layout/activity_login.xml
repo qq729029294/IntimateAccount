@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_vertical"
         app:fulllineedit_hint="@string/hint_username"
-        app:fulllineedit_max_length="22" >
+        app:fulllineedit_max_length="32" >
     </com.nan.ia.app.widget.FullLineEditControl>
 
     <com.nan.ia.app.widget.CustomButton
