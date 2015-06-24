@@ -234,6 +234,7 @@ public class MainActivity extends BaseActivity {
         // create menu items;
 		View view = LayoutInflater.from(this).inflate(R.layout.slide_menu_account, null);
 		TextView textNickname = (TextView) view.findViewById(R.id.text_nickname);
+		TextView textUsername = (TextView) view.findViewById(R.id.text_username);
 		if (AppData.getAccountInfo().getAccountType() == Constant.ACCOUNT_TYPE_UNLOGIN) {
 			// 未登录，去登录
 			textNickname.setText("点击登录");
@@ -245,12 +246,16 @@ public class MainActivity extends BaseActivity {
 					startActivity(new Intent(MainActivity.this, LoginActivity.class));
 				}
 			});
+			
+			textUsername.setVisibility(View.GONE);
 		} else {
 			view.setClickable(false);
 			int userId = AppData.getAccountInfo().getUserId();
-			UserInfo userInfo = mBizFacade.getInstance().obtainUserInfo(this, userId, false);
+			UserInfo userInfo = mBizFacade.obtainUserInfo(this, userId, false);
 			textNickname.setText(userInfo.getNickname());
 			
+			textUsername.setText(AppData.getAccountInfo().getUsername());
+			textUsername.setVisibility(View.VISIBLE);
 		}
 		
 		mResideMenu.addCustomMenuItem(view, ResideMenu.DIRECTION_LEFT);
@@ -286,7 +291,7 @@ public class MainActivity extends BaseActivity {
 		mResideMenu.attachToActivity(this);
 		mResideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
         //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip. 
-		mResideMenu.setScaleValue(0.5f);
+		mResideMenu.setScaleValue(0.6f);
 		
 		refreshMenu();
 	}
